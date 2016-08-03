@@ -60,8 +60,13 @@ module ShowDownloader
 			end
 		end
 
-		def download(link)
-			exec = "deluge-gtk \"#{link}\""
+		def download(link, app = :transmission)
+			case app
+			when :deluge
+				exec = "deluge-gtk \"#{link}\""
+			when :transmission
+				exec = "transmission-gtk \"#{link}\""
+			end
 			Process.detach(Process.spawn(exec, [:out, :err]=>"/dev/null"))
 		end
 
