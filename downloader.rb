@@ -34,9 +34,15 @@ module ShowDownloader
 
 			File.write("date", Date.today)
 
+		rescue AuthenticationError
+			puts "Wrong username/password combination"
+			2
 		end
 
 		def check_date
+			if !File.exist?("date")
+				File.write("date", Date.today-1)
+			end
 			last = Date.parse(File.read("date"))
 			if last != Date.today
 				[false, last]

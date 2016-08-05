@@ -1,5 +1,9 @@
 module ShowDownloader
 
+	class AuthenticationError < StandardError
+
+	end
+
 	class MyEpisodes
 		
 		def MyEpisodes.get_shows(user, pass, last)
@@ -12,6 +16,10 @@ module ShowDownloader
 			loginform.password = pass
 			
 			page = agent.submit(loginform, loginform.buttons.first)
+			# Failed login
+			if page.filename == "login.php"
+				raise AuthenticationError
+			end
 			page = agent.get "http://www.myepisodes.com/ajax/service.php?mode=view_privatelist"
 			shows = page.parser.css('tr.past')
 
