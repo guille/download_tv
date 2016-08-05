@@ -2,5 +2,5 @@
 
 require_relative 'downloader'
 
-dl = ShowDownloader::Downloader.new
+dl = ShowDownloader::Downloader.new ARGV[0]
 dl.run

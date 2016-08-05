@@ -9,6 +9,13 @@ module ShowDownloader
 
 	class Downloader
 
+		attr_accessor :app
+
+		def initialize(app)
+			@app = app
+			puts @app
+		end
+
 		def run
 			Dir.chdir(File.dirname(__FILE__))
 			
