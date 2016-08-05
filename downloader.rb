@@ -36,7 +36,6 @@ module ShowDownloader
 
 		rescue AuthenticationError
 			puts "Wrong username/password combination"
-			2
 		end
 
 		def check_date

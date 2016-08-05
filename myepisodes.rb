@@ -1,9 +1,5 @@
 module ShowDownloader
 
-	class AuthenticationError < StandardError
-
-	end
-
 	class MyEpisodes
 		
 		def MyEpisodes.get_shows(user, pass, last)
@@ -39,5 +35,11 @@ module ShowDownloader
 			end
 			
 		end
+		
 	end
+
+	class AuthenticationError < StandardError
+
+	end
+
 end
