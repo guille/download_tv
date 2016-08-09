@@ -11,9 +11,8 @@ module ShowDownloader
 
 		attr_accessor :app
 
-		def initialize(app)
-			@app = app
-			puts @app
+		def initialize(args)
+			@app = args[0]
 		end
 
 		def run
@@ -23,13 +22,9 @@ module ShowDownloader
 
 			exit if check[0]
 
-			if ARGV[0]
-			 	pass = ARGV[0]
-			else
-			 	print "Enter your MyEpisodes password: "
-			 	pass = STDIN.noecho(&:gets).chomp
-			 	puts
-			end
+			print "Enter your MyEpisodes password: "
+			pass = STDIN.noecho(&:gets).chomp
+			puts
 
 			shows = MyEpisodes.get_shows "Cracky7", pass, check[1]
 
@@ -72,13 +67,9 @@ module ShowDownloader
 			end
 		end
 
-		def download(link, app = :transmission)
-			case app
-			when :deluge
-				exec = "deluge-gtk \"#{link}\""
-			when :transmission
-				exec = "transmission-gtk \"#{link}\""
-			end
+		def download(link)
+			exec = "#{@app} \"#{link}\""
+			
 			Process.detach(Process.spawn(exec, [:out, :err]=>"/dev/null"))
 		end
 
