@@ -47,10 +47,20 @@ module ShowDownloader
 			 	obj = JSON.parse(page)
 			end
 
+			raise NoTorrentsError if obj["error"]
+
 			result = obj["torrent_results"].find { |i| !i["filename"].include?("720") and !i["filename"].include?("1080") }
 
 			result["download"]
+		
+		rescue NoTorrentsError
+			puts "No torrents found for #{show}"
+			#exit
 		end
+
+	end
+
+	class NoTorrentsError < StandardError
 
 	end
 end
