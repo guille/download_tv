@@ -9,10 +9,11 @@ module ShowDownloader
 
 	class Downloader
 
-		attr_accessor :app
+		attr_reader :app, :offset
 
 		def initialize(args)
 			@app = args[0]
+			@offset = args[1].to_i || 0
 		end
 
 		def run
@@ -46,7 +47,7 @@ module ShowDownloader
 			end
 			last = Date.parse(File.read("date"))
 			if last != Date.today
-				[false, last]
+				[false, last - @offset]
 			else
 				puts "Everything up to date"
 				[true, nil]

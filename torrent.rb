@@ -20,6 +20,7 @@ module ShowDownloader
 
 		rescue Mechanize::ResponseCodeError
 			puts "Problem accessing torrentapi.org"
+			exit
 		end
 
 		def get_link (show)
