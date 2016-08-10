@@ -14,10 +14,12 @@ module ShowDownloader
 		def get_token
 			agent = Mechanize.new
 			page = agent.get("https://torrentapi.org/pubapi_v2.php?get_token=get_token").content
-
 			obj = JSON.parse(page)
 
 			@token = obj['token']
+
+		rescue Mechanize::ResponseCodeError
+			puts "Problem accessing torrentapi.org"
 		end
 
 		def get_link (show)
