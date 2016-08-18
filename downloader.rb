@@ -12,22 +12,22 @@ module ShowDownloader
 		attr_reader :app, :offset
 
 		def initialize(args)
-			@app = args[0]
+			@app = args[0]# || (raise ArgumentError)
 			@offset = args[1].to_i || 0
 		end
 
 		def run
 			Dir.chdir(File.dirname(__FILE__))
 			
-			check = check_date
+			check, date = check_date
 
-			exit if check[0]
+			exit if check
 
 			print "Enter your MyEpisodes password: "
 			pass = STDIN.noecho(&:gets).chomp
 			puts
 
-			shows = MyEpisodes.get_shows "Cracky7", pass, check[1]
+			shows = MyEpisodes.get_shows "Cracky7", pass, date
 
 			t = Torrent.new
 
@@ -82,5 +82,6 @@ end
 TODO: Subtitleseeker http://api.subtitleseeker.com/
 TODO: When torrentapi can't find a torrent,
 	save the show in a file and try again next execution
+TODO: User selects the torrent to download
 	
 =end
