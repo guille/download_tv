@@ -4,19 +4,27 @@ require 'date'
 require 'io/console'
 require_relative 'torrent'
 require_relative 'myepisodes'
+require_relative 'linkgrabber'
+require_relative 'grabbers/torrentapi'
+require_relative 'grabbers/eztv'
 
 module ShowDownloader
 
 	class Downloader
 
 		attr_reader :app, :offset
+		attr_reader :t
 
 		def initialize(args)
 			@app = args[0]# || (raise ArgumentError)
 			@offset = args[1].to_i || 0
+			@t = Torrent.new
 		end
 
-		def run
+		##
+		# Gets the links .
+		# Auto flag means it selects the torrent without user input
+		def run(auto=true)
 			Dir.chdir(File.dirname(__FILE__))
 			
 			check, date = check_date
@@ -29,13 +37,13 @@ module ShowDownloader
 
 			shows = MyEpisodes.get_shows "Cracky7", pass, date
 
-			t = Torrent.new
-
+			# While the user is selecting a torrent, new Thread to pull next show
 			fix_names(shows).each do |show|
-				download(t.get_link(show))
+				# puts "Pulling #{show}..."
+				download(@t.get_link(show, auto))
 			end
 
-			File.write("date", Date.today)
+			# File.write("date", Date.today)
 
 		rescue AuthenticationError
 			puts "Wrong username/password combination"
@@ -72,6 +80,7 @@ module ShowDownloader
 			exec = "#{@app} \"#{link}\""
 			
 			Process.detach(Process.spawn(exec, [:out, :err]=>"/dev/null"))
+
 		end
 
 	end

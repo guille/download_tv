@@ -1,70 +1,66 @@
 module ShowDownloader
 
 	class Torrent
-		attr_accessor :token
-		attr_reader :wait
-		attr_reader :search_url
-
 		def initialize
-			@token = get_token
-			@wait = 2.1
-			@search_url = "https://torrentapi.org/pubapi_v2.php?mode=search&search_string=%s&token=%s"
+			# Loads every file in /grabbers
+			@grabbers = Array.new
+
+			manage_grabbers
+			
 		end
 
-		def get_token
-			agent = Mechanize.new
-			page = agent.get("https://torrentapi.org/pubapi_v2.php?get_token=get_token").content
-			obj = JSON.parse(page)
+		def manage_grabbers
+			# add grabbers to the array
 
-			@token = obj['token']
+			# @a = Eztv.new
+			@a = TorrentAPI.new
 
+			
 		rescue Mechanize::ResponseCodeError
 			puts "Problem accessing torrentapi.org"
-			exit
 		end
 
-		def get_link (show)
+		def get_link(show, auto)
 
-			s = show.gsub(" ", "+")
+			links = @a.get_links(show)
 
-			search = @search_url % [s, @token]
-
-			agent = Mechanize.new
-			page = agent.get(search).content
-
-			obj = JSON.parse(page)
-
-			if obj["error_code"]==4 # Token expired
-				get_token
-				search = @search_url % [s, @token]
-				page = agent.get(search).content
-			 	obj = JSON.parse(page)
+			links.each_with_index do |data, i|
+				puts "#{i}\t\t#{data[0]}"
+				
 			end
 
-			while obj["error_code"]==5 # Violate 1req/2s limit
-				sleep(@wait) 
-			 	page = agent.get(search).content
-			 	obj = JSON.parse(page)
+			puts
+
+			if !auto
+				print "Select the torrent you want to download: "
+
+				i = $stdin.gets.chomp.to_i
+
+				while i >= links.size || i < -1
+					puts "Index out of bounds. Try again: "
+					gets.chomp
+				end
+
+				# Use -1 to skip the download
+				i == -1 ? "" : links[i][1]
+			
+			else # Automatically get the links
+				links.each do | name, link|
+					# find first name without 720p or 1080p
+					# result = obj["torrent_results"].find { |i| !i["filename"].include?("720") and !i["filename"].include?("1080") }
+
+				end
+
+
 			end
 
-			raise NoTorrentsError if obj["error"]
 
-			result = obj["torrent_results"].find { |i| !i["filename"].include?("720") and !i["filename"].include?("1080") }
-
-			result["download"]
-		
 		rescue NoTorrentsError
 			puts "No torrents found for #{show}"
-			#exit
+			LinkGrabber.pending << show
+
+			# Use next grabber
 		end
-
 	end
 
-	class NoTorrentsError < StandardError
-
-	end
 end
-
-# Tokens automaticly expire in 15 minutes.
-# The api has a 1req/2s limit.
-# http://torrentapi.org/apidocs_v2.txt

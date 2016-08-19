@@ -2,7 +2,7 @@ module ShowDownloader
 
 	class MyEpisodes
 		
-		def MyEpisodes.get_shows(user, pass, last)
+		def MyEpisodes.get_shows(user = "Cracky7", pass, last)
 			agent = Mechanize.new
 
 			page = agent.get "http://www.myepisodes.com/login.php"
