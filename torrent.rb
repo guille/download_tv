@@ -24,14 +24,15 @@ module ShowDownloader
 
 			links = @a.get_links(show)
 
-			links.each_with_index do |data, i|
-				puts "#{i}\t\t#{data[0]}"
-				
-			end
-
-			puts
-
 			if !auto
+				
+				links.each_with_index do |data, i|
+					puts "#{i}\t\t#{data[0]}"
+					
+				end
+
+				puts
+
 				print "Select the torrent you want to download: "
 
 				i = $stdin.gets.chomp.to_i
