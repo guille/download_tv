@@ -45,15 +45,28 @@ module ShowDownloader
 				i == -1 ? "" : links[i][1]
 			
 			else # Automatically get the links
-				links.each do | name, link|
-					# find first name without 720p or 1080p
-					# result = obj["torrent_results"].find { |i| !i["filename"].include?("720") and !i["filename"].include?("1080") }
+				filters = Array.new
+				filters << ->(n){n.include?("1080")}
+				filters << ->(n){n.include?("720")}
+				filters << ->(n){n.include?("WEB")}
+				filters << ->(n){!n.include?("PROPER") || !n.include?("REPACK")}
 
+				filters.each do |f|
+					# Apply each filter
+					new_links = links.reject {|name, link| f.(name)}
+					# Stop if the filter removes every release
+					break if new_links.size == 0
+
+					links = new_links
+					# Not neeeded:
+					# break if links.size == 1
 				end
 
+				# Get the first result left
+				links[0][1]
+				
 
 			end
-
 
 		rescue NoTorrentsError
 			puts "No torrents found for #{show}"

@@ -37,13 +37,17 @@ module ShowDownloader
 
 			shows = MyEpisodes.get_shows "Cracky7", pass, date
 
+			puts "Nothing to download" if shows.empty?
+
 			# While the user is selecting a torrent, new Thread to pull next show
 			fix_names(shows).each do |show|
 				# puts "Pulling #{show}..."
 				download(@t.get_link(show, auto))
 			end
 
-			# File.write("date", Date.today)
+			puts "Completed. Exiting..."
+
+			File.write("date", Date.today)
 
 		rescue AuthenticationError
 			puts "Wrong username/password combination"
