@@ -26,4 +26,28 @@ describe ShowDownloader::Downloader do
       
   end
 
+  describe "the date file" do 
+    before do
+      File.delete("date") if File.exist?("date")
+
+    end
+
+    it "should be created if it doesn't exist" do
+      ShowDownloader::Downloader.new([]).check_date
+      File.exist?("date").must_equal true
+      
+    end
+    
+  end
+
+  # must raise AuthenticationError
+  # random string must raise torrent not found
+  # also, add it to the @@pending array
+  # querying eztv and torrentapi should return 200 OK
+
+  # it has to be called from /test
+  # otherwise it will use the wrong date/ignored files
+  # possible solution: Dir.chdir before running the test
+
+
 end
