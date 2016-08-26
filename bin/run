@@ -1,6 +1,6 @@
 #!/usr/bin/env ruby
 
-require_relative 'downloader'
+require_relative '../downloader'
 
 dl = ShowDownloader::Downloader.new ARGV
 dl.run

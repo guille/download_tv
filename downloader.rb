@@ -5,7 +5,9 @@ require 'io/console'
 require_relative 'torrent'
 require_relative 'myepisodes'
 require_relative 'linkgrabber'
+require_relative 'subtitles'
 require_relative 'grabbers/torrentapi'
+require_relative 'grabbers/addic7ed'
 require_relative 'grabbers/eztv'
 
 module ShowDownloader
@@ -25,7 +27,7 @@ module ShowDownloader
 		##
 		# Gets the links .
 		# Auto flag means it selects the torrent without user input
-		def run(auto=true)
+		def run(auto=true, subs=true)
 			Dir.chdir(File.dirname(__FILE__))
 			
 			check, date = check_date
@@ -46,22 +48,27 @@ module ShowDownloader
 			queue = Queue.new
 			
 			link_t = Thread.new do
-				to_download.each do |show|
-					# puts "Downloading #{show}"
-					queue << @t.get_link(show, auto)
-				end
-				
+				# Adds a link (or empty string to the queue)
+				to_download.each { |show| queue << @t.get_link(show, auto) }
 			end
 
 			download_t = Thread.new do
-				to_download.size.times do
-					download(queue.pop)
-				end
+				# Downloads every links as they are added
+				# next if queue.pop == "" would prevent the torrent
+				# client from oppening when no torrents are found
+				to_download.size.times { download(queue.pop) }
 			end
+
+			# Another thread for downloading the subtitles
+
+			# subs_t = subs && Thread.new do
+			# 	to_download.each { |show| @s.get_subs(show) }
+			# end
 
 			# Only necessary to join one? Maybe neither
 			link_t.join
 			download_t.join
+			# subs_t.join
 
 			puts "Completed. Exiting..."
 
