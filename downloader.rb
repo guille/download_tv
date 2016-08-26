@@ -48,7 +48,6 @@ module ShowDownloader
 			link_t = Thread.new do
 				to_download.each do |show|
 					# puts "Downloading #{show}"
-					puts show
 					queue << @t.get_link(show, auto)
 				end
 				
@@ -66,7 +65,7 @@ module ShowDownloader
 
 			puts "Completed. Exiting..."
 
-			# File.write("date", Date.today)
+			File.write("date", Date.today)
 
 		rescue AuthenticationError
 			puts "Wrong username/password combination"

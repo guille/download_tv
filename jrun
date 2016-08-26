@@ -1,0 +1,6 @@
+#!/usr/bin/env jruby
+
+require_relative 'downloader'
+
+dl = ShowDownloader::Downloader.new ARGV
+dl.run
