@@ -19,6 +19,7 @@ module ShowDownloader
 			@app = args[0]# || (raise ArgumentError)
 			@offset = args[1].to_i || 0
 			@t = Torrent.new
+			Thread.abort_on_exception = true
 		end
 
 		##
@@ -40,14 +41,32 @@ module ShowDownloader
 			puts "Nothing to download" if shows.empty?
 
 			# While the user is selecting a torrent, new Thread to pull next show
-			fix_names(shows).each do |show|
-				# puts "Pulling #{show}..."
-				download(@t.get_link(show, auto))
+			to_download = fix_names(shows)
+
+			queue = Queue.new
+			
+			link_t = Thread.new do
+				to_download.each do |show|
+					# puts "Downloading #{show}"
+					puts show
+					queue << @t.get_link(show, auto)
+				end
+				
 			end
+
+			download_t = Thread.new do
+				to_download.size.times do
+					download(queue.pop)
+				end
+			end
+
+			# Only necessary to join one? Maybe neither
+			link_t.join
+			download_t.join
 
 			puts "Completed. Exiting..."
 
-			File.write("date", Date.today)
+			# File.write("date", Date.today)
 
 		rescue AuthenticationError
 			puts "Wrong username/password combination"

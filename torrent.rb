@@ -72,6 +72,7 @@ module ShowDownloader
 		rescue NoTorrentsError
 			puts "No torrents found for #{show}"
 			LinkGrabber.pending << show
+			return ""
 
 			# Use next grabber
 		end
