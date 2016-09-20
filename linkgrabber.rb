@@ -23,4 +23,8 @@ module ShowDownloader
 
 	end
 
+	class NoSubtitlesError < StandardError
+
+	end
+
 end

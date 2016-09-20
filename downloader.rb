@@ -114,12 +114,3 @@ module ShowDownloader
 
 	end
 end
-
-=begin
-	
-TODO: Subtitleseeker http://api.subtitleseeker.com/
-TODO: When torrentapi can't find a torrent,
-	save the show in a file and try again next execution
-TODO: User selects the torrent to download
-	
-=end
