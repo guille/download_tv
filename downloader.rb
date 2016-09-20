@@ -14,12 +14,11 @@ module ShowDownloader
 
 	class Downloader
 
-		attr_reader :app, :offset
+		attr_reader :offset
 		attr_reader :t
 
 		def initialize(args)
-			@app = args[0]# || (raise ArgumentError)
-			@offset = args[1].to_i || 0
+			@offset = args[0].to_i || 0
 			@t = Torrent.new
 			Thread.abort_on_exception = true
 		end
@@ -106,7 +105,7 @@ module ShowDownloader
 		end
 
 		def download(link)
-			exec = "#{@app} \"#{link}\""
+			exec = "xdg-open \"#{link}\""
 			
 			Process.detach(Process.spawn(exec, [:out, :err]=>"/dev/null"))
 
