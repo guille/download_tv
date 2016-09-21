@@ -92,9 +92,9 @@ module ShowDownloader
 		end
 
 		def fix_names(shows)
-			# Removes dots and parens
+			# Removes apostrophes and parens
 			s = shows.map do |term|
-				term.gsub(/(\.|\(|\))/, "")
+				term.gsub(/[()']/, "")
 			end
 
 			# Ignored shows
