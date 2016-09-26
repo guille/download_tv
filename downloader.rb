@@ -24,7 +24,7 @@ module ShowDownloader
 		end
 
 		##
-		# Gets the links .
+		# Gets the links.
 		# Auto flag means it selects the torrent without user input
 		def run(auto=true, subs=true)
 			Dir.chdir(File.dirname(__FILE__))
@@ -38,10 +38,9 @@ module ShowDownloader
 			puts
 
 			shows = MyEpisodes.get_shows "Cracky7", pass, date
-
+			
 			puts "Nothing to download" if shows.empty?
 
-			# While the user is selecting a torrent, new Thread to pull next show
 			to_download = fix_names(shows)
 
 			queue = Queue.new
@@ -53,13 +52,14 @@ module ShowDownloader
 
 			download_t = Thread.new do
 				# Downloads every links as they are added
-				# next if queue.pop == "" would prevent the torrent
-				# client from oppening when no torrents are found
-				to_download.size.times { download(queue.pop) }
+				to_download.size.times do
+					magnet = queue.pop
+					next if magnet == "" # Doesnt download if no torrents are found
+					download(magnet)
+				end
 			end
 
 			# Another thread for downloading the subtitles
-
 			# subs_t = subs && Thread.new do
 			# 	to_download.each { |show| @s.get_subs(show) }
 			# end

@@ -1,24 +1,29 @@
 module ShowDownloader
 
 	class Torrent
-		def initialize
-			# Loads every file in /grabbers
-			@grabbers = Array.new
+		attr_reader :grabbers, :tries
 
-			manage_grabbers
+		def initialize
+			# Loads every class name in /grabbers
+			@grabbers = ["TorrentAPI", "Eztv"]
+			@tries = @grabbers.size-1
+
+			change_grabbers
 			
 		end
 
-		def manage_grabbers
-			# add grabbers to the array
+		
+		def change_grabbers
+			# Instantiates the first one
+			@a = (Object.const_get "ShowDownloader::#{@grabbers.first}").new
+			# Pushes it back
+			@grabbers.rotate!
 
-			# @a = Eztv.new
-			@a = TorrentAPI.new
-
-			
 		rescue Mechanize::ResponseCodeError
 			puts "Problem accessing torrentapi.org"
+			change_grabbers
 		end
+
 
 		def get_link(show, auto)
 
@@ -42,6 +47,9 @@ module ShowDownloader
 					gets.chomp
 				end
 
+				# Reset the counter
+				@tries = @grabbers.size-1
+
 				# Use -1 to skip the download
 				i == -1 ? "" : links[i][1]
 			
@@ -59,9 +67,10 @@ module ShowDownloader
 					break if new_links.size == 0
 
 					links = new_links
-					# Not neeeded:
-					# break if links.size == 1
 				end
+
+				# Reset the counter
+				@tries = @grabbers.size-1
 
 				# Get the first result left
 				links[0][1]
@@ -70,11 +79,22 @@ module ShowDownloader
 			end
 
 		rescue NoTorrentsError
-			puts "No torrents found for #{show}"
+			puts "No torrents found for #{show} using #{@a.class.name}"
 			LinkGrabber.pending << show
-			return ""
 
 			# Use next grabber
+			if @tries > 0
+				@tries-=1
+				change_grabbers
+				retry
+				
+			end
+
+			# Reset the counter
+			@tries = @grabbers.size-1
+			return ""
+
+			
 		end
 	end
 
