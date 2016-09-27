@@ -17,10 +17,14 @@ module ShowDownloader
 		attr_reader :offset
 		attr_reader :t
 
-		def initialize(args)
+		def initialize(args=[])
 			@offset = args[0].to_i || 0
 			@t = Torrent.new
 			Thread.abort_on_exception = true
+		end
+
+		def download_single_show(show)
+			download(@t.get_link(show, true))
 		end
 
 		##
