@@ -20,8 +20,8 @@ module ShowDownloader
 		def initialize(offset=0)
 			@offset = offset
 			@t = Torrent.new
-			@auto = ShowDownloader::CONFIG[auto]
-			# @subs = ShowDownloader::CONFIG[subs]
+			@auto = ShowDownloader::CONFIG[:auto]
+			# @subs = ShowDownloader::CONFIG[:subs]
 			Thread.abort_on_exception = true
 		end
 
@@ -42,7 +42,7 @@ module ShowDownloader
 			pass = STDIN.noecho(&:gets).chomp
 			puts
 
-			shows = MyEpisodes.get_shows(ShowDownloader::CONFIG[myepisodes_user], pass, date)
+			shows = MyEpisodes.get_shows(ShowDownloader::CONFIG[:myepisodes_user], pass, date)
 			
 			puts "Nothing to download" if shows.empty?
 
@@ -86,7 +86,7 @@ module ShowDownloader
 			content = File.read("date")
 			
 			last = Date.parse(content)
-			if last != Date.today
+			if last - @offset != Date.today
 				[false, last - @offset]
 			else
 				puts "Everything up to date"
