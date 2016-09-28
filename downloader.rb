@@ -6,6 +6,7 @@ require_relative 'torrent'
 require_relative 'myepisodes'
 require_relative 'linkgrabber'
 require_relative 'subtitles'
+require_relative 'config'
 require_relative 'grabbers/torrentapi'
 require_relative 'grabbers/addic7ed'
 require_relative 'grabbers/eztv'
@@ -17,7 +18,7 @@ module ShowDownloader
 		attr_reader :offset
 		attr_reader :t
 
-		def initialize(args=[])
+		def initialize(args = [])
 			@offset = args[0].to_i || 0
 			@t = Torrent.new
 			Thread.abort_on_exception = true
@@ -30,7 +31,7 @@ module ShowDownloader
 		##
 		# Gets the links.
 		# Auto flag means it selects the torrent without user input
-		def run(auto=true, subs=true)
+		def run(auto = true, subs = true)
 			Dir.chdir(File.dirname(__FILE__))
 			
 			check, date = check_date
@@ -41,7 +42,7 @@ module ShowDownloader
 			pass = STDIN.noecho(&:gets).chomp
 			puts
 
-			shows = MyEpisodes.get_shows "Cracky7", pass, date
+			shows = MyEpisodes.get_shows(ShowDownloader::CONFIG[myepisodes_user], pass, date)
 			
 			puts "Nothing to download" if shows.empty?
 
