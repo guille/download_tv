@@ -15,23 +15,23 @@ module ShowDownloader
 
 	class Downloader
 
-		attr_reader :offset
-		attr_reader :t
+		attr_reader :offset, :t, :auto, :subs
 
-		def initialize(args = [])
-			@offset = args[0].to_i || 0
+		def initialize(offset=0)
+			@offset = offset
 			@t = Torrent.new
+			@auto = ShowDownloader::CONFIG[auto]
+			# @subs = ShowDownloader::CONFIG[subs]
 			Thread.abort_on_exception = true
 		end
 
 		def download_single_show(show)
-			download(@t.get_link(show, true))
+			download(@t.get_link(show, @auto))
 		end
 
 		##
 		# Gets the links.
-		# Auto flag means it selects the torrent without user input
-		def run(auto = true, subs = true)
+		def run
 			Dir.chdir(File.dirname(__FILE__))
 			
 			check, date = check_date
@@ -52,7 +52,7 @@ module ShowDownloader
 			
 			link_t = Thread.new do
 				# Adds a link (or empty string to the queue)
-				to_download.each { |show| queue << @t.get_link(show, auto) }
+				to_download.each { |show| queue << @t.get_link(show, @auto) }
 			end
 
 			download_t = Thread.new do
@@ -65,7 +65,7 @@ module ShowDownloader
 			end
 
 			# Another thread for downloading the subtitles
-			# subs_t = subs && Thread.new do
+			# subs_t = @subs && Thread.new do
 			# 	to_download.each { |show| @s.get_subs(show) }
 			# end
 
@@ -83,10 +83,9 @@ module ShowDownloader
 		end
 
 		def check_date
-			if !File.exist?("date")
-				File.write("date", Date.today-1)
-			end
-			last = Date.parse(File.read("date"))
+			content = File.read("date")
+			
+			last = Date.parse(content)
 			if last != Date.today
 				[false, last - @offset]
 			else
@@ -94,6 +93,8 @@ module ShowDownloader
 				[true, nil]
 			end
 			
+		rescue Errno::ENOENT
+			File.write("date", Date.today-1)
 		end
 
 		def fix_names(shows)
