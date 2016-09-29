@@ -4,7 +4,7 @@ require_relative '../downloader'
 if ARGV[0].nil?
 	dl = ShowDownloader::Downloader.new	
 else
-	dl = ShowDownloader::Downloader.new ARGV[0].to_i
+	dl = ShowDownloader::Downloader.new ARGV[0]
 end
 
 dl.run

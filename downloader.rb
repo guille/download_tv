@@ -18,7 +18,7 @@ module ShowDownloader
 		attr_reader :offset, :t, :auto, :subs
 
 		def initialize(offset=0)
-			@offset = offset
+			@offset = offset.to_i
 			@t = Torrent.new
 			@auto = ShowDownloader::CONFIG[:auto]
 			# @subs = ShowDownloader::CONFIG[:subs]

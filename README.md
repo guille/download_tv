@@ -12,3 +12,4 @@ Another binary is provided (./bin/dl). Passing a show name and episode as a para
 * Subtitle support
 * When the downloader can't find a torrent, save the show in a file and try again next execution
 * Torrent grabbers: torrentz2.eu, torrentproject.se
+* Personalize filters.
