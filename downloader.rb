@@ -95,6 +95,7 @@ module ShowDownloader
 			
 		rescue Errno::ENOENT
 			File.write("date", Date.today-1)
+			retry
 		end
 
 		def fix_names(shows)
