@@ -44,37 +44,40 @@ module ShowDownloader
 
 			shows = MyEpisodes.get_shows(ShowDownloader::CONFIG[:myepisodes_user], pass, date)
 			
-			puts "Nothing to download" if shows.empty?
+			if shows.empty?
+				puts "Nothing to download"
 
-			to_download = fix_names(shows)
+			else
+				to_download = fix_names(shows)
 
-			queue = Queue.new
-			
-			link_t = Thread.new do
+				queue = Queue.new
+				
 				# Adds a link (or empty string to the queue)
-				to_download.each { |show| queue << @t.get_link(show, @auto) }
-			end
-
-			download_t = Thread.new do
-				# Downloads every links as they are added
-				to_download.size.times do
-					magnet = queue.pop
-					next if magnet == "" # Doesnt download if no torrents are found
-					download(magnet)
+				link_t = Thread.new do
+					to_download.each { |show| queue << @t.get_link(show, @auto) }
 				end
+
+				# Downloads the links as they are added
+				download_t = Thread.new do
+					to_download.size.times do
+						magnet = queue.pop
+						next if magnet == "" # Doesn't download if no torrents are found
+						download(magnet)
+					end
+				end
+
+				# Another thread for downloading the subtitles
+				# subs_t = @subs && Thread.new do
+				# 	to_download.each { |show| @s.get_subs(show) }
+				# end
+
+				# Only necessary to join one? Maybe neither
+				link_t.join
+				download_t.join
+				# subs_t.join
+
+				puts "Completed. Exiting..."
 			end
-
-			# Another thread for downloading the subtitles
-			# subs_t = @subs && Thread.new do
-			# 	to_download.each { |show| @s.get_subs(show) }
-			# end
-
-			# Only necessary to join one? Maybe neither
-			link_t.join
-			download_t.join
-			# subs_t.join
-
-			puts "Completed. Exiting..."
 
 			File.write("date", Date.today)
 
