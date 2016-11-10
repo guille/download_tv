@@ -35,6 +35,8 @@ module ShowDownloader
 		def download_file(url)
 			# Url must be like "http://www.addic7ed.com/updated/1/115337/0"
 
+			# ADDIC7ED PROVIDES RSS
+
 			agent = Mechanize.new
 			page = agent.get(url2, [], @url)
 			puts page.save("Hi")
