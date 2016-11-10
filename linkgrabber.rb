@@ -6,13 +6,6 @@ module ShowDownloader
 		def initialize(url, sep)
 			@url = url
 			@sep = sep
-			@@pending = Array.new
-			
-		end
-
-		# Access as LinkGrabber.pending
-		def self.pending
-			@@pending
 			
 		end
 		
