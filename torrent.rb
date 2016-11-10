@@ -61,8 +61,7 @@ module ShowDownloader
 			
 			else # Automatically get the links
 
-				@filters.each do |f|
-					# Apply each filter
+				@filters.each do |f| # Apply each filter
 					new_links = links.reject {|name, link| f.(name)}
 					# Stop if the filter removes every release
 					break if new_links.size == 0
