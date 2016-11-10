@@ -34,9 +34,7 @@ module ShowDownloader
 		def run
 			Dir.chdir(File.dirname(__FILE__))
 			
-			check, date = check_date
-
-			exit if check
+			date = check_date
 
 			print "Enter your MyEpisodes password: "
 			pass = STDIN.noecho(&:gets).chomp
@@ -90,10 +88,10 @@ module ShowDownloader
 			
 			last = Date.parse(content)
 			if last - @offset != Date.today
-				[false, last - @offset]
+				last - @offset
 			else
 				puts "Everything up to date"
-				[true, nil]
+				exit
 			end
 			
 		rescue Errno::ENOENT
