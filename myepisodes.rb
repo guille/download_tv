@@ -5,7 +5,7 @@ module ShowDownloader
 		def MyEpisodes.get_shows(user = "Cracky7", pass, last)
 			agent = Mechanize.new
 
-			page = agent.get "http://www.myepisodes.com/login.php"
+			page = agent.get "https://www.myepisodes.com/login.php"
 
 			loginform = page.forms[1]
 			loginform.username = user
@@ -16,7 +16,7 @@ module ShowDownloader
 			if page.filename == "login.php"
 				raise AuthenticationError
 			end
-			page = agent.get "http://www.myepisodes.com/ajax/service.php?mode=view_privatelist"
+			page = agent.get "https://www.myepisodes.com/ajax/service.php?mode=view_privatelist"
 			shows = page.parser.css('tr.past')
 
 			s = shows.select do |i|
