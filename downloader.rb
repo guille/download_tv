@@ -65,11 +65,10 @@ module ShowDownloader
 				end
 
 				# Another thread for downloading the subtitles
-				# subs_t = @subs && Thread.new do
+				# subs_t = @subs and Thread.new do
 				# 	to_download.each { |show| @s.get_subs(show) }
 				# end
 
-				# Only necessary to join one? Maybe neither
 				link_t.join
 				download_t.join
 				# subs_t.join
@@ -82,6 +81,7 @@ module ShowDownloader
 		rescue AuthenticationError
 			puts "Wrong username/password combination"
 		end
+
 
 		def check_date
 			content = File.read("date")
@@ -99,11 +99,10 @@ module ShowDownloader
 			retry
 		end
 
+
 		def fix_names(shows)
 			# Removes apostrophes and parens
-			s = shows.map do |term|
-				term.gsub(/[()']/, "")
-			end
+			s = shows.map { |t| t.gsub(/[()']/, "") }
 
 			# Ignored shows
 			ignored = File.read("ignored").split("\n")
@@ -112,12 +111,12 @@ module ShowDownloader
 			end
 		end
 
+
 		def download(link)
 			exec = "xdg-open \"#{link}\""
 			
 			Process.detach(Process.spawn(exec, [:out, :err]=>"/dev/null"))
 
 		end
-
 	end
 end
