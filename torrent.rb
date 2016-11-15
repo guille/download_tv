@@ -1,12 +1,12 @@
 module ShowDownloader
 
 	class Torrent
-		attr_reader :grabbers, :tries
 
 		def initialize
-			# Loads every class name in /grabbers
-			@grabbers = ["TorrentAPI", "Eztv"]
-			@tries = @grabbers.size-1
+			@g_names = ["Eztv", "TorrentAPI"]
+			@g_instances = Array.new
+			@n_grabbers = @g_names.size # Initial size
+			@tries = @n_grabbers - 1
 
 			@filters = Array.new
 			@filters << ->(n){n.include?("1080")}
@@ -20,10 +20,15 @@ module ShowDownloader
 
 		
 		def change_grabbers
-			# Instantiates the first one
-			@a = (Object.const_get "ShowDownloader::#{@grabbers.first}").new
-			# Pushes it back
-			@grabbers.rotate!
+			if !@g_names.empty?
+				# Instantiates the last element from g_names, popping it
+				@g_instances.unshift (Object.const_get "ShowDownloader::#{@g_names.pop}").new
+
+			else
+				# Rotates the instantiated grabbers
+				@g_instances.rotate!
+
+			end
 
 		rescue Mechanize::ResponseCodeError
 			puts "Problem accessing torrentapi.org"
@@ -32,18 +37,15 @@ module ShowDownloader
 
 
 		def get_link(show, auto)
-
-			links = @a.get_links(show)
+			links = @g_instances.first.get_links(show)
 
 			if !auto
-				
 				links.each_with_index do |data, i|
 					puts "#{i}\t\t#{data[0]}"
 					
 				end
 
 				puts
-
 				print "Select the torrent you want to download: "
 
 				i = $stdin.gets.chomp.to_i
@@ -54,7 +56,7 @@ module ShowDownloader
 				end
 
 				# Reset the counter
-				@tries = @grabbers.size-1
+				@tries = @n_grabbers - 1
 
 				# Use -1 to skip the download
 				i == -1 ? "" : links[i][1]
@@ -70,7 +72,7 @@ module ShowDownloader
 				end
 
 				# Reset the counter
-				@tries = @grabbers.size-1
+				@tries = @n_grabbers - 1
 
 				# Get the first result left
 				links[0][1]
@@ -78,7 +80,7 @@ module ShowDownloader
 			end
 
 		rescue NoTorrentsError
-			puts "No torrents found for #{show} using #{@a.class.name}"
+			puts "No torrents found for #{show} using #{@g_instances.first.class.name}"
 
 			# Use next grabber
 			if @tries > 0
@@ -87,7 +89,9 @@ module ShowDownloader
 				retry
 
 			else # Reset the counter
-				@tries = @grabbers.size-1
+				# Resets the grabbers order. Bad idea: same line of code
+				# @g_names = ["TorrentAPI", "Eztv"]
+				@tries = @n_grabbers - 1
 				return ""
 			
 			end
