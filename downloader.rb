@@ -15,7 +15,7 @@ module ShowDownloader
 
 	class Downloader
 
-		attr_reader :offset, :t, :auto, :subs
+		attr_reader :t, :auto, :subs
 
 		def initialize(offset=0)
 			@offset = offset.to_i
@@ -27,6 +27,13 @@ module ShowDownloader
 
 		def download_single_show(show)
 			download(@t.get_link(show, @auto))
+		end
+
+
+		def download_from_file(filename)
+			raise "File doesn't exist" if !File.exists? filename
+			File.read(filename).each { |show| download(@t.get_link(show, @auto)) }
+			
 		end
 
 		##
@@ -41,7 +48,7 @@ module ShowDownloader
 			# puts
 
 
-			agent, _ = MyEpisodes.login(ShowDownloader::CONFIG[:myepisodes_user], "cookie")
+			agent, _ = MyEpisodes.login(ShowDownloader::CONFIG[:myepisodes_user], ShowDownloader::CONFIG[:cookie_path])
 
 			shows = MyEpisodes.get_shows(agent, date)
 			
