@@ -36,11 +36,14 @@ module ShowDownloader
 			
 			date = check_date
 
-			print "Enter your MyEpisodes password: "
-			pass = STDIN.noecho(&:gets).chomp
-			puts
+			# print "Enter your MyEpisodes password: "
+			# pass = STDIN.noecho(&:gets).chomp
+			# puts
 
-			shows = MyEpisodes.get_shows(ShowDownloader::CONFIG[:myepisodes_user], pass, date)
+
+			agent, _ = MyEpisodes.login(ShowDownloader::CONFIG[:myepisodes_user], "cookie")
+
+			shows = MyEpisodes.get_shows(agent, date)
 			
 			if shows.empty?
 				puts "Nothing to download"
@@ -78,7 +81,7 @@ module ShowDownloader
 
 			File.write("date", Date.today)
 
-		rescue AuthenticationError
+		rescue InvalidLoginError
 			puts "Wrong username/password combination"
 		end
 

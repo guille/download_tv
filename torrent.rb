@@ -89,8 +89,6 @@ module ShowDownloader
 				retry
 
 			else # Reset the counter
-				# Resets the grabbers order. Bad idea: same line of code
-				# @g_names = ["TorrentAPI", "Eztv"]
 				@tries = @n_grabbers - 1
 				return ""
 			

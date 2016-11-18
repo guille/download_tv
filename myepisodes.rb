@@ -1,21 +1,46 @@
 module ShowDownloader
 
 	class MyEpisodes
-		
-		def MyEpisodes.get_shows(user = "Cracky7", pass, last)
+
+		def MyEpisodes.login(user=nil, cookie_path="", save_cookie: true)
 			agent = Mechanize.new
 
-			page = agent.get "https://www.myepisodes.com/login.php"
+			# Try loading cookie
+			return MyEpisodes.loadcookie(cookie_path) if File.exists? cookie_path
 
-			loginform = page.forms[1]
-			loginform.username = user
-			loginform.password = pass
-			
-			page = agent.submit(loginform, loginform.buttons.first)
-			# Failed login
-			if page.filename == "login.php"
-				raise AuthenticationError
+			if !user
+				print "Enter your MyEpisodes username: "
+				user = STDIN.gets.chomp
 			end
+
+			print "Enter your MyEpisodes password: "
+			pass = STDIN.noecho(&:gets).chomp
+			puts
+
+			page = agent.get "http://www.myepisodes.com/login.php"
+
+			login_form = page.forms[1]
+			login_form.username = user
+			login_form.password = pass
+
+			page = agent.submit(login_form, login_form.buttons.first)
+
+			raise InvalidLoginError if page.filename == "login.php"
+
+			agent.cookie_jar.save(cookie_path, session: true) if save_cookie
+
+			[agent, page]
+			
+		end
+
+		def MyEpisodes.loadcookie(cookie_path)
+			agent = Mechanize.new
+			agent.cookie_jar.load cookie_path
+			agent
+
+		end
+		
+		def MyEpisodes.get_shows(agent, last)
 			page = agent.get "https://www.myepisodes.com/ajax/service.php?mode=view_privatelist"
 			shows = page.parser.css('tr.past')
 
@@ -38,7 +63,7 @@ module ShowDownloader
 		
 	end
 
-	class AuthenticationError < StandardError
+	class InvalidLoginError < StandardError
 
 	end
 
