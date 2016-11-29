@@ -44,6 +44,7 @@ module ShowDownloader
 			end
 
 			while obj["error_code"]==5 # Violate 1req/2s limit
+				# puts "Torrentapi request limit hit. Wait a few seconds..."
 				sleep(@wait) 
 				page = agent.get(search).content
 				obj = JSON.parse(page)

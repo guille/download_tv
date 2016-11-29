@@ -27,7 +27,7 @@ module ShowDownloader
 
 			raise InvalidLoginError if page.filename == "login.php"
 
-			agent.cookie_jar.save(cookie_path, session: true) if save_cookie
+			agent.cookie_jar.save(cookie_path, session: true) if save_cookie && cookie_path != ""
 
 			[agent, page]
 			
