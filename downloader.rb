@@ -6,19 +6,24 @@ require_relative 'torrent'
 require_relative 'myepisodes'
 require_relative 'linkgrabber'
 require_relative 'subtitles'
-require_relative 'config'
 require_relative 'grabbers/torrentapi'
 require_relative 'grabbers/addic7ed'
 require_relative 'grabbers/eztv'
+begin
+	require_relative 'config'
+rescue LoadError
+	puts "Config file not found. Try renaming the config_example file to config.rb"
+	exit
+end
 
 module ShowDownloader
 
 	class Downloader
 
-		attr_reader :t, :auto, :subs
+		attr_reader :offset, :t, :auto, :subs
 
 		def initialize(offset=0)
-			@offset = offset.to_i
+			@offset = offset.to_i.abs
 			@t = Torrent.new
 			@auto = ShowDownloader::CONFIG[:auto]
 			# @subs = ShowDownloader::CONFIG[:subs]
@@ -43,13 +48,7 @@ module ShowDownloader
 			
 			date = check_date
 
-			# print "Enter your MyEpisodes password: "
-			# pass = STDIN.noecho(&:gets).chomp
-			# puts
-
-
 			agent, _ = MyEpisodes.login(ShowDownloader::CONFIG[:myepisodes_user], ShowDownloader::CONFIG[:cookie_path])
-
 			shows = MyEpisodes.get_shows(agent, date)
 			
 			if shows.empty?
@@ -74,7 +73,7 @@ module ShowDownloader
 					end
 				end
 
-				# Another thread for downloading the subtitles
+				# Downloading the subtitles
 				# subs_t = @subs and Thread.new do
 				# 	to_download.each { |show| @s.get_subs(show) }
 				# end
