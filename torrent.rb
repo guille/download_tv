@@ -33,6 +33,11 @@ module ShowDownloader
 		rescue Mechanize::ResponseCodeError
 			puts "Problem accessing torrentapi.org"
 			change_grabbers
+
+		rescue SocketError
+			puts "Check your internet connection"
+			exit
+			
 		end
 
 
