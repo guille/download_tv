@@ -114,9 +114,8 @@ module ShowDownloader
 			s = shows.map { |t| t.gsub(/[()']/, "") }
 
 			# Ignored shows
-			ignored = File.read("ignored").split("\n")
 			s.reject do |i|
-				ignored.include?(i.split(" ")[0..-2].join(" "))
+				ShowDownloader::CONFIG[:ignored].include?(i.split(" ")[0..-2].join(" "))
 			end
 		end
 
