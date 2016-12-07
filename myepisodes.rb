@@ -17,7 +17,7 @@ module ShowDownloader
 			pass = STDIN.noecho(&:gets).chomp
 			puts
 
-			page = agent.get "http://www.myepisodes.com/login.php"
+			page = agent.get "https://www.myepisodes.com/login.php"
 
 			login_form = page.forms[1]
 			login_form.username = user

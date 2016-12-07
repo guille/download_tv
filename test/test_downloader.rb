@@ -26,6 +26,7 @@ describe ShowDownloader::Downloader do
 		end
 
 		it "should remove ignored shows" do
+			ShowDownloader::CONFIG[:ignored] = ["Ignored"]
 			shows = ["Mr. Foo S01E02", "Bar (UK) S00E22", "Ignored S20E22", "Let's S05E03"]
 			result = ["Mr. Foo S01E02", "Bar UK S00E22", "Lets S05E03"]
 			ShowDownloader::Downloader.new.fix_names(shows).must_equal result
