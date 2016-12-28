@@ -34,7 +34,7 @@ module ShowDownloader
 			puts "Problem accessing torrentapi.org"
 			change_grabbers
 
-		rescue SocketError
+		rescue SocketError, Errno::ECONNRESET
 			puts "Check your internet connection"
 			exit
 			

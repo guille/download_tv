@@ -37,7 +37,7 @@ module ShowDownloader
 
 		def download_from_file(filename)
 			raise "File doesn't exist" if !File.exists? filename
-			File.read(filename).each { |show| download(@t.get_link(show, @auto)) }
+			File.readlines(filename).each { |show| download(@t.get_link(show, @auto)) }
 			
 		end
 
