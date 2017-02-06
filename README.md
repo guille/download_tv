@@ -1,11 +1,19 @@
 # daily-shows
 
+daily-shows is a Ruby command line application that automatically downloads the new episodes from the shows you follow. It grabs the list of shows from your MyEpisodes account.
+
+### Installation
+
+Clone the repository.
+
 Modify the config_example.rb file and rename it to config.rb
 
-Run the binary ./bin/run to pull the last episodes. If you want to repeat a past day, you can set an offset (./bin/run <offset>) that will start pulling episodes from that many days ago.
+### Usage
 
-Another binary is provided (./bin/dl). Passing a show name and episode as a parameter, it tries to download it. Example: *dl The Big Bang Theory S08E01*
+Three binaries are provided:
 
-### Contributing
+* /bin/run: Fetches the list of episodes from MyEpisodes and tries to download all the new episodes since the last time the program was run. This binary accepts an offset as a parameter in order to re-download the episodes from previous days.
 
-Contributions and feature suggestions are welcome. Just clone the repository and submit a pull request.
+* /bin/dl: This binary accepts a show name and episode as a parameter, and will try to download said episode. Example: *dl Breaking Bad S04E01*
+
+* /bin/fromfile: Takes a text file as an argument. Each line of the file is interpreted as a episode to download. Example: *dl /path/to/listofeps*
