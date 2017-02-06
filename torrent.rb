@@ -2,6 +2,8 @@ module ShowDownloader
 
 	class Torrent
 
+		attr_reader :g_names, :g_instances, :n_grabbers
+
 		def initialize
 			@g_names = ["Eztv", "TorrentAPI"]
 			@g_instances = Array.new
@@ -9,6 +11,7 @@ module ShowDownloader
 			@tries = @n_grabbers - 1
 
 			@filters = Array.new
+			@filters << ->(n){n.include?("2160")}
 			@filters << ->(n){n.include?("1080")}
 			@filters << ->(n){n.include?("720")}
 			@filters << ->(n){n.include?("WEB")}

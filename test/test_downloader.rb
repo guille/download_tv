@@ -65,3 +65,5 @@ describe ShowDownloader::Downloader do
 	end
 
 end
+
+Dir.chdir("..")
