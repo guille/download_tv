@@ -6,7 +6,7 @@ module ShowDownloader
 		attr_reader :wait
 
 		def initialize
-			super("https://torrentapi.org/pubapi_v2.php?mode=search&search_string=%s&token=%s", "+")
+			super("https://torrentapi.org/pubapi_v2.php?mode=search&search_string=%s&token=%s")
 			@token = get_token
 			@wait = 2.1
 			
@@ -24,10 +24,7 @@ module ShowDownloader
 
 		end
 
-		def get_links(show)
-
-			# Change spaces for the separator
-			s = show.gsub(" ", @sep)
+		def get_links(s)
 
 			# Format the url
 			search = @url % [s, @token]

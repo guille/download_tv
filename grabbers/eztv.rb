@@ -1,13 +1,10 @@
 module ShowDownloader
 	class Eztv < LinkGrabber
 		def initialize
-			super("https://eztv.ag/search/%s", "-")
+			super("https://eztv.ag/search/%s")
 		end
 
-		def get_links(show)
-
-			# Change spaces for the separator
-			s = show.gsub(" ", @sep)
+		def get_links(s)
 
 			# Format the url
 			search = @url % [s]

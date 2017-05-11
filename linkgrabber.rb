@@ -1,11 +1,10 @@
 module ShowDownloader
 
 	class LinkGrabber
-		attr_reader :url, :sep
+		attr_reader :url
 
-		def initialize(url, sep)
+		def initialize(url)
 			@url = url
-			@sep = sep
 			
 		end
 		
