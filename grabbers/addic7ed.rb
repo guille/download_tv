@@ -23,6 +23,10 @@ module ShowDownloader
 			# No redirection means no subtitle found
 			raise NoSubtitlesError if res.uri.to_s == search
 
+			##########
+			# DO OPENSUBTITLES FIRST (see subtitles.rb)
+			#####
+
 			# We now have an URL like:
 			# http://www.addic7ed.com/serie/Mr._Robot/2/3/eps2.1k3rnel-pan1c.ksd
 

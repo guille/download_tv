@@ -23,3 +23,5 @@ end
 # Subscene
 # Subtitleseeker
 # http://thesubdb.com/
+# Do OpenSubtitles first: way easier
+# http://trac.opensubtitles.org/projects/opensubtitles/wiki/DevReadFirst
