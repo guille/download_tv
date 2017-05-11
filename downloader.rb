@@ -32,18 +32,22 @@ module ShowDownloader
 
 		def download_single_show(show)
 			download(@t.get_link(show, @auto))
+		rescue Interrupt
+			puts "Interrupt signal detected. Exiting..."
 		end
 
 
 		def download_from_file(filename)
 			raise "File doesn't exist" if !File.exists? filename
 			File.readlines(filename).each { |show| download(@t.get_link(show, @auto)) }
-			
+
+		rescue Interrupt
+			puts "Interrupt signal detected. Exiting..."
 		end
 
 		##
 		# Gets the links.
-		def run
+		def run(dont_write_to_date_file)
 			Dir.chdir(File.dirname(__FILE__))
 			
 			date = check_date
@@ -85,10 +89,12 @@ module ShowDownloader
 				puts "Completed. Exiting..."
 			end
 
-			File.write("date", Date.today)
+			File.write("date", Date.today) unless dont_write_to_date_file
 
 		rescue InvalidLoginError
 			puts "Wrong username/password combination"
+		rescue Interrupt
+			puts "Interrupt signal detected. Exiting..."
 		end
 
 

@@ -1,10 +1,6 @@
 #!/usr/bin/env ruby
 
 require_relative '../downloader'
-if ARGV[0].nil?
-	dl = ShowDownloader::Downloader.new	
-else
-	dl = ShowDownloader::Downloader.new ARGV[0]
-end
+dl = ShowDownloader::Downloader.new(*ARGV)
 
-dl.run
+dl.run(ARGV.include?("-a"))
