@@ -5,7 +5,7 @@ module ShowDownloader
 		attr_reader :g_names, :g_instances, :n_grabbers
 
 		def initialize
-			@g_names = ["Eztv", "TorrentAPI"]
+			@g_names = ["Eztv", "ThePirateBay", "TorrentAPI"]
 			@g_instances = Array.new
 			@n_grabbers = @g_names.size # Initial size
 			@tries = @n_grabbers - 1

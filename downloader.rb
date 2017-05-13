@@ -7,7 +7,7 @@ require_relative 'myepisodes'
 require_relative 'linkgrabber'
 require_relative 'subtitles'
 require_relative 'grabbers/torrentapi'
-require_relative 'grabbers/addic7ed'
+require_relative 'grabbers/tpb'
 require_relative 'grabbers/eztv'
 begin
 	require_relative 'config'
