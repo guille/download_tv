@@ -30,8 +30,7 @@ describe ShowDownloader::Torrent do
 		end
 
 		it "will return an empty string when torrent can't be found" do
-			notfound = ->{ @t.get_link("Totally Fake Show askjdgsaudas", true) }
-			notfound.must_raise ShowDownloader::NoTorrentsError
+			@t.get_link("Totally Fake Show askjdgsaudas", true).must_equal ""
 
 		end
 

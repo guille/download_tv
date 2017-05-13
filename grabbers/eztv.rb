@@ -9,8 +9,7 @@ module ShowDownloader
 			# Format the url
 			search = @url % [s]
 
-			agent = Mechanize.new
-			data = agent.get(search).search("a.magnet")
+			data = @agent.get(search).search("a.magnet")
 
 			# Torrent name in data[i].attribute "title"
 			# "Suits S04E01 HDTV x264-LOL Torrent: Magnet Link"

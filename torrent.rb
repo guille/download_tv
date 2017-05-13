@@ -10,12 +10,13 @@ module ShowDownloader
 			@n_grabbers = @g_names.size # Initial size
 			@tries = @n_grabbers - 1
 
-			@filters = Array.new
-			@filters << ->(n){n.include?("2160")}
-			@filters << ->(n){n.include?("1080")}
-			@filters << ->(n){n.include?("720")}
-			@filters << ->(n){n.include?("WEB")}
-			@filters << ->(n){!n.include?("PROPER") || !n.include?("REPACK")}
+			@filters = [
+				->(n){n.include?("2160")},
+				->(n){n.include?("1080")},
+				->(n){n.include?("720")},
+				->(n){n.include?("WEB")},
+				->(n){!n.include?("PROPER") || !n.include?("REPACK")},
+			]
 
 			change_grabbers
 			
@@ -25,7 +26,10 @@ module ShowDownloader
 		def change_grabbers
 			if !@g_names.empty?
 				# Instantiates the last element from g_names, popping it
-				@g_instances.unshift (Object.const_get "ShowDownloader::#{@g_names.pop}").new
+				newt = (Object.const_get "ShowDownloader::#{@g_names.pop}").new
+				newt.test_connection
+
+				@g_instances.unshift newt
 
 			else
 				# Rotates the instantiated grabbers
@@ -33,12 +37,17 @@ module ShowDownloader
 
 			end
 
-		rescue Mechanize::ResponseCodeError
-			puts "Problem accessing torrentapi.org"
+		rescue Mechanize::ResponseCodeError, Net::HTTP::Persistent::Error
+
+			puts "Problem accessing #{newt.class.name}"
+			# We won't be using this grabber
+			@n_grabbers = @n_grabbers-1
+			@tries = @tries - 1
+
 			change_grabbers
 
 		rescue SocketError, Errno::ECONNRESET, Net::OpenTimeout
-			puts "Check your internet connection"
+			puts "Connection error."
 			exit
 			
 		end
