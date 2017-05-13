@@ -1,7 +1,9 @@
 module ShowDownloader
 	class ThePirateBay < LinkGrabber
-		def initialize
-			super("https://thepiratebay.rs/search/%s/0/7/0")
+		def initialize()
+			proxy = ShowDownloader::CONFIG[:tpb_proxy].gsub(/\/+$/, "") || "https://thepiratebay.cr"
+
+			super("#{proxy}/search/%s/0/7/0")
 		end
 
 		def get_links(s)
