@@ -1,6 +1,11 @@
 #!/usr/bin/env ruby
 
 require_relative '../downloader'
-dl = ShowDownloader::Downloader.new(*ARGV)
 
-dl.run(ARGV.include?("-a"))
+begin
+	dl = ShowDownloader::Downloader.new(*ARGV)
+	dl.run(ARGV.include?("-a"))
+
+rescue Interrupt
+	puts "Interrupt signal detected. Exiting..."
+end

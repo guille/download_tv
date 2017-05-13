@@ -32,8 +32,6 @@ module ShowDownloader
 
 		def download_single_show(show)
 			download(@t.get_link(show, @auto))
-		rescue Interrupt
-			puts "Interrupt signal detected. Exiting..."
 		end
 
 
@@ -41,8 +39,6 @@ module ShowDownloader
 			raise "File doesn't exist" if !File.exists? filename
 			File.readlines(filename).each { |show| download(@t.get_link(show, @auto)) }
 
-		rescue Interrupt
-			puts "Interrupt signal detected. Exiting..."
 		end
 
 		##
@@ -93,8 +89,6 @@ module ShowDownloader
 
 		rescue InvalidLoginError
 			puts "Wrong username/password combination"
-		rescue Interrupt
-			puts "Interrupt signal detected. Exiting..."
 		end
 
 

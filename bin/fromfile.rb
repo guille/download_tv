@@ -2,5 +2,10 @@
 
 require_relative '../downloader'
 
-dl = ShowDownloader::Downloader.new
-dl.download_from_file(ARGV[0])
+begin
+	dl = ShowDownloader::Downloader.new
+	dl.download_from_file(ARGV[0])
+
+rescue Interrupt
+	puts "Interrupt signal detected. Exiting..."
+end
