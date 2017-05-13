@@ -1,5 +1,6 @@
 require 'json'
 require 'mechanize'
+# require 'http-cookie'
 require 'date'
 require 'io/console'
 require_relative 'torrent'
@@ -48,8 +49,10 @@ module ShowDownloader
 			
 			date = check_date
 
-			agent, _ = MyEpisodes.login(ShowDownloader::CONFIG[:myepisodes_user], ShowDownloader::CONFIG[:cookie_path])
-			shows = MyEpisodes.get_shows(agent, date)
+			myepisodes = MyEpisodes.new(ShowDownloader::CONFIG[:myepisodes_user], ShowDownloader::CONFIG[:cookie_path])
+			# Log in using cookie by default
+			myepisodes.load_cookie
+			shows = myepisodes.get_shows(date)
 			
 			if shows.empty?
 				puts "Nothing to download"

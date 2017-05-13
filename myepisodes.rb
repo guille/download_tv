@@ -2,46 +2,67 @@ module ShowDownloader
 
 	class MyEpisodes
 
-		def MyEpisodes.login(user=nil, cookie_path="", save_cookie: true)
-			agent = Mechanize.new
+		def initialize(user=nil, cookie_path="", save_cookie: true)
+			@agent = Mechanize.new
+			@user = user
+			@cookie_path = cookie_path
+			@save_cookie = save_cookie
+		end
 
-			# Try loading cookie
-			return MyEpisodes.loadcookie(cookie_path) if File.exists? cookie_path
-
-			if !user
+		def login
+			if !@user
 				print "Enter your MyEpisodes username: "
-				user = STDIN.gets.chomp
+				@user = STDIN.gets.chomp
 			end
 
 			print "Enter your MyEpisodes password: "
 			pass = STDIN.noecho(&:gets).chomp
 			puts
 
-			page = agent.get "https://www.myepisodes.com/login.php"
+			page = @agent.get "https://www.myepisodes.com/login.php"
 
 			login_form = page.forms[1]
-			login_form.username = user
+			login_form.username = @user
 			login_form.password = pass
 
-			page = agent.submit(login_form, login_form.buttons.first)
+			page = @agent.submit(login_form, login_form.buttons.first)
 
 			raise InvalidLoginError if page.filename == "login.php"
 
-			agent.cookie_jar.save(cookie_path, session: true) if save_cookie && cookie_path != ""
+			save_cookie() if @save_cookie
 
-			[agent, page]
+			@agent
 			
 		end
 
-		def MyEpisodes.loadcookie(cookie_path)
-			agent = Mechanize.new
-			agent.cookie_jar.load cookie_path
-			agent
+		def load_cookie
+			if File.exists? @cookie_path
+				@agent.cookie_jar.load @cookie_path
+				page = @agent.get "https://www.myepisodes.com/login.php"
+				if page.links[1].text == "Register"
+					puts "The cookie is invalid/has expired."
+					login
+				end
+				@agent
+			else
+				puts "Cookie file not found"
+				login
+			end
+			
+		end
 
+		def save_cookie
+			if File.exists? @cookie_path
+				@agent.cookie_jar.save(@cookie_path, session: true) if cookie_path != ""
+			else
+				puts "Couldn't save cookie: invalid cookie path"
+			end
+			@agent
+			
 		end
 		
-		def MyEpisodes.get_shows(agent, last)
-			page = agent.get "https://www.myepisodes.com/ajax/service.php?mode=view_privatelist"
+		def get_shows(last)
+			page = @agent.get "https://www.myepisodes.com/ajax/service.php?mode=view_privatelist"
 			shows = page.parser.css('tr.past')
 
 			s = shows.select do |i|
@@ -59,6 +80,9 @@ module ShowDownloader
 				"#{name} #{ep}"
 			end
 			
+		rescue NoMethodError
+			puts "You must log in first"
+			exit
 		end
 		
 	end
