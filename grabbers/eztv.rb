@@ -17,8 +17,8 @@ module ShowDownloader
 			# EZTV shows 50 latest releases if it can't find the torrent
 			raise NoTorrentsError if data.size == 50
 
-			names = data.collect {|i| i.attribute("title").text.chomp(" Magnet Link")}
-			links = data.collect {|i| i.attribute "href"}
+			names = data.collect { |i| i.attribute("title").text.chomp(" Magnet Link") }
+			links = data.collect { |i| i.attribute("href").text }
 
 			names.zip(links)
 			

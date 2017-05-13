@@ -5,7 +5,7 @@ module ShowDownloader
 		attr_reader :g_names, :g_instances, :n_grabbers
 
 		def initialize
-			@g_names = ["Eztv", "ThePirateBay", "TorrentAPI"]
+			@g_names = ShowDownloader::CONFIG[:grabbers].clone 
 			@g_instances = Array.new
 			@n_grabbers = @g_names.size # Initial size
 			@tries = @n_grabbers - 1
@@ -63,7 +63,7 @@ module ShowDownloader
 				end
 
 				puts
-				print "Select the torrent you want to download: "
+				print "Select the torrent you want to download [-1 to skip]: "
 
 				i = $stdin.gets.chomp.to_i
 
@@ -80,13 +80,7 @@ module ShowDownloader
 			
 			else # Automatically get the links
 
-				@filters.each do |f| # Apply each filter
-					new_links = links.reject {|name, link| f.(name)}
-					# Stop if the filter removes every release
-					break if new_links.size == 0
-
-					links = new_links
-				end
+				links = filter_shows(links)
 
 				# Reset the counter
 				@tries = @n_grabbers - 1
@@ -111,6 +105,17 @@ module ShowDownloader
 			
 			end
 			
+		end
+
+		def filter_shows(links)
+			@filters.each do |f| # Apply each filter
+				new_links = links.reject {|name, link| f.(name)}
+				# Stop if the filter removes every release
+				break if new_links.size == 0
+
+				links = new_links
+			end
+			links
 		end
 	end
 

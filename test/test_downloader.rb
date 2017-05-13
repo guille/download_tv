@@ -1,10 +1,11 @@
 require 'minitest/autorun'
-# require 'date'
 require_relative '../downloader'
 
-Dir.chdir(File.dirname(__FILE__))
-
 describe ShowDownloader::Downloader do
+	before do
+		Dir.chdir(File.dirname(__FILE__))
+		File.delete("date") if File.exist?("date")
+	end
 
 	describe "when creating the object" do
 		it "should store the first argument as @offset" do
@@ -37,9 +38,7 @@ describe ShowDownloader::Downloader do
 	describe "the date file" do 
 		dl = ShowDownloader::Downloader.new
 
-		before do
-			File.delete("date") if File.exist?("date")
-		end
+
 
 		it "should be created if it doesn't exist" do
 			dl.check_date
@@ -66,4 +65,6 @@ describe ShowDownloader::Downloader do
 
 end
 
-Dir.chdir("..")
+puts Dir.pwd
+# Dir.chdir("..")
+puts Dir.pwd

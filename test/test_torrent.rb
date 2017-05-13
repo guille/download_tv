@@ -1,6 +1,5 @@
 require 'minitest/autorun'
-# require 'date'
-require_relative '../torrent'
+require_relative '../downloader'
 
 describe ShowDownloader::Torrent do
 	before do
@@ -29,11 +28,7 @@ describe ShowDownloader::Torrent do
 			
 		end
 
-		it "will return an empty string when torrent can't be found" do
-			@t.get_link("Totally Fake Show askjdgsaudas", true).must_equal ""
-
-		end
-
+		# TODO: Test filter_shows(links)
 		
 	end
 end
