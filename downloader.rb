@@ -113,13 +113,13 @@ module ShowDownloader
 
 
 		def fix_names(shows)
-			# Removes apostrophes and parens
-			s = shows.map { |t| t.gsub(/[()']/, "") }
-
 			# Ignored shows
-			s.reject do |i|
+			s = shows.reject do |i|
 				ShowDownloader::CONFIG[:ignored].include?(i.split(" ")[0..-2].join(" "))
 			end
+
+			# Removes apostrophes and parens
+			s.map { |t| t.gsub(/[()']/, "") }
 		end
 
 
