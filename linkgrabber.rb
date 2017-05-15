@@ -14,6 +14,10 @@ module ShowDownloader
 			agent.read_timeout = 2
 			agent.get(@url)
 		end
+
+		def get_links(s)
+			raise NotImplementedError
+		end
 		
 	end
 

@@ -26,7 +26,7 @@ module ShowDownloader
 		def change_grabbers
 			if !@g_names.empty?
 				# Instantiates the last element from g_names, popping it
-				newt = (Object.const_get "ShowDownloader::#{@g_names.pop}").new
+				newt = (ShowDownloader.const_get @g_names.pop).new
 				newt.test_connection
 
 				@g_instances.unshift newt
@@ -101,6 +101,7 @@ module ShowDownloader
 
 			else # Reset the counter
 				@tries = @n_grabbers - 1
+				# TODO: Handle show not found here!!
 				return ""
 			
 			end

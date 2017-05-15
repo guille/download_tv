@@ -64,7 +64,3 @@ describe ShowDownloader::Downloader do
 	end
 
 end
-
-puts Dir.pwd
-# Dir.chdir("..")
-puts Dir.pwd
