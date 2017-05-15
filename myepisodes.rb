@@ -2,15 +2,15 @@ module ShowDownloader
 
 	class MyEpisodes
 
-		def initialize(user=nil, cookie_path="", save_cookie: true)
+		def initialize(user=nil, cookie_path="")
 			@agent = Mechanize.new
 			@user = user
 			@cookie_path = cookie_path
-			@save_cookie = save_cookie
+			@save_cookie = cookie_path != ""
 		end
 
 		def login
-			if !@user
+			if !@user || @user==""
 				print "Enter your MyEpisodes username: "
 				@user = STDIN.gets.chomp
 			end
@@ -52,11 +52,7 @@ module ShowDownloader
 		end
 
 		def save_cookie
-			if File.exists? @cookie_path
-				@agent.cookie_jar.save(@cookie_path, session: true) if cookie_path != ""
-			else
-				puts "Couldn't save cookie: invalid cookie path"
-			end
+			@agent.cookie_jar.save(@cookie_path, session: true)
 			@agent
 			
 		end
