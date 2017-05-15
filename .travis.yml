@@ -8,3 +8,4 @@ before_install: cp config_example.rb config.rb
 install:
   - gem install json
   - gem install mechanize
+  - gem install minitest
