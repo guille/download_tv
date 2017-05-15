@@ -1,0 +1,10 @@
+language: ruby
+
+rvm:
+  - ruby-head
+
+before_install: cp config_example.rb config.rb
+
+install:
+  - gem install json
+  - gem install mechanize
