@@ -121,7 +121,7 @@ module ShowDownloader
 			end
 
 			# Removes apostrophes and parens
-			s.map { |t| t.gsub(/[()']/, "") }
+			s.map { |t| t.gsub(/\(.+\)|[']/, "") }
 		end
 
 
