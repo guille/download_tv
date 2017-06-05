@@ -12,13 +12,26 @@ Rename the config_example.rb to config.rb and modify it if needed.
 
 ### Usage
 
-Three binaries are provided:
+A binary is provided in /bin/tv.
 
-* /bin/run: Fetches the list of episodes from MyEpisodes that have aired since the program was run for the last time and tries to download them. This binary accepts an offset as a parameter in order to re-download the episodes from previous days.
+```
+Usage: tv [options]
 
-* /bin/dl: This binary accepts a show name and episode as a parameter, and will try to download said episode. Example: *dl Breaking Bad S04E01*
+Specific options:
+    -o, --offset OFFSET              Move back the last run offset
+    -f, --file PATH                  Download shows from a file
+    -d, --download SHOW              Downloads given show
+        --dry-run                    Don't write to the date file
+    -h, --help                       Show this message
+```
 
-* /bin/fromfile: Takes a text file as an argument. Each line of the file is interpreted as a episode to download. Example: *dl /path/to/listofeps*
+Three actions are recognised:
+
+* By default, it fetches the list of episodes from MyEpisodes that have aired since the program was run for the last time and tries to download them. The -o flag can be used in order to re-download the episodes from previous days.
+
+* In order to download a single episode, use the -d flag. Example: *tv -d Breaking Bad S04E01*
+
+* Finally, the -f flag can be used to download a set of episodes. This option takes a text file as an argument. Each line of the file is interpreted as a episode to download. Example: *tv -f /path/to/listofeps*
 
 ### Configuration
 
