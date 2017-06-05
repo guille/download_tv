@@ -3,13 +3,13 @@ require 'mechanize'
 # require 'http-cookie'
 require 'date'
 require 'io/console'
+
 require_relative 'torrent'
 require_relative 'myepisodes'
 require_relative 'linkgrabber'
 require_relative 'subtitles'
-require_relative 'grabbers/torrentapi'
-require_relative 'grabbers/tpb'
-require_relative 'grabbers/eztv'
+Dir[File.join(__dir__, 'grabbers', '*.rb')].each {|file| require file }
+
 begin
 	require_relative 'config'
 rescue LoadError
@@ -21,7 +21,7 @@ module ShowDownloader
 
 	class Downloader
 
-		attr_reader :offset, :t, :auto, :subs
+		attr_reader :offset, :auto, :subs
 
 		def initialize(offset)
 			@offset = offset.abs
@@ -31,22 +31,23 @@ module ShowDownloader
 		end
 
 		def download_single_show(show)
-			@t = Torrent.new
-			download(@t.get_link(show, @auto))
+			t = Torrent.new
+			download(t.get_link(show, @auto))
 		end
 
 
 		def download_from_file(filename)
 			raise "File doesn't exist" if !File.exists? filename
-			@t = Torrent.new
-			File.readlines(filename).each { |show| download(@t.get_link(show, @auto)) }
+			t = Torrent.new
+			File.readlines(filename).each { |show| download(t.get_link(show, @auto)) }
 
 		end
 
 		##
 		# Gets the links.
 		def run(dont_write_to_date_file)
-			Dir.chdir(File.dirname(__FILE__))
+			# Change to installation directory
+			Dir.chdir(__dir__)
 			
 			date = check_date
 
@@ -59,14 +60,14 @@ module ShowDownloader
 				puts "Nothing to download"
 
 			else
-				@t = Torrent.new
+				t = Torrent.new
 				to_download = fix_names(shows)
 
 				queue = Queue.new
 				
 				# Adds a link (or empty string to the queue)
 				link_t = Thread.new do
-					to_download.each { |show| queue << @t.get_link(show, @auto) }
+					to_download.each { |show| queue << t.get_link(show, @auto) }
 				end
 
 				# Downloads the links as they are added
@@ -117,6 +118,7 @@ module ShowDownloader
 		def fix_names(shows)
 			# Ignored shows
 			s = shows.reject do |i|
+				# Remove season+episode
 				ShowDownloader::CONFIG[:ignored].include?(i.split(" ")[0..-2].join(" "))
 			end
 
