@@ -5,7 +5,7 @@ module ShowDownloader
 	 subs: true, # Download subtitles (not implemented yet)
 	 cookie_path: "cookie", # Leave blank to prevent the app from storing cookies
 	 ignored: [], # list of strings that match show names as written in myepisodes
-	 tpb_proxy: "https://thepiratebay.cr", # URL of the TPB proxy to use
+	 tpb_proxy: "https://pirateproxy.cc", # URL of the TPB proxy to use
 	 grabbers: ["Eztv", "ThePirateBay", "TorrentAPI"], # names of the classes in /grabbers
 	}
 	
