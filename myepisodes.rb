@@ -76,9 +76,6 @@ module ShowDownloader
 				"#{name} #{ep}"
 			end
 			
-		rescue NoMethodError
-			puts "You must log in first"
-			exit
 		end
 		
 	end

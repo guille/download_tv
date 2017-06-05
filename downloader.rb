@@ -23,21 +23,22 @@ module ShowDownloader
 
 		attr_reader :offset, :t, :auto, :subs
 
-		def initialize(offset=0)
-			@offset = offset.to_i.abs
-			@t = Torrent.new
+		def initialize(offset)
+			@offset = offset.abs
 			@auto = ShowDownloader::CONFIG[:auto]
 			# @subs = ShowDownloader::CONFIG[:subs]
 			Thread.abort_on_exception = true
 		end
 
 		def download_single_show(show)
+			@t = Torrent.new
 			download(@t.get_link(show, @auto))
 		end
 
 
 		def download_from_file(filename)
 			raise "File doesn't exist" if !File.exists? filename
+			@t = Torrent.new
 			File.readlines(filename).each { |show| download(@t.get_link(show, @auto)) }
 
 		end
@@ -58,6 +59,7 @@ module ShowDownloader
 				puts "Nothing to download"
 
 			else
+				@t = Torrent.new
 				to_download = fix_names(shows)
 
 				queue = Queue.new
