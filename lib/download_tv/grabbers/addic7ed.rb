@@ -1,4 +1,4 @@
-module ShowDownloader
+module DownloadTV
 
 	class Addic7ed < LinkGrabber
 		def initialize

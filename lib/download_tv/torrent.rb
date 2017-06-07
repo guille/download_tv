@@ -1,11 +1,11 @@
-module ShowDownloader
+module DownloadTV
 
 	class Torrent
 
 		attr_reader :g_names, :g_instances, :n_grabbers
 
 		def initialize
-			@g_names = ShowDownloader::CONFIG[:grabbers].clone 
+			@g_names = DownloadTV::CONFIG[:grabbers].clone 
 			@g_instances = Array.new
 			@n_grabbers = @g_names.size # Initial size
 			@tries = @n_grabbers - 1
@@ -26,7 +26,7 @@ module ShowDownloader
 		def change_grabbers
 			if !@g_names.empty?
 				# Instantiates the last element from g_names, popping it
-				newt = (ShowDownloader.const_get @g_names.pop).new
+				newt = (DownloadTV.const_get @g_names.pop).new
 				newt.test_connection
 
 				@g_instances.unshift newt

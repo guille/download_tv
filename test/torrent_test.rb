@@ -1,9 +1,8 @@
-require 'minitest/autorun'
-require_relative '../downloader'
+require "test_helper"
 
-describe ShowDownloader::Torrent do
+describe DownloadTV::Torrent do
 	before do
-		@t = ShowDownloader::Torrent.new
+		@t = DownloadTV::Torrent.new
 	end
 
 	describe "when creating the object" do

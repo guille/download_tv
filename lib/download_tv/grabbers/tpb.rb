@@ -1,9 +1,9 @@
-module ShowDownloader
+module DownloadTV
 
 	class ThePirateBay < LinkGrabber
 
 		def initialize()
-			proxy = ShowDownloader::CONFIG[:tpb_proxy].gsub(/\/+$/, "") || "https://thepiratebay.cr"
+			proxy = DownloadTV::CONFIG[:tpb_proxy].gsub(/\/+$/, "") || "https://thepiratebay.cr"
 
 			super("#{proxy}/search/%s/0/7/0")
 			

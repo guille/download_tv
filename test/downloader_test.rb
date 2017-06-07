@@ -1,7 +1,6 @@
-require 'minitest/autorun'
-require_relative '../downloader'
+require "test_helper"
 
-describe ShowDownloader::Downloader do
+describe DownloadTV::Downloader do
 	before do
 		Dir.chdir(File.dirname(__FILE__))
 		File.delete("date") if File.exist?("date")
@@ -9,11 +8,11 @@ describe ShowDownloader::Downloader do
 
 	describe "when creating the object" do
 		it "should receive an integer" do
-			->{ ShowDownloader::Downloader.new("foo") }.must_raise NoMethodError
+			->{ DownloadTV::Downloader.new("foo") }.must_raise NoMethodError
 		end
 
 		it "should store the first argument as @offset" do
-			ShowDownloader::Downloader.new(3).offset.must_equal 3
+			DownloadTV::Downloader.new(3).offset.must_equal 3
 		end
 
 	end
@@ -22,20 +21,20 @@ describe ShowDownloader::Downloader do
 		it "should remove apostrophes and parens" do
 			shows = ["Mr. Foo S01E02", "Bar (UK) S00E22", "Let's S05E03"]
 			result = ["Mr. Foo S01E02", "Bar S00E22", "Lets S05E03"]
-			ShowDownloader::Downloader.new(0).fix_names(shows).must_equal result
+			DownloadTV::Downloader.new(0).fix_names(shows).must_equal result
 		end
 
 		it "should remove ignored shows" do
-			ShowDownloader::CONFIG[:ignored] = ["Ignored"]
+			DownloadTV::CONFIG[:ignored] = ["Ignored"]
 			shows = ["Mr. Foo S01E02", "Bar (UK) S00E22", "Ignored S20E22", "Let's S05E03"]
 			result = ["Mr. Foo S01E02", "Bar S00E22", "Lets S05E03"]
-			ShowDownloader::Downloader.new(0).fix_names(shows).must_equal result
+			DownloadTV::Downloader.new(0).fix_names(shows).must_equal result
 		end
 	end
 
 
 	describe "the date file" do 
-		dl = ShowDownloader::Downloader.new(0)
+		dl = DownloadTV::Downloader.new(0)
 
 
 

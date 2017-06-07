@@ -1,14 +1,13 @@
-require 'minitest/autorun'
-require_relative '../downloader'
+require "test_helper"
 
-describe ShowDownloader::LinkGrabber do
+describe DownloadTV::LinkGrabber do
 
-	grabbers = ShowDownloader::CONFIG[:grabbers].clone
-	instances = grabbers.map { |g| (ShowDownloader.const_get g).new }
+	grabbers = DownloadTV::CONFIG[:grabbers].clone
+	instances = grabbers.map { |g| (DownloadTV.const_get g).new }
 
 	instances.each do |grabber|
 		describe grabber do
-			# grabber = g#(Object.const_get "ShowDownloader::#{g}").new
+			# grabber = g#(Object.const_get "DownloadTV::#{g}").new
 
 			it "will have a url attribute on creation" do
 				# instance_eval("#{g}.new")
@@ -24,7 +23,7 @@ describe ShowDownloader::LinkGrabber do
 			it "will raise NoTorrentsError when torrent can't be found" do
 				# grabber = (Object.const_get g).new
 				notfound = ->{ grabber.get_links("Totally Fake Show askjdgsaudas") }
-				notfound.must_raise ShowDownloader::NoTorrentsError
+				notfound.must_raise DownloadTV::NoTorrentsError
 
 			end
 
@@ -46,7 +45,7 @@ describe ShowDownloader::LinkGrabber do
 	end
 
 	it "raises an error if the instance doesn't implement get_links" do
-		->{ ShowDownloader::LinkGrabber.new("").get_links("test") }.must_raise NotImplementedError
+		->{ DownloadTV::LinkGrabber.new("").get_links("test") }.must_raise NotImplementedError
 		
 	end
 	

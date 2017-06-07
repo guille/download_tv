@@ -1,4 +1,4 @@
-module ShowDownloader
+module DownloadTV
 	class Eztv < LinkGrabber
 		def initialize
 			super("https://eztv.ag/search/%s")

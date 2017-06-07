@@ -1,4 +1,4 @@
-module ShowDownloader
+module DownloadTV
 	CONFIG = {
 	 myepisodes_user: "", # MyEpisodes login username
 	 auto: true, # Try to automatically select the torrents

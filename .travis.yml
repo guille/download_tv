@@ -1,11 +1,7 @@
+sudo: false
 language: ruby
 
 rvm:
   - ruby-head
 
-before_install: cp config_example.rb config.rb
-
-install:
-  - gem install json
-  - gem install mechanize
-  - gem install minitest
+before_install: cp lib/download_tv/config_example.rb lib/download_tv/config.rb

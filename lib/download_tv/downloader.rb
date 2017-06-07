@@ -1,15 +1,3 @@
-require 'json'
-require 'mechanize'
-# require 'http-cookie'
-require 'date'
-require 'io/console'
-
-require_relative 'torrent'
-require_relative 'myepisodes'
-require_relative 'linkgrabber'
-require_relative 'subtitles'
-Dir[File.join(__dir__, 'grabbers', '*.rb')].each {|file| require file }
-
 begin
 	require_relative 'config'
 rescue LoadError
@@ -17,7 +5,7 @@ rescue LoadError
 	exit
 end
 
-module ShowDownloader
+module DownloadTV
 
 	class Downloader
 
@@ -25,8 +13,8 @@ module ShowDownloader
 
 		def initialize(offset)
 			@offset = offset.abs
-			@auto = ShowDownloader::CONFIG[:auto]
-			# @subs = ShowDownloader::CONFIG[:subs]
+			@auto = DownloadTV::CONFIG[:auto]
+			# @subs = DownloadTV::CONFIG[:subs]
 			Thread.abort_on_exception = true
 		end
 
@@ -51,7 +39,7 @@ module ShowDownloader
 			
 			date = check_date
 
-			myepisodes = MyEpisodes.new(ShowDownloader::CONFIG[:myepisodes_user], ShowDownloader::CONFIG[:cookie_path])
+			myepisodes = MyEpisodes.new(DownloadTV::CONFIG[:myepisodes_user], DownloadTV::CONFIG[:cookie_path])
 			# Log in using cookie by default
 			myepisodes.load_cookie
 			shows = myepisodes.get_shows(date)
@@ -119,7 +107,7 @@ module ShowDownloader
 			# Ignored shows
 			s = shows.reject do |i|
 				# Remove season+episode
-				ShowDownloader::CONFIG[:ignored].include?(i.split(" ")[0..-2].join(" "))
+				DownloadTV::CONFIG[:ignored].include?(i.split(" ")[0..-2].join(" "))
 			end
 
 			# Removes apostrophes and parens

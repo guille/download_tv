@@ -1,7 +1,7 @@
 #!/usr/bin/env ruby
 
 require 'optparse'
-require_relative '../downloader'
+require 'download_tv'
 
 options = {}
 options[:offset] = 0
@@ -41,7 +41,7 @@ end
 opt_parser.parse!(ARGV)
 
 begin
-	dl = ShowDownloader::Downloader.new(options[:offset])
+	dl = DownloadTV::Downloader.new(options[:offset])
 	case options[:cmd]
 		when "run"
 			dl.run(options[:dry])
@@ -52,4 +52,5 @@ begin
 	end
 rescue Interrupt
 	puts "Interrupt signal detected. Exiting..."
+	exit 1
 end
