@@ -1,4 +1,5 @@
 date
-config.rb
+config
 cookie
 /Gemfile.lock
+/pkg/

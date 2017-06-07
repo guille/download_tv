@@ -2,11 +2,10 @@ module DownloadTV
 
 	class MyEpisodes
 
-		def initialize(user=nil, cookie_path="")
+		def initialize(user=nil, save_cookie)
 			@agent = Mechanize.new
 			@user = user
-			@cookie_path = cookie_path
-			@save_cookie = cookie_path != ""
+			@save_cookie = save_cookie
 		end
 
 		def login
@@ -36,8 +35,8 @@ module DownloadTV
 		end
 
 		def load_cookie
-			if File.exists? @cookie_path
-				@agent.cookie_jar.load @cookie_path
+			if File.exists? "cookie"
+				@agent.cookie_jar.load "cookie"
 				page = @agent.get "https://www.myepisodes.com/login.php"
 				if page.links[1].text == "Register"
 					puts "The cookie is invalid/has expired."
@@ -52,7 +51,7 @@ module DownloadTV
 		end
 
 		def save_cookie
-			@agent.cookie_jar.save(@cookie_path, session: true)
+			@agent.cookie_jar.save("cookie", session: true)
 			@agent
 			
 		end

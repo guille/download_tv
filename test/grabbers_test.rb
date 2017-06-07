@@ -2,7 +2,7 @@ require "test_helper"
 
 describe DownloadTV::LinkGrabber do
 
-	grabbers = DownloadTV::CONFIG[:grabbers].clone
+	grabbers = ["Eztv", "ThePirateBay", "TorrentAPI"]
 	instances = grabbers.map { |g| (DownloadTV.const_get g).new }
 
 	instances.each do |grabber|

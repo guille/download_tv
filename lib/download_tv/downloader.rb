@@ -1,20 +1,20 @@
-begin
-	require_relative 'config'
-rescue LoadError
-	puts "Config file not found. Try renaming the config_example file to config.rb"
-	exit
-end
-
 module DownloadTV
 
 	class Downloader
 
 		attr_reader :offset, :auto, :subs
+		attr_accessor :config
 
-		def initialize(offset)
+		def initialize(offset, auto, subs, config={})
 			@offset = offset.abs
-			@auto = DownloadTV::CONFIG[:auto]
-			# @subs = DownloadTV::CONFIG[:subs]
+			@auto = auto
+			@subs = subs
+			if config.empty?
+				@config = Configuration.new.content # Load configuration
+			else
+				@config = config
+			end
+			
 			Thread.abort_on_exception = true
 		end
 
@@ -39,7 +39,7 @@ module DownloadTV
 			
 			date = check_date
 
-			myepisodes = MyEpisodes.new(DownloadTV::CONFIG[:myepisodes_user], DownloadTV::CONFIG[:cookie_path])
+			myepisodes = MyEpisodes.new(@config[:myepisodes_user], @config[:cookie])
 			# Log in using cookie by default
 			myepisodes.load_cookie
 			shows = myepisodes.get_shows(date)
@@ -107,7 +107,7 @@ module DownloadTV
 			# Ignored shows
 			s = shows.reject do |i|
 				# Remove season+episode
-				DownloadTV::CONFIG[:ignored].include?(i.split(" ")[0..-2].join(" "))
+				@config[:ignored].include?(i.split(" ")[0..-2].join(" "))
 			end
 
 			# Removes apostrophes and parens
