@@ -55,7 +55,7 @@ end
 opt_parser.parse!(ARGV)
 
 begin
-	dl = DownloadTV::Downloader.new(options[:offset])
+	dl = DownloadTV::Downloader.new(options[:offset], options[:auto], options[:subs])
 	case options[:cmd]
 		when "run"
 			dl.run(options[:dry])
