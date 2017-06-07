@@ -20,11 +20,9 @@ module DownloadTV
 				print "Enter your MyEpisodes username: "
 			end
 			@content[:myepisodes_user] = STDIN.gets.chomp
-			puts
 
 			print "Save cookie? (y)/n: "
 			@content[:cookie] = STDIN.gets.chomp.downcase != "n"
-			puts
 
 			if @content[:ignored]
 				puts "Enter a comma-separated list of shows to ignore: (#{@content[:ignored]})"
@@ -32,8 +30,7 @@ module DownloadTV
 				puts "Enter a comma-separated list of shows to ignore: "
 			end
 			
-			@content[:ignored] = STDIN.gets.chomp
-			puts
+			@content[:ignored] = STDIN.gets.chomp.split(",").map(&:strip)
 			STDOUT.flush
 
 			serialize()
