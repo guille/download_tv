@@ -2,9 +2,10 @@ module DownloadTV
 	class Configuration
 		attr_reader :content
 		
-		def initialize
-			if File.exists? "config.rb"
+		def initialize(force_change=false)
+			if File.exists? "config"
 				@content = File.open("config", "rb") {|f| Marshal.load(f)}
+				change_configuration if force_change
 			else
 				@content = {}
 				change_configuration
@@ -16,7 +17,7 @@ module DownloadTV
 			if @content[:myepisodes_user]
 				print "Enter your MyEpisodes username (#{@content[:myepisodes_user]}) : "
 			else
-				print "Enter your MyEpisodes username : "
+				print "Enter your MyEpisodes username: "
 			end
 			@content[:myepisodes_user] = STDIN.gets.chomp
 			puts
@@ -25,9 +26,15 @@ module DownloadTV
 			@content[:cookie] = STDIN.gets.chomp.downcase != "n"
 			puts
 
-			puts "Enter a comma-separated list of shows to ignore: (#{@content[:ignored]})"
+			if @content[:ignored]
+				puts "Enter a comma-separated list of shows to ignore: (#{@content[:ignored]})"
+			else
+				puts "Enter a comma-separated list of shows to ignore: "
+			end
+			
 			@content[:ignored] = STDIN.gets.chomp
 			puts
+			STDOUT.flush
 
 			serialize()
 		end

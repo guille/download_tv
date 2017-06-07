@@ -64,7 +64,7 @@ begin
 		when "file"
 			dl.download_from_file(options[:arg])
 		when "config"
-			DownloadTV::Configuration.new.change_configuration
+			DownloadTV::Configuration.new true
 	end
 rescue Interrupt
 	puts "Interrupt signal detected. Exiting..."
