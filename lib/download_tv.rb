@@ -11,5 +11,3 @@ require "download_tv/myepisodes"
 require "download_tv/linkgrabber"
 require "download_tv/subtitles"
 Dir[File.join(__dir__, 'download_tv', 'grabbers', '*.rb')].each {|file| require file }
-
-puts DownloadTV::Configuration
