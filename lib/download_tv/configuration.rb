@@ -3,6 +3,8 @@ module DownloadTV
 		attr_reader :content
 		
 		def initialize(force_change=false)
+			Dir.chdir(__dir__)
+			
 			if File.exists? "config"
 				@content = File.open("config", "rb") {|f| Marshal.load(f)}
 				change_configuration if force_change
