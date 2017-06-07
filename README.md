@@ -1,8 +1,8 @@
-# daily-shows
+# download_tv
 
 [![Build Status](https://travis-ci.org/guille/daily-shows.svg?branch=master)](https://travis-ci.org/guille/daily-shows)
 
-daily-shows is a Ruby command line application that automatically downloads the new episodes from the shows you follow. It grabs the list of shows from your MyEpisodes account.
+download_tv is a Ruby command line application that automatically downloads the new episodes from the shows you follow. It grabs the list of shows from your MyEpisodes account.
 
 ### Installation
 
