@@ -3,5 +3,3 @@ language: ruby
 
 rvm:
   - ruby-head
-
-before_install: cp lib/download_tv/config_example.rb lib/download_tv/config.rb
