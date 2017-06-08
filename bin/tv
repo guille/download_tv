@@ -34,6 +34,10 @@ opt_parser = OptionParser.new do |opts|
 		options[:cmd] = "config"
 	end
 
+	opts.on("--show-config", "Show current configuration values") do |n|
+		options[:cmd] = "showconfig"
+	end
+
 	opts.on("--dry-run", "Don't write to the date file") do |n|
 		options[:dry] = n
 	end
@@ -65,6 +69,9 @@ begin
 			dl.download_from_file(options[:arg])
 		when "config"
 			DownloadTV::Configuration.new true
+		when "showconfig"
+			DownloadTV::Configuration.new.print_config
+
 	end
 rescue Interrupt
 	puts "Interrupt signal detected. Exiting..."

@@ -38,8 +38,14 @@ module DownloadTV
 			serialize()
 		end
 
-		def serialize()
+
+		def serialize
 			File.open("config", "wb") {|f| Marshal.dump(@content, f)}			
+		end
+		
+
+		def print_config
+			@content.each {|k, v| puts "#{k}: #{v}"}
 		end
 	end
 end
