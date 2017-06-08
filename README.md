@@ -21,7 +21,8 @@ Specific options:
     -f, --file PATH                  Download shows from a file
     -d, --download SHOW              Downloads given show
     -c, --configure                  Configures defaults
-        --dry-run                    Don't write to the date file
+    --show-config                Show current configuration values
+    --dry-run                    Don't write to the date file
     -a, --[no-]auto                  Automatically find links
     -s, --[no-]subtitles             Download subtitles
     -h, --help                       Show this message
