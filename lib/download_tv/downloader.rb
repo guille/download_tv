@@ -25,6 +25,7 @@ module DownloadTV
 
 
 		def download_from_file(filename)
+			filename = File.realpath(filename)
 			raise "File doesn't exist" if !File.exists? filename
 			t = Torrent.new
 			File.readlines(filename).each { |show| download(t.get_link(show, @auto)) }
