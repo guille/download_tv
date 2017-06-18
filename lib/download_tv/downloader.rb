@@ -111,8 +111,8 @@ module DownloadTV
 				@config[:ignored].include?(i.split(" ")[0..-2].join(" "))
 			end
 
-			# Removes apostrophes and parens
-			s.map { |t| t.gsub(/ \(.+\)|[']/, "") }
+			# Removes apostrophes, colons and parens
+			s.map { |t| t.gsub(/ \(.+\)|[':]/, "") }
 		end
 
 

@@ -40,9 +40,9 @@ describe DownloadTV::Downloader do
 		config = {:ignored => ["Ignored"]}
 		dl = DownloadTV::Downloader.new(0, true, true, config)
 
-		it "should remove apostrophes and parens" do
-			shows = ["Mr. Foo S01E02", "Bar (UK) S00E22", "Let's S05E03"]
-			result = ["Mr. Foo S01E02", "Bar S00E22", "Lets S05E03"]
+		it "should remove apostrophes, colons and parens" do
+			shows = ["Mr. Foo S01E02", "Bar (UK) S00E22", "Let's S05E03", "Baz: The Story S05E22"]
+			result = ["Mr. Foo S01E02", "Bar S00E22", "Lets S05E03", "Baz The Story S05E22"]
 			dl.fix_names(shows).must_equal result
 		end
 
