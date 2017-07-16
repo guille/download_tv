@@ -50,6 +50,11 @@ opt_parser = OptionParser.new do |opts|
 		options[:subs] = n
 	end
 
+	opts.on("-v", "Print version") do |n|
+		puts DownloadTV::VERSION
+		exit
+	end
+
 	opts.on_tail("-h", "--help", "Show this message") do
 		puts opts
 		exit
