@@ -37,7 +37,7 @@ describe DownloadTV::Downloader do
 
 		it "should store the fourth argument as @grabber" do
 			DownloadTV::Downloader.new(3, true, true, "KAT", {1=>1}).grabber.must_equal "KAT"
-			DownloadTV::Downloader.new(3, true, false, nil, {1=>1}).grabber.must_equal nil
+			DownloadTV::Downloader.new(3, true, false, nil, {1=>1}).grabber.must_be_nil
 		end
 
 	end
