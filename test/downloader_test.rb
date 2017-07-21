@@ -7,38 +7,44 @@ describe DownloadTV::Downloader do
 	end
 
 	describe "when creating the object" do
-		it "should receive three parameters" do
+		it "should receive four parameters" do
 			->{ DownloadTV::Downloader.new(0) }.must_raise ArgumentError
 			->{ DownloadTV::Downloader.new(0, true) }.must_raise ArgumentError
+			->{ DownloadTV::Downloader.new(0, true, true) }.must_raise ArgumentError
 		end
 
 		it "can receive an optional configuration hash" do
-			DownloadTV::Downloader.new(0, true, true, {:hi => 1}).config.must_equal ({:hi => 1})
+			DownloadTV::Downloader.new(0, true, true, nil, {:hi => 1}).config.must_equal ({:hi => 1})
 		end
 
 		it "should receive an integer for the offset" do
-			->{ DownloadTV::Downloader.new("foo", true, true, {1=>1}) }.must_raise NoMethodError
+			->{ DownloadTV::Downloader.new("foo", true, true, nil, {1=>1}) }.must_raise NoMethodError
 		end
 
 		it "should store the first argument as @offset" do
-			DownloadTV::Downloader.new(3, true, true, {1=>1}).offset.must_equal 3
+			DownloadTV::Downloader.new(3, true, true, nil, {1=>1}).offset.must_equal 3
 		end
 
 		it "should store the second argument as @auto" do
-			DownloadTV::Downloader.new(3, true, true, {1=>1}).auto.must_equal true
-			DownloadTV::Downloader.new(3, false, true, {1=>1}).auto.must_equal false
+			DownloadTV::Downloader.new(3, true, true, nil, {1=>1}).auto.must_equal true
+			DownloadTV::Downloader.new(3, false, true, nil, {1=>1}).auto.must_equal false
 		end
 
-		it "should store the second argument as @subs" do
-			DownloadTV::Downloader.new(3, true, true, {1=>1}).subs.must_equal true
-			DownloadTV::Downloader.new(3, true, false, {1=>1}).subs.must_equal false
+		it "should store the third argument as @subs" do
+			DownloadTV::Downloader.new(3, true, true, nil, {1=>1}).subs.must_equal true
+			DownloadTV::Downloader.new(3, true, false, nil, {1=>1}).subs.must_equal false
+		end
+
+		it "should store the fourth argument as @grabber" do
+			DownloadTV::Downloader.new(3, true, true, "KAT", {1=>1}).grabber.must_equal "KAT"
+			DownloadTV::Downloader.new(3, true, false, nil, {1=>1}).grabber.must_equal nil
 		end
 
 	end
 
 	describe "the fix_names function" do
 		config = {:ignored => ["Ignored"]}
-		dl = DownloadTV::Downloader.new(0, true, true, config)
+		dl = DownloadTV::Downloader.new(0, true, true, nil, config)
 
 		it "should remove apostrophes, colons and parens" do
 			shows = ["Mr. Foo S01E02", "Bar (UK) S00E22", "Let's S05E03", "Baz: The Story S05E22"]
@@ -56,7 +62,7 @@ describe DownloadTV::Downloader do
 
 
 	describe "the date file" do 
-		dl = DownloadTV::Downloader.new(0, true, true, {1=>1})
+		dl = DownloadTV::Downloader.new(0, true, true, nil, {1=>1})
 
 		it "should be created if it doesn't exist" do
 			dl.check_date
