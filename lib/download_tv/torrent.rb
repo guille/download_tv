@@ -4,11 +4,18 @@ module DownloadTV
 
 		attr_reader :g_names, :g_instances, :n_grabbers
 
-		def initialize
-			@g_names = ["Eztv", "ThePirateBay", "TorrentAPI", "KAT"]
+		def grabbers
+			["Eztv", "KAT", "ThePirateBay", "TorrentAPI"]
+		end
+
+		def initialize(default_grabber=nil)
+			@g_names = grabbers
 			@g_instances = Array.new
 			@n_grabbers = @g_names.size # Initial size
 			@tries = @n_grabbers - 1
+
+			# Silently ignores bad names
+			@g_names.rotate! @g_names.find_index(default_grabber).to_i
 
 			@filters = [
 				->(n){n.include?("2160")},

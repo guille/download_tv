@@ -34,7 +34,7 @@ opt_parser = OptionParser.new do |opts|
 		options[:cmd] = "config"
 	end
 
-	opts.on("--show-config", "Show current configuration values") do |n|
+	opts.on("--show-config", "Show current configuration values") do
 		options[:cmd] = "showconfig"
 	end
 
@@ -50,7 +50,16 @@ opt_parser = OptionParser.new do |opts|
 		options[:subs] = n
 	end
 
-	opts.on("-v", "Print version") do |n|
+	opts.on("-g", "--grabber GRABBER", "Use given grabber as first option") do |g|
+		options[:grabber] = g
+	end
+
+	opts.on("--show-grabbers", "List available grabbers") do
+		puts DownloadTV::Torrent.new.grabbers
+		exit
+	end
+
+	opts.on("-v", "Print version") do
 		puts DownloadTV::VERSION
 		exit
 	end
@@ -64,7 +73,7 @@ end
 opt_parser.parse!(ARGV)
 
 begin
-	dl = DownloadTV::Downloader.new(options[:offset], options[:auto], options[:subs])
+	dl = DownloadTV::Downloader.new(options[:offset], options[:auto], options[:subs], options[:grabber])
 	case options[:cmd]
 		when "run"
 			dl.run(options[:dry])

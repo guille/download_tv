@@ -2,13 +2,14 @@ module DownloadTV
 
 	class Downloader
 
-		attr_reader :offset, :auto, :subs
+		attr_reader :offset, :auto, :subs, :grabber
 		attr_accessor :config
 
-		def initialize(offset, auto, subs, config={})
+		def initialize(offset, auto, subs, grabber, config={})
 			@offset = offset.abs
 			@auto = auto
 			@subs = subs
+			@grabber = grabber
 			if config.empty?
 				@config = Configuration.new.content # Load configuration
 			else
@@ -19,7 +20,7 @@ module DownloadTV
 		end
 
 		def download_single_show(show)
-			t = Torrent.new
+			t = Torrent.new(@grabber)
 			download(t.get_link(show, @auto))
 		end
 
@@ -27,7 +28,7 @@ module DownloadTV
 		def download_from_file(filename)
 			filename = File.realpath(filename)
 			raise "File doesn't exist" if !File.exists? filename
-			t = Torrent.new
+			t = Torrent.new(@grabber)
 			File.readlines(filename).each { |show| download(t.get_link(show, @auto)) }
 
 		end
@@ -49,7 +50,7 @@ module DownloadTV
 				puts "Nothing to download"
 
 			else
-				t = Torrent.new
+				t = Torrent.new(@grabber)
 				to_download = fix_names(shows)
 
 				queue = Queue.new
