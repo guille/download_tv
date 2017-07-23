@@ -17,14 +17,6 @@ module DownloadTV
 			# Silently ignores bad names
 			@g_names.rotate! @g_names.find_index(default_grabber).to_i
 
-			@filters = [
-				->(n){n.include?("2160")},
-				->(n){n.include?("1080")},
-				->(n){n.include?("720")},
-				->(n){n.include?("WEB")},
-				->(n){!n.include?("PROPER") || !n.include?("REPACK")},
-			]
-
 			change_grabbers
 			
 		end
@@ -60,42 +52,13 @@ module DownloadTV
 		end
 
 
-		def get_link(show, auto)
+		def get_links(show)
 			links = @g_instances.first.get_links(show)
 
-			if !auto
-				links.each_with_index do |data, i|
-					puts "#{i}\t\t#{data[0]}"
-					
-				end
-
-				puts
-				print "Select the torrent you want to download [-1 to skip]: "
-
-				i = $stdin.gets.chomp.to_i
-
-				while i >= links.size || i < -1
-					puts "Index out of bounds. Try again: "
-					i = $stdin.gets.chomp.to_i
-				end
-
-				# Reset the counter
-				@tries = @n_grabbers - 1
-
-				# Use -1 to skip the download
-				i == -1 ? "" : links[i][1]
+			# Reset the counter
+			@tries = @n_grabbers - 1
 			
-			else # Automatically get the links
-
-				links = filter_shows(links)
-
-				# Reset the counter
-				@tries = @n_grabbers - 1
-
-				# Get the first result left
-				links[0][1]
-				
-			end
+			links
 
 		rescue NoTorrentsError
 			puts "No torrents found for #{show} using #{@g_instances.first.class.name}"
@@ -109,22 +72,13 @@ module DownloadTV
 			else # Reset the counter
 				@tries = @n_grabbers - 1
 				# TODO: Handle show not found here!!
-				return ""
+				return []
 			
 			end
 			
 		end
 
-		def filter_shows(links)
-			@filters.each do |f| # Apply each filter
-				new_links = links.reject {|name, link| f.(name)}
-				# Stop if the filter removes every release
-				break if new_links.size == 0
-
-				links = new_links
-			end
-			links
-		end
+		
 	end
 
 end

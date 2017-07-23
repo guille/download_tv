@@ -26,8 +26,6 @@ describe DownloadTV::Torrent do
 			@t.g_instances.size.must_equal @t.n_grabbers
 			
 		end
-
-		# TODO: Test filter_shows(links)
 		
 	end
 end
