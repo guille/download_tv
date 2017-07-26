@@ -1,15 +1,18 @@
 module DownloadTV
 	class Configuration
-		attr_reader :content
+		attr_reader :content, :config_path
 		
-		def initialize(force_change=false)
+		def initialize(content={}, force_change=false)
 			Dir.chdir(__dir__)
+
+			@config_path = content[:path] || "config"
 			
-			if File.exists? "config"
-				@content = File.open("config", "rb") {|f| Marshal.load(f)}
+			if File.exist? @config_path
+				@content = File.open(@config_path, "rb") { |f| Marshal.load(f) }
+				@content.merge!(content) unless content.empty?
 				change_configuration if force_change
 			else
-				@content = {}
+				@content = content
 				change_configuration
 			end
 		end
@@ -35,12 +38,18 @@ module DownloadTV
 			@content[:ignored] = STDIN.gets.chomp.split(",").map(&:strip)
 			STDOUT.flush
 
+			# When modifying existing config, keeps previous values
+			# When creating new one, sets defaults
+			@content[:auto] ||= true
+			@content[:subs] ||= true
+			@content[:grabber] ||= "TorrentAPI"
+
 			serialize()
 		end
 
 
 		def serialize
-			File.open("config", "wb") {|f| Marshal.dump(@content, f)}			
+			File.open(@config_path, "wb") { |f| Marshal.dump(@content, f) }
 		end
 		
 

@@ -2,33 +2,28 @@ module DownloadTV
 
 	class Downloader
 
-		attr_reader :offset, :auto, :subs, :grabber
-		attr_accessor :config
+		attr_reader :offset, :config
 
-		def initialize(offset, auto, subs, grabber, config={})
+		def initialize(offset=0, config={})
+			# Change to installation directory
+			Dir.chdir(__dir__)
+
 			@offset = offset.abs
-			@auto = auto
-			@subs = subs
-			@grabber = grabber
-			if config.empty?
-				@config = Configuration.new.content # Load configuration
-			else
-				@config = config
-			end
-
+			@config = Configuration.new(config).content # Load configuration
+			
 			@filters = [
-				->(n){n.include?("2160")},
-				->(n){n.include?("1080")},
-				->(n){n.include?("720")},
-				->(n){n.include?("WEB")},
-				->(n){!n.include?("PROPER") || !n.include?("REPACK")},
+				->(n){ n.include?("2160p") },
+				->(n){ n.include?("1080p") },
+				->(n){ n.include?("720p")  },
+				->(n){ n.include?("WEB")   },
+				->(n){ !n.include?("PROPER") && !n.include?("REPACK") },
 			]
 			
 			Thread.abort_on_exception = true
 		end
 
 		def download_single_show(show)
-			t = Torrent.new(@grabber)
+			t = Torrent.new(@config[:grabber])
 			download(get_link(t, show))
 		end
 
@@ -36,20 +31,19 @@ module DownloadTV
 		##
 		# Given a file containing a list of episodes (one per line), it tries to find download links for each
 		def download_from_file(filename)
+			if !File.exists? filename
+				puts "Error: #{filename} not found" 
+				exit 1
+			end
 			filename = File.realpath(filename)
-			raise "File doesn't exist" if !File.exists? filename
-			t = Torrent.new(@grabber)
+			t = Torrent.new(@config[:grabber])
 			File.readlines(filename).each { |show| download(get_link(t, show)) }
-
 		end
 
 		##
 		# Finds download links for all new episodes aired since the last run of the program
 		# It connects to MyEpisodes in order to find which shows to track and which new episodes aired.
 		def run(dont_write_to_date_file)
-			# Change to installation directory
-			Dir.chdir(__dir__)
-			
 			date = check_date
 
 			myepisodes = MyEpisodes.new(@config[:myepisodes_user], @config[:cookie])
@@ -61,7 +55,7 @@ module DownloadTV
 				puts "Nothing to download"
 
 			else
-				t = Torrent.new(@grabber)
+				t = Torrent.new(@config[:grabber])
 				to_download = fix_names(shows)
 
 				queue = Queue.new
@@ -81,7 +75,7 @@ module DownloadTV
 				end
 
 				# Downloading the subtitles
-				# subs_t = @subs and Thread.new do
+				# subs_t = @config[:subs] and Thread.new do
 				# 	to_download.each { |show| @s.get_subs(show) }
 				# end
 
@@ -100,7 +94,7 @@ module DownloadTV
 
 		##
 		# Uses a Torrent object to obtain links to the given tv show
-		# When @auto is true it will try to find the best match based on a set of filters
+		# When :auto is true it will try to find the best match based on a set of filters
 		# When it's false it will prompt the user to select the preferred result
 		# Returns either a magnet link or an emptry string
 		def get_link(t, show)
@@ -108,7 +102,7 @@ module DownloadTV
 
 			return "" if links.empty?
 
-			if @auto
+			if @config[:auto]
 				links = filter_shows(links)
 				links.first[1]
 			

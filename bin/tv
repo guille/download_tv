@@ -5,10 +5,9 @@ require 'download_tv'
 
 options = {}
 options[:offset] = 0
-options[:auto] = true
-options[:subs] = true
 options[:dry] = false
 options[:cmd] = "run"
+config = {}
 
 opt_parser = OptionParser.new do |opts|
 	opts.banner = "Usage: tv [options]"
@@ -43,15 +42,15 @@ opt_parser = OptionParser.new do |opts|
 	end
 
 	opts.on("-a", "--[no-]auto", "Automatically find links") do |n|
-		options[:auto] = n
+		config[:auto] = n
 	end
 
 	opts.on("-s", "--[no-]subtitles", "Download subtitles") do |n|
-		options[:subs] = n
+		config[:subs] = n
 	end
 
 	opts.on("-g", "--grabber GRABBER", "Use given grabber as first option") do |g|
-		options[:grabber] = g
+		config[:grabber] = g
 	end
 
 	opts.on("--show-grabbers", "List available grabbers") do
@@ -73,19 +72,20 @@ end
 opt_parser.parse!(ARGV)
 
 begin
-	dl = DownloadTV::Downloader.new(options[:offset], options[:auto], options[:subs], options[:grabber])
 	case options[:cmd]
 		when "run"
+			dl = DownloadTV::Downloader.new(options[:offset], config)
 			dl.run(options[:dry])
 		when "dl"
+			dl = DownloadTV::Downloader.new(options[:offset], config)
 			dl.download_single_show(options[:arg])
 		when "file"
+			dl = DownloadTV::Downloader.new(options[:offset], config)
 			dl.download_from_file(options[:arg])
 		when "config"
-			DownloadTV::Configuration.new true
+			DownloadTV::Configuration.new(config, true)
 		when "showconfig"
-			DownloadTV::Configuration.new.print_config
-
+			DownloadTV::Configuration.new(config).print_config
 	end
 rescue Interrupt
 	puts "Interrupt signal detected. Exiting..."
