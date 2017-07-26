@@ -42,7 +42,7 @@ module DownloadTV
 			# ADDIC7ED PROVIDES RSS
 
 			agent = Mechanize.new
-			page = agent.get(url2, [], @url)
+			page = agent.get(url, [], @url)
 			puts page.save("Hi")
 			
 		end

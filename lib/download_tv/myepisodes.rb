@@ -35,7 +35,7 @@ module DownloadTV
 		end
 
 		def load_cookie
-			if File.exists? "cookie"
+			if File.exist? "cookie"
 				@agent.cookie_jar.load "cookie"
 				page = @agent.get "https://www.myepisodes.com/login.php"
 				if page.links[1].text == "Register"

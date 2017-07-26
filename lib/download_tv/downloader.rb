@@ -31,7 +31,7 @@ module DownloadTV
 		##
 		# Given a file containing a list of episodes (one per line), it tries to find download links for each
 		def download_from_file(filename)
-			if !File.exists? filename
+			if !File.exist? filename
 				puts "Error: #{filename} not found" 
 				exit 1
 			end
@@ -89,7 +89,7 @@ module DownloadTV
 			File.write("date", Date.today) unless dont_write_to_date_file
 
 		rescue InvalidLoginError
-			puts "Wrong username/password combination"
+			warn "Wrong username/password combination"
 		end
 
 		##
@@ -164,7 +164,7 @@ module DownloadTV
 		# These filters are defined at @filters
 		def filter_shows(links)
 			@filters.each do |f| # Apply each filter
-				new_links = links.reject { |name, link| f.(name) }
+				new_links = links.reject { |name, _link| f.(name) }
 				# Stop if the filter removes every release
 				break if new_links.size == 0
 

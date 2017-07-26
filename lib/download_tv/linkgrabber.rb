@@ -15,7 +15,7 @@ module DownloadTV
 			agent.get(@url)
 		end
 
-		def get_links(s)
+		def get_links(_s)
 			raise NotImplementedError
 		end
 		

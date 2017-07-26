@@ -38,7 +38,7 @@ module DownloadTV
 
 		rescue Mechanize::ResponseCodeError, Net::HTTP::Persistent::Error
 
-			puts "Problem accessing #{newt.class.name}"
+			warn "Problem accessing #{newt.class.name}"
 			# We won't be using this grabber
 			@n_grabbers = @n_grabbers-1
 			@tries = @tries - 1
@@ -46,8 +46,8 @@ module DownloadTV
 			change_grabbers
 
 		rescue SocketError, Errno::ECONNRESET, Net::OpenTimeout
-			puts "Connection error."
-			exit
+			warn "Connection error."
+			exit 1
 			
 		end
 
@@ -71,7 +71,7 @@ module DownloadTV
 
 			else # Reset the counter
 				@tries = @n_grabbers - 1
-				# TODO: Handle show not found here!!
+				# Handle show not found here!!
 				return []
 			
 			end

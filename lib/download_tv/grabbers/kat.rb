@@ -16,7 +16,7 @@ module DownloadTV
 			# Remove duplicates
 			data.keep_if { |i| i.text != "" }
 
-			names = data.collect &:text
+			names = data.collect(&:text)
 			links = []
 
 			data.each do |res|
