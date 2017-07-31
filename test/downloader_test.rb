@@ -44,7 +44,7 @@ describe DownloadTV::Downloader do
 			shows = ["Mr. Foo S01E02", "Bar (UK) S00E22", "Ignored S20E22", "Let's S05E03"]
 			result = ["Mr. Foo S01E02", "Bar S00E22", "Lets S05E03"]
 			
-			dl = DownloadTV::Downloader.new(0, ignored: ["Ignored"], path: config_path)
+			dl = DownloadTV::Downloader.new(0, ignored: ["ignored"], path: config_path)
 			dl.fix_names(shows).must_equal result
 		end
 	end
