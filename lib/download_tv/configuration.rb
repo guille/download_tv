@@ -44,6 +44,7 @@ module DownloadTV
 			@content[:auto] ||= true
 			@content[:subs] ||= true
 			@content[:grabber] ||= "TorrentAPI"
+			@content[:date] ||= Date.today-1
 
 			serialize
 		end

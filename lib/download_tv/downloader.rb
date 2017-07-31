@@ -43,7 +43,7 @@ module DownloadTV
 		##
 		# Finds download links for all new episodes aired since the last run of the program
 		# It connects to MyEpisodes in order to find which shows to track and which new episodes aired.
-		def run(dont_write_to_date_file)
+		def run(dont_update_last_run)
 			date = check_date
 
 			myepisodes = MyEpisodes.new(@config[:myepisodes_user], @config[:cookie])
@@ -86,7 +86,7 @@ module DownloadTV
 				puts "Completed. Exiting..."
 			end
 
-			File.write("date", Date.today) unless dont_write_to_date_file
+			@config[:date] = Date.today unless dont_update_last_run
 
 		rescue InvalidLoginError
 			warn "Wrong username/password combination"
@@ -128,19 +128,13 @@ module DownloadTV
 
 
 		def check_date
-			content = File.read("date")
-			
-			last = Date.parse(content)
+			last = @config[:date]
 			if last - @offset != Date.today
 				last - @offset
 			else
 				puts "Everything up to date"
 				exit
 			end
-			
-		rescue Errno::ENOENT
-			File.write("date", Date.today-1)
-			retry
 		end
 
 

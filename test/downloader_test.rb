@@ -50,28 +50,10 @@ describe DownloadTV::Downloader do
 	end
 
 
-	describe "the date file" do 
-
-		it "should be created if it doesn't exist" do
-			dl = DownloadTV::Downloader.new(0, path: config_path)
-			Dir.chdir(__dir__) # Use date file in test directory
-			dl.check_date
-			File.exist?("date").must_equal true
-		end
-
-		it "contains a date after running the method" do
-			dl = DownloadTV::Downloader.new(0, path: config_path)
-			Dir.chdir(__dir__)
-			date = dl.check_date
-			date.must_equal (Date.today-1)
-			Date.parse(File.read("date")).must_equal Date.today-1
-		end
-
+	describe "the check_date method" do
 		it "exits the script when up to date" do
-			File.write("date", Date.today)
 			begin
-				dl = DownloadTV::Downloader.new(0, path: config_path)
-				Dir.chdir(__dir__)
+				dl = DownloadTV::Downloader.new(0, date: Date.today, path: config_path)
 				dl.check_date
 				flunk
 			rescue SystemExit
@@ -80,16 +62,13 @@ describe DownloadTV::Downloader do
 		end
 
 		it "uses the offset to adjust the date" do
-			File.write("date", Date.today)
-
 			# Would exit with offset 0
-			dl = DownloadTV::Downloader.new(1, path: config_path)
+			dl = DownloadTV::Downloader.new(1, date: Date.today, path: config_path)
 
-			Dir.chdir(__dir__)
 			date = dl.check_date
 
 			date.must_equal (Date.today-1)
-			Date.parse(File.read("date")).must_equal Date.today
+			dl.config[:date].must_equal Date.today
 		end
 		
 	end
