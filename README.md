@@ -4,7 +4,6 @@
 [![Gem Version](https://badge.fury.io/rb/download_tv.svg)](https://badge.fury.io/rb/download_tv)
 [![Code Climate](https://codeclimate.com/github/guille/download_tv.svg)](https://codeclimate.com/github/guille/download_tv)
 
-
 download_tv is a Ruby command line application that automatically downloads the new episodes from the shows you follow. It grabs the list of shows from your MyEpisodes account.
 
 ### Installation
@@ -23,10 +22,13 @@ Specific options:
     -f, --file PATH                  Download shows from a file
     -d, --download SHOW              Downloads given show
     -c, --configure                  Configures defaults
-    --show-config                Show current configuration values
-    --dry-run                    Don't write to the date file
+        --show-config                Show current configuration values
+        --dry-run                    Don't write to the date file
     -a, --[no-]auto                  Automatically find links
     -s, --[no-]subtitles             Download subtitles
+    -g, --grabber GRABBER            Use given grabber as first option
+        --show-grabbers              List available grabbers
+    -v                               Print version
     -h, --help                       Show this message
 
 ```
