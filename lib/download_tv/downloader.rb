@@ -153,7 +153,7 @@ module DownloadTV
 			# Ignored shows
 			s = shows.reject do |i|
 				# Remove season+episode
-				@config[:ignored].include?(i.split(" ")[0..-2].join(" "))
+				@config[:ignored].include?(i.split(" ")[0..-2].join(" ").downcase)
 			end
 
 			s.map { |i| i.gsub(/ \(.+\)|[':]/, "") }

@@ -35,7 +35,7 @@ module DownloadTV
 				puts "Enter a comma-separated list of shows to ignore: "
 			end
 			
-			@content[:ignored] = STDIN.gets.chomp.split(",").map(&:strip)
+			@content[:ignored] = STDIN.gets.chomp.split(",").map(&:strip).map(&:downcase)
 			STDOUT.flush
 
 			# When modifying existing config, keeps previous values

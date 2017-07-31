@@ -47,4 +47,6 @@ describe DownloadTV::Configuration do
 	# 	end
 	# end
 
+	# test [:ignored] gets turned to lowercase
+
 end
