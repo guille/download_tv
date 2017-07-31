@@ -9,17 +9,16 @@ Gem::Specification.new do |s|
   s.authors       = ["guille"]
   s.email         = ["guillerg96@gmail.com"]
 
-  s.summary       = %q{DownloadTV finds the next episodes from shows you follow on MyEpisodes and downloads them.}
+  s.summary       = %q{DownloadTV is a tool that allows the user to find magnet links for tv show episodes. It accepts shows as arguments, from a file or it can integrate with your MyEpisodes account.}
   s.homepage      = "https://github.com/guille/download_tv"
 
   s.files         = `git ls-files -z`.split("\x0").reject do |f|
     f.match(%r{^(test)/})
   end
-  # s.files       = `git ls-files -- lib/*`.split($/)
+
   s.test_files  = `git ls-files -- test/*`.split($/)
   s.require_paths = ["lib"]
 
-  # s.bindir        = "exe"
   s.executables   = ["tv"]
   s.default_executable = 'tv'
 
