@@ -32,6 +32,13 @@ describe DownloadTV::Configuration do
 			c = DownloadTV::Configuration.new(path: config_path, myepisodes_user: "fake")
 			c.content.must_equal ({path: config_path, myepisodes_user: "fake"})
 		end
+
+		it "will downcase ignored shows" do
+			create_dummy_config(config_path, ignored: ["duMMy", "String"])
+
+			c = DownloadTV::Configuration.new(path: config_path)
+			c.content[:ignored].must_equal ["dummy", "string"]
+		end
 	end
 
 	# describe "when the file doesn't exist" do
@@ -46,7 +53,5 @@ describe DownloadTV::Configuration do
 	# 		DownloadTV::Configuration.new(path: config_path, true)
 	# 	end
 	# end
-
-	# test [:ignored] gets turned to lowercase
 
 end

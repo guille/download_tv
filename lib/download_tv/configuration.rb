@@ -10,6 +10,7 @@ module DownloadTV
 			if File.exist? @config_path
 				@content = File.open(@config_path, "rb") { |f| Marshal.load(f) }
 				@content.merge!(content) unless content.empty?
+				@content[:ignored]&.map!(&:downcase)
 				change_configuration if force_change
 			else
 				@content = content
@@ -44,7 +45,7 @@ module DownloadTV
 			@content[:subs] ||= true
 			@content[:grabber] ||= "TorrentAPI"
 
-			serialize()
+			serialize
 		end
 
 
