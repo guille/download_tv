@@ -33,4 +33,5 @@ Gem::Specification.new do |s|
   s.add_dependency("fileutils")
 
   s.has_rdoc    = false
+  s.license     = "MIT"
 end

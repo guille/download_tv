@@ -46,3 +46,7 @@ The options -c and --show-config allow the user to change or view the current co
 The `auto` flag toggles whether all the results for each show are prompted to the user for him to choose or if the application should try to choose the download link automatically (by default, prioritizes PROPER/REPACK releases at 480p).
 
 With -g and --show-grabbers, the user can see what grabbers are available and choose one of these as their preferred option. By default, the application searchs for torrents in TorrentAPI, ThePirateBay, KAT and EZTV, in that order, skipping to the next when one of them is down/doesn't have a torrent for said episode.
+
+### License
+
+This project is released under the terms of the MIT license. See [LICENSE.md](https://github.com/guille/download_tv/blob/master/LICENSE.md) file for details.
