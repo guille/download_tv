@@ -3,12 +3,10 @@ module DownloadTV
 		attr_reader :content, :config_path
 		
 		def initialize(content={}, force_change=false)
-			Dir.chdir(__dir__)
-
-			@config_path = content[:path] || "config"
+			@config_path = content[:path] || File.join(ENV["HOME"], ".config", "download_tv")
 			
 			if File.exist? @config_path
-				@content = File.open(@config_path, "rb") { |f| Marshal.load(f) }
+				load_config
 				@content.merge!(content) unless content.empty?
 				@content[:ignored]&.map!(&:downcase)
 				change_configuration if force_change
@@ -45,6 +43,7 @@ module DownloadTV
 			@content[:subs] ||= true
 			@content[:grabber] ||= "TorrentAPI"
 			@content[:date] ||= Date.today-1
+			@content[:version] = DownloadTV::VERSION
 
 			serialize
 		end
@@ -52,6 +51,21 @@ module DownloadTV
 
 		def serialize
 			File.open(@config_path, "wb") { |f| Marshal.dump(@content, f) }
+		end
+
+		def load_config
+			@content = File.open(@config_path, "rb") { |f| Marshal.load(f) }
+			if !@content[:version] || breaking_changes?(@content[:version])
+				change_configuration
+			end
+		end
+
+		##
+		# Returns true if a major or minor update has been detected
+		# Returns false if a patch has been detected
+		# Returns nil if it's the same version
+		def breaking_changes?(version)
+			DownloadTV::VERSION.split(".").zip(version.split(".")).find_index { |x, y| y > x }&.< 2
 		end
 		
 

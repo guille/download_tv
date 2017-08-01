@@ -5,7 +5,6 @@ describe DownloadTV::Downloader do
 
 	before do
 		Dir.chdir(__dir__)
-		File.delete("date") if File.exist?("date")
 		create_dummy_config(config_path) unless File.exist?(config_path)
 	end
 
@@ -54,7 +53,7 @@ describe DownloadTV::Downloader do
 		it "exits the script when up to date" do
 			begin
 				dl = DownloadTV::Downloader.new(0, date: Date.today, path: config_path)
-				dl.check_date
+				run_silently { dl.check_date }
 				flunk
 			rescue SystemExit
 			

@@ -30,6 +30,7 @@ Gem::Specification.new do |s|
   s.add_dependency("mechanize")
   s.add_dependency("date")
   s.add_dependency("io-console")
+  s.add_dependency("fileutils")
 
   s.has_rdoc    = false
 end
