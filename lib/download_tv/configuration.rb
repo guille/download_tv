@@ -3,7 +3,8 @@ module DownloadTV
 		attr_reader :content, :config_path
 		
 		def initialize(content={}, force_change=false)
-			@config_path = content[:path] || File.join(ENV["HOME"], ".config", "download_tv")
+			FileUtils.mkdir_p(File.join(ENV["HOME"], ".config", "download_tv"))
+			@config_path = content[:path] || File.join(ENV["HOME"], ".config", "download_tv", "config")
 			
 			if File.exist? @config_path
 				load_config

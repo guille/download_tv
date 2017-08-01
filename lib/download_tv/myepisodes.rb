@@ -6,6 +6,7 @@ module DownloadTV
 			@agent = Mechanize.new
 			@user = user
 			@save_cookie = save_cookie
+			@cookie_path = File.join(ENV["HOME"], ".config", "download_tv", "cookie")
 		end
 
 		def login
@@ -35,8 +36,8 @@ module DownloadTV
 		end
 
 		def load_cookie
-			if File.exist? "cookie"
-				@agent.cookie_jar.load "cookie"
+			if File.exist? @cookie_path
+				@agent.cookie_jar.load @cookie_path
 				page = @agent.get "https://www.myepisodes.com/login.php"
 				if page.links[1].text == "Register"
 					puts "The cookie is invalid/has expired."
@@ -51,7 +52,7 @@ module DownloadTV
 		end
 
 		def save_cookie
-			@agent.cookie_jar.save("cookie", session: true)
+			@agent.cookie_jar.save(@cookie_path, session: true)
 			@agent
 			
 		end
