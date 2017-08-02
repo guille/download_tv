@@ -5,9 +5,6 @@ module DownloadTV
 		attr_reader :offset, :config
 
 		def initialize(offset=0, config={})
-			# Change to installation directory
-			Dir.chdir(__dir__)
-
 			@offset = offset.abs
 			@config = Configuration.new(config).content # Load configuration
 			
