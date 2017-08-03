@@ -10,84 +10,84 @@ options[:cmd] = "run"
 config = {}
 
 opt_parser = OptionParser.new do |opts|
-	opts.banner = "Usage: tv [options]"
+  opts.banner = "Usage: tv [options]"
 
-	opts.separator ""
-	opts.separator "Specific options:"
+  opts.separator ""
+  opts.separator "Specific options:"
 
-	opts.on("-o", "--offset OFFSET", Integer, "Move back the last run offset") do |o|
-		options[:offset] = o
-	end
+  opts.on("-o", "--offset OFFSET", Integer, "Move back the last run offset") do |o|
+    options[:offset] = o
+  end
 
-	opts.on("-f", "--file PATH", "Download shows from a file") do |f|
-		options[:cmd] = "file"
-		options[:arg] = f
-	end
+  opts.on("-f", "--file PATH", "Download shows from a file") do |f|
+    options[:cmd] = "file"
+    options[:arg] = f
+  end
 
-	opts.on("-d", "--download SHOW", "Downloads given show") do |s|
-		options[:cmd] = "dl"
-		options[:arg] = s
-	end
+  opts.on("-d", "--download SHOW", "Downloads given show") do |s|
+    options[:cmd] = "dl"
+    options[:arg] = s
+  end
 
-	opts.on("-c", "--configure", "Configures defaults") do
-		options[:cmd] = "config"
-	end
+  opts.on("-c", "--configure", "Configures defaults") do
+    options[:cmd] = "config"
+  end
 
-	opts.on("--show-config", "Show current configuration values") do
-		options[:cmd] = "showconfig"
-	end
+  opts.on("--show-config", "Show current configuration values") do
+    options[:cmd] = "showconfig"
+  end
 
-	opts.on("--dry-run", "Don't write to the date file") do |n|
-		options[:dry] = n
-	end
+  opts.on("--dry-run", "Don't write to the date file") do |n|
+    options[:dry] = n
+  end
 
-	opts.on("-a", "--[no-]auto", "Automatically find links") do |n|
-		config[:auto] = n
-	end
+  opts.on("-a", "--[no-]auto", "Automatically find links") do |n|
+    config[:auto] = n
+  end
 
-	opts.on("-s", "--[no-]subtitles", "Download subtitles") do |n|
-		config[:subs] = n
-	end
+  opts.on("-s", "--[no-]subtitles", "Download subtitles") do |n|
+    config[:subs] = n
+  end
 
-	opts.on("-g", "--grabber GRABBER", "Use given grabber as first option") do |g|
-		config[:grabber] = g
-	end
+  opts.on("-g", "--grabber GRABBER", "Use given grabber as first option") do |g|
+    config[:grabber] = g
+  end
 
-	opts.on("--show-grabbers", "List available grabbers") do
-		puts DownloadTV::Torrent.new.grabbers
-		exit
-	end
+  opts.on("--show-grabbers", "List available grabbers") do
+    puts DownloadTV::Torrent.new.grabbers
+    exit
+  end
 
-	opts.on("-v", "Print version") do
-		puts DownloadTV::VERSION
-		exit
-	end
+  opts.on("-v", "--version", "Print version") do
+    puts DownloadTV::VERSION
+    exit
+  end
 
-	opts.on_tail("-h", "--help", "Show this message") do
-		puts opts
-		exit
-	end
+  opts.on_tail("-h", "--help", "Show this message") do
+    puts opts
+    exit
+  end
 end
 
 opt_parser.parse!(ARGV)
 
 begin
-	case options[:cmd]
-		when "run"
-			dl = DownloadTV::Downloader.new(options[:offset], config)
-			dl.run(options[:dry])
-		when "dl"
-			dl = DownloadTV::Downloader.new(options[:offset], config)
-			dl.download_single_show(options[:arg])
-		when "file"
-			dl = DownloadTV::Downloader.new(options[:offset], config)
-			dl.download_from_file(options[:arg])
-		when "config"
-			DownloadTV::Configuration.new(config, true)
-		when "showconfig"
-			DownloadTV::Configuration.new(config).print_config
-	end
+  case options[:cmd]
+    when "run"
+      dl = DownloadTV::Downloader.new(options[:offset], config)
+      dl.run(options[:dry])
+    when "dl"
+      dl = DownloadTV::Downloader.new(options[:offset], config)
+      dl.download_single_show(options[:arg])
+    when "file"
+      dl = DownloadTV::Downloader.new(options[:offset], config)
+      dl.download_from_file(options[:arg])
+    when "config"
+      DownloadTV::Configuration.new(config, true)
+    when "showconfig"
+      DownloadTV::Configuration.new(config).print_config
+  end
 rescue Interrupt
-	puts "Interrupt signal detected. Exiting..."
-	exit 1
+  puts "Interrupt signal detected. Exiting..."
+  exit 1
 end

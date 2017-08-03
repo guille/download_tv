@@ -5,16 +5,16 @@ require "minitest/autorun"
 
 
 def create_dummy_config(in_path, config={})
-	config[:version] = DownloadTV::VERSION if !config[:version]
-	File.open(in_path, "wb") { |f| Marshal.dump(config, f) }
+  config[:version] = DownloadTV::VERSION if !config[:version]
+  File.open(in_path, "wb") { |f| Marshal.dump(config, f) }
 end
 
 def run_silently
-	previous_stdout, $stdout = $stdout, StringIO.new
-	previous_stderr, $stderr = $stderr, StringIO.new
-	yield
-	$stdout.string
+  previous_stdout, $stdout = $stdout, StringIO.new
+  previous_stderr, $stderr = $stderr, StringIO.new
+  yield
+  $stdout.string
 ensure
-	$stdout = previous_stdout
-	$stderr = previous_stderr
+  $stdout = previous_stdout
+  $stderr = previous_stderr
 end

@@ -1,20 +1,20 @@
 module DownloadTV
 
-	class Subtitles
+  class Subtitles
 
-		def initialize
-			@a = Addic7ed.new
-			
-		end
+    def initialize
+      @a = Addic7ed.new
+      
+    end
 
-		def get_subs(show)
-			@a.get_subs(show)
+    def get_subs(show)
+      @a.get_subs(show)
 
-		rescue NoSubtitlesError
-			puts "No subtitles found for #{show}"
+    rescue NoSubtitlesError
+      puts "No subtitles found for #{show}"
 
-		end
-		
-	end
+    end
+    
+  end
 
 end
