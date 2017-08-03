@@ -2,6 +2,7 @@ require "json"
 require "mechanize"
 require "date"
 require "io/console"
+require "fileutils"
 
 require "download_tv/version"
 require "download_tv/configuration"
