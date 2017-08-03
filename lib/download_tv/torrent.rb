@@ -15,7 +15,7 @@ module DownloadTV
 			@tries = @n_grabbers - 1
 
 			# Silently ignores bad names
-			@g_names.rotate! @g_names.find_index(default_grabber).to_i
+			@g_names.rotate! @g_names.find_index(default_grabber).to_i+1
 
 			change_grabbers
 			
