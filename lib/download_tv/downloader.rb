@@ -170,10 +170,24 @@ module DownloadTV
 		# Spawns a silent process to download a given magnet link
 		# Uses xdg-open (not portable)
 		def download(link)
-			exec = "xdg-open \"#{link}\""
+			@cmd ||= detect_os
+			
+			exec = "#{@cmd} \"#{link}\""
 			
 			Process.detach(Process.spawn(exec, [:out, :err]=>"/dev/null"))
 
+		end
+
+		def detect_os
+			case RbConfig::CONFIG['host_os']
+			when /linux/
+				"xdg-open"
+			when /darwin/
+				"open"
+			else
+				warn "You're using an unsupported platform."
+				exit 1
+			end
 		end
 	end
 end
