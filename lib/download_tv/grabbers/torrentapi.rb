@@ -6,8 +6,7 @@ module DownloadTV
 		attr_reader :wait
 
 		def initialize
-			super("https://torrentapi.org/pubapi_v2.php?mode=search&search_string=%s&token=%s")
-			@token = get_token
+			super("https://torrentapi.org/pubapi_v2.php?mode=search&search_string=%s&token=%s&app_id=DownloadTV")
 			@wait = 2.1
 			
 		end
@@ -25,6 +24,7 @@ module DownloadTV
 		end
 
 		def get_links(s)
+			@token ||= get_token
 
 			# Format the url
 			search = @url % [s, @token]
