@@ -11,8 +11,10 @@ end
 
 def run_silently
 	previous_stdout, $stdout = $stdout, StringIO.new
+	previous_stderr, $stderr = $stderr, StringIO.new
 	yield
 	$stdout.string
 ensure
 	$stdout = previous_stdout
+	$stderr = previous_stderr
 end

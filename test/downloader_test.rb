@@ -143,4 +143,42 @@ describe DownloadTV::Downloader do
 		end
 	end
 
+	describe "the detect_os method" do
+		it "returns xdg open for linux" do
+			prev = RbConfig::CONFIG['host_os']
+			RbConfig::CONFIG['host_os'] = "linux-gnu"
+
+			dl = DownloadTV::Downloader.new(0, path: config_path)
+			dl.detect_os.must_equal "xdg-open"
+			
+			RbConfig::CONFIG['host_os'] = prev
+		end
+
+		it "returns open for mac" do
+			prev = RbConfig::CONFIG['host_os']
+			RbConfig::CONFIG['host_os'] = "darwin15.6.0"
+
+			dl = DownloadTV::Downloader.new(0, path: config_path)
+			dl.detect_os.must_equal "open"
+			
+			RbConfig::CONFIG['host_os'] = prev
+		end
+
+		it "exits when it can't detect the platform" do
+			prev = RbConfig::CONFIG['host_os']
+			RbConfig::CONFIG['host_os'] = "dummy"
+
+			dl = DownloadTV::Downloader.new(0, path: config_path)
+
+			begin
+				run_silently { dl.detect_os.must_equal "xdg-open" }
+				flunk
+			rescue SystemExit
+			
+			end
+			
+			RbConfig::CONFIG['host_os'] = prev
+		end
+	end
+
 end

@@ -41,7 +41,7 @@ module DownloadTV
 			warn "Problem accessing #{newt.class.name}"
 			# We won't be using this grabber
 			@n_grabbers = @n_grabbers-1
-			@tries = @tries - 1
+			@tries = @n_grabbers - 1
 
 			change_grabbers
 
