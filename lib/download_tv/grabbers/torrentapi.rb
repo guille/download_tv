@@ -15,7 +15,7 @@ module DownloadTV
 		# Connects to Torrentapi.org and requests a token.
 		# Returns said token.
 		def get_token
-			page = @agent.get("https://torrentapi.org/pubapi_v2.php?get_token=get_token").content
+			page = @agent.get("https://torrentapi.org/pubapi_v2.php?get_token=get_token&app_id=DownloadTV").content
 			
 			obj = JSON.parse(page)
 
@@ -54,6 +54,9 @@ module DownloadTV
 
 			names.zip(links)
 
+		rescue Mechanize::ResponseCodeError
+			# Temporary solution for Cloudflare being obnoxious
+			raise NoTorrentsError
 		end
 
 	end
