@@ -1,21 +1,22 @@
 module DownloadTV
-
+  ##
+  # Addic7ed prototype (WIP)
   class Addic7ed < LinkGrabber
     def initialize
-      super("http://www.addic7ed.com/search.php?search=%s&Submit=Search", "+")
+      super('http://www.addic7ed.com/search.php?search=%s&Submit=Search')
     end
 
     def get_subs(show)
       url = get_url(show)
       download_file(url)
     end
-    
+
     def get_url(show)
       # Change spaces for the separator
-      s = show.gsub(" ", @sep)
+      s = show.gsub(' ', @sep)
 
       # Format the url
-      search = @url % [s]
+      search = Format(@url, s)
 
       agent = Mechanize.new
       res = agent.get(search)
@@ -32,30 +33,24 @@ module DownloadTV
 
       # To find the real links:
       # see comments at the end of file
-
-
-    end 
+    end
 
     def download_file(url)
-      # Url must be like "http://www.addic7ed.com/updated/1/115337/0"
+      # Url must be like 'http://www.addic7ed.com/updated/1/115337/0'
 
       # ADDIC7ED PROVIDES RSS
 
       agent = Mechanize.new
       page = agent.get(url, [], @url)
-      puts page.save("Hi")
-      
+      puts page.save('Hi')
     end
-    
   end
 end
-
-
 # subtitles = {}
-# html.css(".tabel95 .newsDate").each do |td|
+# html.css('.tabel95 .newsDate').each do |td|
 #   if downloads = td.text.match(/\s(\d*)\sDownloads/i)
 #     done = false
-#     td.parent.parent.xpath("./tr/td/a[@class='buttonDownload']/@href").each do |link|
+#     td.parent.parent.xpath('./tr/td/a[@class='buttonDownload']/@href').each do |link|
 #       if md = link.value.match(/updated/i)
 #         subtitles[downloads[1].to_i] = link.value
 #         done = true

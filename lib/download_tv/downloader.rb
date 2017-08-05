@@ -1,21 +1,21 @@
 module DownloadTV
-
+  ##
+  # Entry point of the application
   class Downloader
-
     attr_reader :offset, :config
 
-    def initialize(offset=0, config={})
+    def initialize(offset = 0, config = {})
       @offset = offset.abs
       @config = Configuration.new(config).content # Load configuration
-      
+
       @filters = [
-        ->(n){ n.include?("2160p") },
-        ->(n){ n.include?("1080p") },
-        ->(n){ n.include?("720p")  },
-        ->(n){ n.include?("WEB")   },
-        ->(n){ !n.include?("PROPER") && !n.include?("REPACK") },
+        ->(n) { n.include?('2160p') },
+        ->(n) { n.include?('1080p') },
+        ->(n) { n.include?('720p')  },
+        ->(n) { n.include?('WEB')   },
+        ->(n) { !n.include?('PROPER') && !n.include?('REPACK') }
       ]
-      
+
       Thread.abort_on_exception = true
     end
 
@@ -24,12 +24,11 @@ module DownloadTV
       download(get_link(t, show))
     end
 
-
     ##
     # Given a file containing a list of episodes (one per line), it tries to find download links for each
     def download_from_file(filename)
       if !File.exist? filename
-        puts "Error: #{filename} not found" 
+        puts "Error: #{filename} not found"
         exit 1
       end
       filename = File.realpath(filename)
@@ -47,16 +46,16 @@ module DownloadTV
       # Log in using cookie by default
       myepisodes.load_cookie
       shows = myepisodes.get_shows(date)
-      
+
       if shows.empty?
-        puts "Nothing to download"
+        puts 'Nothing to download'
 
       else
         t = Torrent.new(@config[:grabber])
         to_download = fix_names(shows)
 
         queue = Queue.new
-        
+
         # Adds a link (or empty string to the queue)
         link_t = Thread.new do
           to_download.each { |show| queue << get_link(t, show) }
@@ -66,7 +65,7 @@ module DownloadTV
         download_t = Thread.new do
           to_download.size.times do
             magnet = queue.pop
-            next if magnet == "" # Doesn't download if no torrents are found
+            next if magnet == '' # Doesn't download if no torrents are found
             download(magnet)
           end
         end
@@ -80,13 +79,12 @@ module DownloadTV
         download_t.join
         # subs_t.join
 
-        puts "Completed. Exiting..."
+        puts 'Completed. Exiting...'
       end
 
       @config[:date] = Date.today unless dont_update_last_run
-
     rescue InvalidLoginError
-      warn "Wrong username/password combination"
+      warn 'Wrong username/password combination'
     end
 
     ##
@@ -97,43 +95,39 @@ module DownloadTV
     def get_link(t, show)
       links = t.get_links(show)
 
-      return "" if links.empty?
+      return '' if links.empty?
 
       if @config[:auto]
         links = filter_shows(links)
         links.first[1]
-      
       else
         puts "Collecting links for #{show}"
         links.each_with_index { |data, i| puts "#{i}\t\t#{data[0]}" }
-        
+
         puts
-        print "Select the torrent you want to download [-1 to skip]: "
+        print 'Select the torrent you want to download [-1 to skip]: '
 
         i = $stdin.gets.chomp.to_i
 
         while i >= links.size || i < -1
-          puts "Index out of bounds. Try again [-1 to skip]: "
+          puts 'Index out of bounds. Try again [-1 to skip]: '
           i = $stdin.gets.chomp.to_i
         end
 
         # Use -1 to skip the download
-        i == -1 ? "" : links[i][1]
+        i == -1 ? '' : links[i][1]
       end
-      
     end
-
 
     def check_date
       last = @config[:date]
       if last - @offset != Date.today
         last - @offset
       else
-        puts "Everything up to date"
+        puts 'Everything up to date'
         exit
       end
     end
-
 
     ##
     # Given a list of shows and episodes:
@@ -144,10 +138,10 @@ module DownloadTV
       # Ignored shows
       s = shows.reject do |i|
         # Remove season+episode
-        @config[:ignored].include?(i.split(" ")[0..-2].join(" ").downcase)
+        @config[:ignored].include?(i.split(' ')[0..-2].join(' ').downcase)
       end
 
-      s.map { |i| i.gsub(/ \(.+\)|[':]/, "") }
+      s.map { |i| i.gsub(/ \(.+\)|[':]/, '') }
     end
 
     ##
@@ -155,9 +149,9 @@ module DownloadTV
     # These filters are defined at @filters
     def filter_shows(links)
       @filters.each do |f| # Apply each filter
-        new_links = links.reject { |name, _link| f.(name) }
+        new_links = links.reject { |name, _link| f.call(name) }
         # Stop if the filter removes every release
-        break if new_links.size == 0
+        break if new_links.empty?
 
         links = new_links
       end
@@ -165,25 +159,23 @@ module DownloadTV
       links
     end
 
-
     ##
     # Spawns a silent process to download a given magnet link
     # Uses xdg-open (not portable)
     def download(link)
       @cmd ||= detect_os
-      
-      exec = "#{@cmd} \"#{link}\""
-      
-      Process.detach(Process.spawn(exec, [:out, :err]=>"/dev/null"))
 
+      exec = "#{@cmd} \"#{link}\""
+
+      Process.detach(Process.spawn(exec, %i[out err] => '/dev/null'))
     end
 
     def detect_os
       case RbConfig::CONFIG['host_os']
       when /linux/
-        "xdg-open"
+        'xdg-open'
       when /darwin/
-        "open"
+        'open'
       else
         warn "You're using an unsupported platform."
         exit 1

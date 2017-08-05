@@ -1,12 +1,12 @@
 module DownloadTV
-
+  ##
+  # Interface for the grabbers
   class LinkGrabber
     attr_reader :url
 
     def initialize(url)
       @url = url
       @agent = Mechanize.new
-      
     end
 
     def test_connection
@@ -18,15 +18,9 @@ module DownloadTV
     def get_links(_s)
       raise NotImplementedError
     end
-    
   end
 
-  class NoTorrentsError < StandardError
+  class NoTorrentsError < StandardError; end
 
-  end
-
-  class NoSubtitlesError < StandardError
-
-  end
-
+  class NoSubtitlesError < StandardError; end
 end
