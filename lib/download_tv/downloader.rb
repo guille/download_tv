@@ -6,7 +6,7 @@ module DownloadTV
 
     def initialize(offset = 0, config = {})
       @offset = offset.abs
-      @config = Configuration.new(config).content # Load configuration
+      @config = Configuration.new(config) # Load configuration
 
       @filters = [
         ->(n) { n.include?('2160p') },
@@ -20,7 +20,7 @@ module DownloadTV
     end
 
     def download_single_show(show)
-      t = Torrent.new(@config[:grabber])
+      t = Torrent.new(@config.content[:grabber])
       download(get_link(t, show))
     end
 
@@ -32,7 +32,7 @@ module DownloadTV
         exit 1
       end
       filename = File.realpath(filename)
-      t = Torrent.new(@config[:grabber])
+      t = Torrent.new(@config.content[:grabber])
       File.readlines(filename).each { |show| download(get_link(t, show)) }
     end
 
@@ -42,7 +42,7 @@ module DownloadTV
     def run(dont_update_last_run)
       date = check_date
 
-      myepisodes = MyEpisodes.new(@config[:myepisodes_user], @config[:cookie])
+      myepisodes = MyEpisodes.new(@config.content[:myepisodes_user], @config.content[:cookie])
       # Log in using cookie by default
       myepisodes.load_cookie
       shows = myepisodes.get_shows(date)
@@ -51,7 +51,7 @@ module DownloadTV
         puts 'Nothing to download'
 
       else
-        t = Torrent.new(@config[:grabber])
+        t = Torrent.new(@config.content[:grabber])
         to_download = fix_names(shows)
 
         queue = Queue.new
@@ -71,7 +71,7 @@ module DownloadTV
         end
 
         # Downloading the subtitles
-        # subs_t = @config[:subs] and Thread.new do
+        # subs_t = @config.content[:subs] and Thread.new do
         #   to_download.each { |show| @s.get_subs(show) }
         # end
 
@@ -82,7 +82,8 @@ module DownloadTV
         puts 'Completed. Exiting...'
       end
 
-      @config[:date] = Date.today unless dont_update_last_run
+      @config.content[:date] = Date.today unless dont_update_last_run
+      @config.serialize
     rescue InvalidLoginError
       warn 'Wrong username/password combination'
     end
@@ -97,7 +98,7 @@ module DownloadTV
 
       return '' if links.empty?
 
-      if @config[:auto]
+      if @config.content[:auto]
         links = filter_shows(links)
         links.first[1]
       else
@@ -120,7 +121,7 @@ module DownloadTV
     end
 
     def check_date
-      last = @config[:date]
+      last = @config.content[:date]
       if last - @offset != Date.today
         last - @offset
       else
@@ -138,7 +139,7 @@ module DownloadTV
       # Ignored shows
       s = shows.reject do |i|
         # Remove season+episode
-        @config[:ignored].include?(i.split(' ')[0..-2].join(' ').downcase)
+        @config.content[:ignored].include?(i.split(' ')[0..-2].join(' ').downcase)
       end
 
       s.map { |i| i.gsub(/ \(.+\)|[':]/, '') }
