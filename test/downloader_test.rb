@@ -24,8 +24,8 @@ describe DownloadTV::Downloader do
 
     it 'can receive an optional configuration hash' do
       dl = DownloadTV::Downloader.new(0, auto: true, grabber: 'KAT', path: config_path)
-      dl.config[:auto].must_equal true
-      dl.config[:grabber].must_equal 'KAT'
+      dl.config.content[:auto].must_equal true
+      dl.config.content[:grabber].must_equal 'KAT'
     end
   end
 
@@ -61,7 +61,7 @@ describe DownloadTV::Downloader do
       date = dl.check_date
 
       date.must_equal(Date.today - 1)
-      dl.config[:date].must_equal Date.today
+      dl.config.content[:date].must_equal Date.today
     end
   end
 
