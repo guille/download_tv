@@ -37,7 +37,7 @@ Specific options:
 
 By default, it fetches the list of episodes from MyEpisodes.com that have aired since the program was run for the last time and tries to download them. The -o flag can be used in order to re-download the episodes from previous days. The --dry-run option is useful to prevent download_tv from updating the date (for example, when running the application shortly after an episode airs)
 
-In order to download a single episode, use the -d flag: *tv -d Breaking Bad S04E01*
+In order to download a single episode, use the -d flag, quoting the string when it contains spaces: *tv -d "Breaking Bad S04E01"*
 
 The -f flag can be used to read the list of episodes to download from a file. Each line of the file is interpreted as a episode to download: *tv -f /path/to/listofeps*
 
