@@ -38,7 +38,7 @@ module DownloadTV
     ##
     # Finds download links for all new episodes aired since the last run of the program
     # It connects to MyEpisodes in order to find which shows to track and which new episodes aired.
-    def run(dont_update_last_run, offset=0)
+    def run(dont_update_last_run, offset = 0)
       date = check_date(offset)
 
       myepisodes = MyEpisodes.new(@config.content[:myepisodes_user], @config.content[:cookie])

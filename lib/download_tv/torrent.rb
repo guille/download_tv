@@ -55,7 +55,7 @@ module DownloadTV
       puts "No torrents found for #{show} using #{@g_instances.first.class.name}"
 
       # Use next grabber
-      if @tries > 0
+      if @tries.positive?
         @tries -= 1
         change_grabbers
         retry
