@@ -12,7 +12,7 @@ module DownloadTV
 
     def test_connection
       @agent.read_timeout = 2
-      @agent.get(@url)
+      @agent.get(format(@url, 'test'))
     end
 
     def get_links(_s)

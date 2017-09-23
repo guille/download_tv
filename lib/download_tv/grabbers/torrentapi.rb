@@ -11,6 +11,13 @@ module DownloadTV
     end
 
     ##
+    # Specific implementation for TorrentAPI (requires token)
+    def test_connection
+      @agent.read_timeout = 2
+      @agent.get(format(@url, 'test', 'test'))
+    end
+
+    ##
     # Connects to Torrentapi.org and requests a token.
     # Returns said token.
     def renew_token
