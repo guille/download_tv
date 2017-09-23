@@ -4,6 +4,7 @@ module DownloadTV
   class MyEpisodes
     def initialize(user, save_cookie)
       @agent = Mechanize.new
+      @agent.user_agent = DownloadTV::USER_AGENT
       @user = user
       @save_cookie = save_cookie
       @cookie_path = File.join(ENV['HOME'], '.config', 'download_tv', 'cookie')
