@@ -74,13 +74,13 @@ opt_parser.parse!(ARGV)
 begin
   case options[:cmd]
   when 'run'
-    dl = DownloadTV::Downloader.new(options[:offset], config)
-    dl.run(options[:dry])
+    dl = DownloadTV::Downloader.new(config)
+    dl.run(options[:dry], options[:offset].abs)
   when 'dl'
-    dl = DownloadTV::Downloader.new(options[:offset], config)
+    dl = DownloadTV::Downloader.new(config)
     dl.download_single_show(options[:arg])
   when 'file'
-    dl = DownloadTV::Downloader.new(options[:offset], config)
+    dl = DownloadTV::Downloader.new(config)
     dl.download_from_file(options[:arg])
   when 'config'
     DownloadTV::Configuration.new(config, true)
