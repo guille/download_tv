@@ -6,12 +6,10 @@ describe DownloadTV::LinkGrabber do
 
   instances.each do |grabber|
     describe grabber do
+      next if grabber.test_connection.code != '200'
+
       it 'will have a url attribute on creation' do
         grabber.url.wont_be_nil
-      end
-
-      it 'should get a 200 code response' do
-        grabber.test_connection.code.must_equal '200'
       end
 
       it "will raise NoTorrentsError when torrent can't be found" do
