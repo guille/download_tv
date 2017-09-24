@@ -19,8 +19,4 @@ module DownloadTV
       raise NotImplementedError
     end
   end
-
-  class NoTorrentsError < StandardError; end
-
-  class NoSubtitlesError < StandardError; end
 end

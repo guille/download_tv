@@ -14,6 +14,10 @@ require 'download_tv/subtitles'
 
 module DownloadTV
   USER_AGENT = "DownloadTV #{DownloadTV::VERSION}".freeze
+
+  class NoTorrentsError < StandardError; end
+
+  class NoSubtitlesError < StandardError; end
 end
 
 Dir[File.join(__dir__, 'download_tv', 'grabbers', '*.rb')].each { |file| require file }
