@@ -111,6 +111,7 @@ describe DownloadTV::Downloader do
       t.expect(:get_links, [], [show])
       dl = DownloadTV::Downloader.new(auto: false, path: config_path)
       dl.get_link(t, show).must_equal ''
+      t.verify
     end
 
     it 'returns the first link when auto is set to true' do
@@ -120,6 +121,7 @@ describe DownloadTV::Downloader do
       t.expect(:get_links, [['Name 1', 'Link 1'], ['Name 2', 'Link 2']], [show])
       dl = DownloadTV::Downloader.new(auto: true, path: config_path)
       dl.get_link(t, show).must_equal 'Link 1'
+      t.verify
     end
   end
 
