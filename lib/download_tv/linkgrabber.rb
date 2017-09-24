@@ -10,9 +10,12 @@ module DownloadTV
       @agent.user_agent = DownloadTV::USER_AGENT
     end
 
-    def test_connection
+    def online?
       @agent.read_timeout = 2
       @agent.get(format(@url, 'test'))
+      true
+    rescue Mechanize::ResponseCodeError, Net::HTTP::Persistent::Error
+      false
     end
 
     def get_links(_s)

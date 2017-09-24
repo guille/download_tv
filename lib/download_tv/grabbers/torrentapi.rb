@@ -12,9 +12,12 @@ module DownloadTV
 
     ##
     # Specific implementation for TorrentAPI (requires token)
-    def test_connection
+    def online?
       @agent.read_timeout = 2
       @agent.get(format(@url, 'test', 'test'))
+      true
+    rescue Mechanize::ResponseCodeError, Net::HTTP::Persistent::Error
+      false
     end
 
     ##

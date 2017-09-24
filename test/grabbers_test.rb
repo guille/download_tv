@@ -6,7 +6,7 @@ describe DownloadTV::LinkGrabber do
 
   instances.each do |grabber|
     describe grabber do
-      next if grabber.test_connection.code != '200'
+      next unless grabber.online?
 
       it 'will have a url attribute on creation' do
         grabber.url.wont_be_nil

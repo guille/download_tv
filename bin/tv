@@ -90,4 +90,7 @@ begin
 rescue Interrupt
   puts 'Interrupt signal detected. Exiting...'
   exit 1
+rescue SocketError, Errno::ECONNRESET, Net::OpenTimeout
+  warn 'Connection error.'
+  exit 1
 end

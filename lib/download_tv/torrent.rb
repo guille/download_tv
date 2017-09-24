@@ -24,23 +24,17 @@ module DownloadTV
       if !@g_names.empty?
         # Instantiates the last element from g_names, popping it
         newt = (DownloadTV.const_get @g_names.pop).new
-        newt.test_connection
 
-        @g_instances.unshift newt
-
-      else
-        # Rotates the instantiated grabbers
+        if newt.online?
+          @g_instances.unshift newt
+        else
+          warn "Problem accessing #{newt.class.name}"
+          @tries -= 1 # We won't be using this grabber
+          change_grabbers
+        end
+      else # Rotates the instantiated grabbers
         @g_instances.rotate!
       end
-    rescue Mechanize::ResponseCodeError, Net::HTTP::Persistent::Error
-      warn "Problem accessing #{newt.class.name}"
-      # We won't be using this grabber
-      @tries -= 1
-
-      change_grabbers
-    rescue SocketError, Errno::ECONNRESET, Net::OpenTimeout
-      warn 'Connection error.'
-      exit 1
     end
 
     def get_links(show)
