@@ -61,9 +61,6 @@ module DownloadTV
       links = obj['torrent_results'].collect { |i| i['download'] }
 
       names.zip(links)
-      # Temporary solution for Cloudflare being obnoxious
-    rescue Mechanize::ResponseCodeError
-      raise NoTorrentsError
     end
   end
 end
