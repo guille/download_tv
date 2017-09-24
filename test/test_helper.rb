@@ -4,7 +4,7 @@ require 'minitest/autorun'
 
 def create_dummy_config(in_path, config = {})
   config[:version] = DownloadTV::VERSION unless config[:version]
-  File.open(in_path, 'wb') { |f| Marshal.dump(config, f) }
+  File.write(in_path, JSON.generate(config))
 end
 
 def run_silently

@@ -132,14 +132,17 @@ describe DownloadTV::Configuration do
   end
 
   describe 'the serialize method' do
-    it 'stores the configuration in a Marshalled file' do
+    it 'stores the configuration in a JSON file' do
       # Calls serialize
       run_silently do
         STDIN.stub :gets, 'anything' do
           DownloadTV::Configuration.new(path: config_path)
         end
       end
-      content = File.open(config_path, 'rb') { |f| Marshal.load(f) }
+      # content = File.open(config_path, 'rb') { |f| Marshal.load(f) }
+      source = File.read(config_path)
+      content = JSON.parse(source, symbolize_names: true)
+      content[:date] = Date.parse(content[:date])
 
       content[:cookie].must_equal true
       content[:myepisodes_user].must_equal 'anything'
@@ -147,7 +150,7 @@ describe DownloadTV::Configuration do
       content[:auto].must_equal true
       content[:subs].must_equal true
       content[:grabber].must_equal 'TorrentAPI'
-      content[:date].must_equal(Date.today - 1)
+      content[:date].must_equal Date.today - 1
       content[:version].must_equal DownloadTV::VERSION
     end
   end

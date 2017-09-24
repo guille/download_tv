@@ -51,12 +51,20 @@ module DownloadTV
     end
 
     def serialize
-      File.open(@config_path, 'wb') { |f| Marshal.dump(@content, f) }
+      File.write(@config_path, JSON.generate(@content))
     end
 
     def load_config
-      @content = File.open(@config_path, 'rb') { |f| Marshal.load(f) }
+      source = File.read(@config_path)
+      @content = JSON.parse(source, symbolize_names: true)
+
+      @content[:date] = Date.parse(@content[:date]) if @content[:date]
+
       change_configuration if !@content[:version] || breaking_changes?(@content[:version])
+    rescue JSON::ParserError
+      @content = {}
+      change_configuration
+      retry
     end
 
     ##
