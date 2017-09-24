@@ -12,7 +12,7 @@ module DownloadTV
 
     def online?
       @agent.read_timeout = 2
-      @agent.get(format(@url, 'test'))
+      @agent.head(format(@url, 'test'))
       true
     rescue Mechanize::ResponseCodeError, Net::HTTP::Persistent::Error
       false
