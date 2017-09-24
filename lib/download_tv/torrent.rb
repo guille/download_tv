@@ -2,7 +2,7 @@ module DownloadTV
   ##
   # Class in charge of managing the link grabbers
   class Torrent
-    attr_reader :g_names, :g_instances, :n_grabbers
+    attr_reader :g_names, :g_instances, :tries
 
     def grabbers
       %w[Eztv KAT ThePirateBay TorrentAPI]
@@ -11,11 +11,11 @@ module DownloadTV
     def initialize(default_grabber = nil)
       @g_names = grabbers
       @g_instances = []
-      @n_grabbers = @g_names.size # Initial size
-      @tries = @n_grabbers - 1
+      reset_tries
 
       # Silently ignores bad names
-      @g_names.rotate! @g_names.find_index(default_grabber).to_i + 1
+      found = @g_names.find_index(default_grabber)
+      @g_names.rotate! found + 1 if found
 
       change_grabbers
     end
@@ -35,8 +35,7 @@ module DownloadTV
     rescue Mechanize::ResponseCodeError, Net::HTTP::Persistent::Error
       warn "Problem accessing #{newt.class.name}"
       # We won't be using this grabber
-      @n_grabbers -= 1
-      @tries = @n_grabbers - 1
+      @tries -= 1
 
       change_grabbers
     rescue SocketError, Errno::ECONNRESET, Net::OpenTimeout
@@ -47,8 +46,7 @@ module DownloadTV
     def get_links(show)
       links = @g_instances.first.get_links(show)
 
-      # Reset the counter
-      @tries = @n_grabbers - 1
+      reset_tries
 
       links
     rescue NoTorrentsError
@@ -60,11 +58,15 @@ module DownloadTV
         change_grabbers
         retry
 
-      else # Reset the counter
-        @tries = @n_grabbers - 1
+      else
+        reset_tries
         # Handle show not found here!!
         return []
       end
+    end
+
+    def reset_tries
+      @tries = @g_names.size + @g_instances.size - 1
     end
   end
 end
