@@ -1,6 +1,7 @@
 module DownloadTV
   ##
   # TorrentAPI.org grabber
+  # Interfaces with http://torrentapi.org/apidocs_v2.txt
   class TorrentAPI < LinkGrabber
     attr_accessor :token
     attr_reader :wait
@@ -21,17 +22,14 @@ module DownloadTV
     end
 
     ##
-    # Connects to Torrentapi.org and requests a token.
-    # Returns said token.
+    # Connects to Torrentapi.org and requests a token, returning it
+    # Tokens automatically expire every 15 minutes
     def renew_token
       page = @agent.get('https://torrentapi.org/pubapi_v2.php?get_token=get_token&app_id=DownloadTV').content
 
       obj = JSON.parse(page)
 
       @token = obj['token']
-      # Tokens automaticly expire in 15 minutes.
-      # The api has a 1req/2s limit.
-      # http://torrentapi.org/apidocs_v2.txt
     end
 
     def get_links(s)
@@ -51,11 +49,9 @@ module DownloadTV
       end
 
       while obj['error_code'] == 5 # Violate 1req/2s limit
-        # puts 'Torrentapi request limit hit. Wait a few seconds...'
         sleep(@wait)
         page = @agent.get(search).content
         obj = JSON.parse(page)
-
       end
 
       raise NoTorrentsError if obj['error']
