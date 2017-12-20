@@ -32,7 +32,7 @@ module DownloadTV
       end
       filename = File.realpath(filename)
       t = Torrent.new(@config.content[:grabber])
-      File.readlines(filename).each { |show| download(get_link(t, show)) }
+      File.readlines(filename).each { |show| download(get_link(t, show.chomp)) }
     end
 
     ##
