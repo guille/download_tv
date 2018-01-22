@@ -45,13 +45,13 @@ module DownloadTV
       # Log in using cookie by default
       myepisodes.load_cookie
       shows = myepisodes.get_shows(date)
+      to_download = fix_names(shows)
 
-      if shows.empty?
+      if to_download.empty?
         puts 'Nothing to download'
 
       else
         t = Torrent.new(@config.content[:grabber])
-        to_download = fix_names(shows)
 
         queue = Queue.new
 
