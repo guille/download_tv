@@ -3,26 +3,22 @@ module DownloadTV
   # KATcr.co grabber
   class KAT < LinkGrabber
     def initialize
-      super('https://katcr.co/new/search-torrents.php?search="%s"&sort=seeders&order=desc')
+      super('https://katcr.co/advanced-usearch/')
     end
 
     def get_links(s)
-      # Format the url
-      search = format(@url, s)
+      params = {
+        'category': 'TV',
+        'orderby': 'seeds-desc',
+        'search': s
+      }
+      
+      data = @agent.post(@url, params).search("table.torrents_table tbody tr td[1]")
 
-      data = @agent.get(search).links.select { |i| i.href.include? 'torrents-details.php?' }
+      names = data.map { |i| i.search('a.torrents_table__torrent_title b').text }
+      links = data.map { |i| i.search('div.torrents_table__actions a[3]').first.attribute('href').text }
 
-      raise NoTorrentsError if data == []
-
-      # Remove duplicates
-      data.keep_if { |i| i.text != '' }
-
-      names = data.collect(&:text)
-      links = []
-
-      data.each do |res|
-        links << res.click.search('a.kaGiantButton[title="Magnet link"]').attribute('href').text
-      end
+      raise NoTorrentsError if data.size == 0
 
       names.zip(links)
     end
