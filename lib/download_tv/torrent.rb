@@ -22,12 +22,11 @@ module DownloadTV
     end
 
     def check_grabber_online
-      unless @g_instances.first.online?
-        # We won't be using this grabber
-        warn "Problem accessing #{newt.class.name}"
-        @tries -= 1
-        @g_instances.drop 1
-      end
+      return if @g_instances.first.online?
+      # We won't be using this grabber
+      warn "Problem accessing #{newt.class.name}"
+      @tries -= 1
+      @g_instances.drop 1
     end
 
     def change_grabbers

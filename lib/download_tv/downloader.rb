@@ -26,13 +26,14 @@ module DownloadTV
     ##
     # Given a file containing a list of episodes (one per line), it tries to find download links for each
     def download_from_file(filename)
-      if !File.exist? filename
+      if File.exist? filename
+        filename = File.realpath(filename)
+        t = Torrent.new(@config.content[:grabber])
+        File.readlines(filename).each { |show| download(get_link(t, show.chomp)) }
+      else
         puts "Error: #{filename} not found"
         exit 1
       end
-      filename = File.realpath(filename)
-      t = Torrent.new(@config.content[:grabber])
-      File.readlines(filename).each { |show| download(get_link(t, show.chomp)) }
     end
 
     ##
