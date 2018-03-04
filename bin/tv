@@ -90,7 +90,7 @@ begin
 rescue Interrupt
   puts 'Interrupt signal detected. Exiting...'
   exit 1
-rescue SocketError, Errno::ECONNRESET, Net::OpenTimeout
+rescue SocketError, Errno::ECONNRESET, Net::OpenTimeout,Net::ReadTimeout
   warn 'Connection error.'
   exit 1
 end
