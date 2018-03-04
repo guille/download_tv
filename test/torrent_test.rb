@@ -6,14 +6,7 @@ describe DownloadTV::Torrent do
       @t = DownloadTV::Torrent.new
     end
 
-    it 'will have the right amount of grabbers' do
-      @t.g_names.size.must_equal @t.grabbers.size - 1
-      @t.g_instances.size.must_equal 1
-    end
-
     it 'will populate the instances' do
-      @t.grabbers.size.times.each { @t.change_grabbers }
-      @t.g_names.empty?.must_equal true
       @t.g_instances.size.must_equal @t.grabbers.size
     end
 

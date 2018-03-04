@@ -2,44 +2,44 @@ module DownloadTV
   ##
   # Class in charge of managing the link grabbers
   class Torrent
-    attr_reader :g_names, :g_instances, :tries
+    attr_reader :g_instances, :tries
 
     def grabbers
-      %w[Eztv KAT ThePirateBay TorrentAPI]
+      %w[TorrentAPI ThePirateBay Eztv KAT]
     end
 
     def initialize(default_grabber = nil)
-      @g_names = grabbers
-      @g_instances = []
-      reset_tries
+      g_names = grabbers
 
       # Silently ignores bad names
-      found = @g_names.find_index(default_grabber)
-      @g_names.rotate! found + 1 if found
+      found_default = g_names.find_index(default_grabber)
+      g_names.rotate! found_default if found_default
 
-      change_grabbers
+      @g_instances = g_names.map { |g| (DownloadTV.const_get g).new }
+      reset_tries
+
+      check_grabber_online
+    end
+
+    def check_grabber_online
+      unless @g_instances.first.online?
+        # We won't be using this grabber
+        warn "Problem accessing #{newt.class.name}"
+        @tries -= 1
+        @g_instances.drop 1
+      end
     end
 
     def change_grabbers
-      if !@g_names.empty?
-        # Instantiates the last element from g_names, popping it
-        newt = (DownloadTV.const_get @g_names.pop).new
-
-        if newt.online?
-          @g_instances.unshift newt
-        else
-          warn "Problem accessing #{newt.class.name}"
-          @tries -= 1 # We won't be using this grabber
-          change_grabbers
-        end
-      else # Rotates the instantiated grabbers
-        @g_instances.rotate!
-      end
+      # Rotates the instantiated grabbers
+      @g_instances.rotate!
+      check_grabber_online
     end
 
     def get_links(show)
       links = @g_instances.first.get_links(show)
 
+      reset_grabbers_order
       reset_tries
 
       links
@@ -53,6 +53,7 @@ module DownloadTV
         retry
 
       else
+        reset_grabbers_order
         reset_tries
         # Handle show not found here!!
         return []
@@ -60,7 +61,11 @@ module DownloadTV
     end
 
     def reset_tries
-      @tries = @g_names.size + @g_instances.size - 1
+      @tries = @g_instances.size - 1
+    end
+
+    def reset_grabbers_order
+      @g_instances.rotate!(@tries + 1)
     end
   end
 end
