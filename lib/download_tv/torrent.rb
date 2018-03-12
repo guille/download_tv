@@ -24,7 +24,7 @@ module DownloadTV
     def check_grabber_online
       return if @g_instances.first.online?
       # We won't be using this grabber
-      warn "Problem accessing #{newt.class.name}"
+      warn "Problem accessing #{@g_instances.first.class.name}"
       @tries -= 1
       @g_instances.drop 1
     end
