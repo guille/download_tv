@@ -26,7 +26,7 @@ module DownloadTV
       # We won't be using this grabber
       warn "Problem accessing #{@g_instances.first.class.name}"
       @tries -= 1
-      @g_instances.drop 1
+      @g_instances.shift # Removes first element
     end
 
     def change_grabbers
