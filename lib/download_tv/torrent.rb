@@ -22,11 +22,16 @@ module DownloadTV
     end
 
     def check_grabber_online
+      if @g_instances.empty?
+        warn 'There are no available grabbers.'
+        exit 1
+      end
       return if @g_instances.first.online?
       # We won't be using this grabber
       warn "Problem accessing #{@g_instances.first.class.name}"
       @tries -= 1
       @g_instances.shift # Removes first element
+      check_grabber_online
     end
 
     def change_grabbers
