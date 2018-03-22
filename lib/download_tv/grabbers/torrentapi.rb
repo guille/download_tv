@@ -8,14 +8,14 @@ module DownloadTV
 
     def initialize
       super('https://torrentapi.org/pubapi_v2.php?mode=search&search_string=%s&token=%s&app_id=DownloadTV')
-      @wait = 2.1
+      @wait = 0.1
     end
 
     ##
     # Specific implementation for TorrentAPI (requires token)
     def online?
       @agent.read_timeout = 2
-      @agent.head(format(@url, 'test', 'test'))
+      renew_token
       true
     rescue Mechanize::ResponseCodeError, Net::HTTP::Persistent::Error
       false
@@ -60,6 +60,14 @@ module DownloadTV
       links = obj['torrent_results'].collect { |i| i['download'] }
 
       names.zip(links)
+    rescue Mechanize::ResponseCodeError => e
+      if e.response_code == '429'
+        sleep(@wait)
+        retry
+      else
+        warn 'An unexpected error has occurred. Try updating the gem.'
+        exit 1
+      end
     end
   end
 end
