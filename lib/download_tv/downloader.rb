@@ -11,7 +11,7 @@ module DownloadTV
         ->(n) { n.include?('2160p') },
         ->(n) { n.include?('1080p') },
         ->(n) { n.include?('720p')  },
-        ->(n) { n.include?('WEB')   },
+        # ->(n) { n.include?('WEB')   },
         ->(n) { !n.include?('PROPER') && !n.include?('REPACK') }
       ]
 
