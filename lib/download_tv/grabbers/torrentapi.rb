@@ -17,8 +17,13 @@ module DownloadTV
       @agent.read_timeout = 2
       renew_token
       true
-    rescue Mechanize::ResponseCodeError, Net::HTTP::Persistent::Error
-      false
+    rescue Mechanize::ResponseCodeError, Net::HTTP::Persistent::Error => e
+      if e.response_code == '429'
+        sleep(@wait)
+        retry
+      else
+        false
+      end
     end
 
     ##

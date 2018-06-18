@@ -24,7 +24,8 @@ describe DownloadTV::Torrent do
   describe 'when giving it a default grabber' do
     it 'has a default order' do
       t = DownloadTV::Torrent.new(nil)
-      t.g_instances.first.class.name.must_equal 'DownloadTV::TorrentAPI'
+      expected = t.grabbers.map { |i| "DownloadTV::#{i}"}
+      t.g_instances.map { |i| i.class.name}.must_equal expected
     end
 
     %w[Eztv KAT ThePirateBay TorrentAPI].each do |g|
