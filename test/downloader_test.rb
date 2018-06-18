@@ -78,13 +78,6 @@ describe DownloadTV::Downloader do
       dl.filter_shows(links).must_equal res
     end
 
-    it 'removes names with WEB in them' do
-      dl = DownloadTV::Downloader.new(path: config_path)
-      links = [['Link 1 WEBRIP', ''], ['Link 2 rip', ''], ['Link.720p.rip', '']]
-      res = [['Link 2 rip', '']]
-      dl.filter_shows(links).must_equal res
-    end
-
     it 'removes names without PROPER or REPACK in them' do
       dl = DownloadTV::Downloader.new(path: config_path)
       links = [['Link 1', ''], ['Link 2 2160p', ''], ['Link 3', ''], ['Link 4 PROPER', ''], ['Link REPACK 5', '']]
