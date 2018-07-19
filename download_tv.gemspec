@@ -21,7 +21,6 @@ Gem::Specification.new do |s|
   s.require_paths = ['lib']
 
   s.executables = ['tv']
-  s.default_executable = 'tv'
 
   s.add_development_dependency 'bundler', '~> 1.15'
   s.add_development_dependency 'rake', '~> 10.0'
@@ -30,6 +29,5 @@ Gem::Specification.new do |s|
   s.add_dependency('json')
   s.add_dependency('mechanize')
 
-  s.has_rdoc    = false
   s.license     = 'MIT'
 end
