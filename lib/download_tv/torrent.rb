@@ -5,8 +5,7 @@ module DownloadTV
     attr_reader :g_instances, :tries
 
     def grabbers
-      # %w[TorrentAPI ThePirateBay Eztv KAT]
-      %w[TorrentAPI ThePirateBay Eztv]
+      %w[TorrentAPI ThePirateBay Eztv KAT]
     end
 
     def initialize(default_grabber = nil)
