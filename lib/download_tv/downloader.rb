@@ -2,7 +2,7 @@ module DownloadTV
   ##
   # Entry point of the application
   class Downloader
-    attr_reader :offset, :config
+    attr_reader :config
 
     def initialize(config = {})
       @config = Configuration.new(config) # Load configuration
