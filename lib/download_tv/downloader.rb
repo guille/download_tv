@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module DownloadTV
   ##
   # Entry point of the application

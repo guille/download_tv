@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module DownloadTV
   ##
   # Class in charge of managing the link grabbers

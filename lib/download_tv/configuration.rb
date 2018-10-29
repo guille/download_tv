@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module DownloadTV
   ##
   # Class used for managing the configuration of the application

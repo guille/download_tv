@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'json'
 require 'mechanize'
 require 'date'
@@ -13,7 +15,7 @@ require 'download_tv/linkgrabber'
 require 'download_tv/subtitles'
 
 module DownloadTV
-  USER_AGENT = "DownloadTV #{DownloadTV::VERSION}".freeze
+  USER_AGENT = "DownloadTV #{DownloadTV::VERSION}"
 
   class NoTorrentsError < StandardError; end
 
