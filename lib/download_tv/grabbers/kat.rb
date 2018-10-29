@@ -8,20 +8,29 @@ module DownloadTV
       super('https://katcr.co/advanced-usearch/')
     end
 
-    def get_links(_show)
+    def get_links(show)
       tries = 0
       max_tries = 5
 
       params = {
         'category': 'TV',
         'orderby': 'seeds-desc',
-        'search': s
+        'search': show
       }
 
-      data = @agent.post(@url, params).search('tbody tr td[1]')
+      data = @agent.post(@url, params)
+                   .search('tbody tr td[1]')
 
-      names = data.map { |i| i.search('a.torrents_table__torrent_title b').text }
-      links = data.map { |i| i.search('div.torrents_table__actions a[3]').first.attribute('href').text }
+      names = data.map do |i|
+        i.search('a.torrents_table__torrent_title b')
+         .text
+      end
+      links = data.map do |i|
+        i.search('div.torrents_table__actions a[3]')
+         .first
+         .attribute('href')
+         .text
+      end
 
       raise NoTorrentsError if data.empty?
 

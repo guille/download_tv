@@ -11,12 +11,10 @@ module DownloadTV
     end
 
     def get_links(show)
-      # Format the url
       search = format(@url, show)
 
-      data = @agent.get(search).search('#searchResult tr')
       # Skip the header
-      data = data.drop 1
+      data = @agent.get(search).search('#searchResult tr').drop 1
 
       raise NoTorrentsError if data.empty?
 

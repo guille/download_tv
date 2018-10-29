@@ -44,16 +44,19 @@ module DownloadTV
     def load_cookie
       if File.exist? @cookie_path
         @agent.cookie_jar.load @cookie_path
-        page = @agent.get 'https://www.myepisodes.com/login.php'
-        if page.links[1].text == 'Register'
-          puts 'The cookie is invalid/has expired.'
-          login
-        end
-        @agent
+        return @agent if logged_in?
+
+        puts 'The cookie is invalid/has expired.'
       else
         puts 'Cookie file not found'
-        login
       end
+
+      login
+    end
+
+    def logged_in?
+      page = @agent.get 'https://www.myepisodes.com/login.php'
+      page.links[1].text == 'Register'
     end
 
     def save_cookie

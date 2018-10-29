@@ -5,7 +5,8 @@ module DownloadTV
   # Addic7ed prototype (WIP)
   class Addic7ed < LinkGrabber
     def initialize
-      super('http://www.addic7ed.com/search.php?search=%s&Submit=Search')
+      super('http://www.addic7ed.com/search.php?search=%s'\
+            '&Submit=Search')
     end
 
     def get_subs(show)

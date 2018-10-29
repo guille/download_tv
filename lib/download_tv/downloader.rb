@@ -26,12 +26,14 @@ module DownloadTV
     end
 
     ##
-    # Given a file containing a list of episodes (one per line), it tries to find download links for each
+    # Given a file containing a list of episodes (one per line)
+    # it tries to find download links for each
     def download_from_file(filename)
       if File.exist? filename
         filename = File.realpath(filename)
         t = Torrent.new(@config.content[:grabber])
-        File.readlines(filename).each { |show| download(get_link(t, show.chomp)) }
+        File.readlines(filename)
+            .each { |show| download(get_link(t, show.chomp)) }
       else
         puts "Error: #{filename} not found"
         exit 1
@@ -39,16 +41,13 @@ module DownloadTV
     end
 
     ##
-    # Finds download links for all new episodes aired since the last run of the program
-    # It connects to MyEpisodes in order to find which shows to track and which new episodes aired.
+    # Finds download links for all new episodes aired since
+    # the last run of the program
+    # It connects to MyEpisodes in order to find which shows
+    # to track and which new episodes aired.
     def run(dont_update_last_run, offset = 0)
       date = check_date(offset)
-
-      myepisodes = MyEpisodes.new(@config.content[:myepisodes_user], @config.content[:cookie])
-      # Log in using cookie by default
-      myepisodes.load_cookie
-      shows = myepisodes.get_shows(date)
-      to_download = fix_names(shows)
+      to_download = shows_to_download(date)
 
       if to_download.empty?
         puts 'Nothing to download'
@@ -91,9 +90,19 @@ module DownloadTV
       warn 'Wrong username/password combination'
     end
 
+    def shows_to_download(date)
+      myepisodes = MyEpisodes.new(@config.content[:myepisodes_user],
+                                  @config.content[:cookie])
+      # Log in using cookie by default
+      myepisodes.load_cookie
+      shows = myepisodes.get_shows(date)
+      fix_names(shows)
+    end
+
     ##
     # Uses a Torrent object to obtain links to the given tv show
-    # When :auto is true it will try to find the best match based on a set of filters
+    # When :auto is true it will try to find the best match
+    # based on a set of filters.
     # When it's false it will prompt the user to select the preferred result
     # Returns either a magnet link or an emptry string
     def get_link(torrent, show)
@@ -105,22 +114,27 @@ module DownloadTV
         links = filter_shows(links)
         links.first[1]
       else
-        puts "Collecting links for #{show}"
-        links.each_with_index { |data, i| puts "#{i}\t\t#{data[0]}" }
-
-        puts
-        print 'Select the torrent you want to download [-1 to skip]: '
-
-        i = $stdin.gets.chomp.to_i
-
-        while i >= links.size || i < -1
-          puts 'Index out of bounds. Try again [-1 to skip]: '
-          i = $stdin.gets.chomp.to_i
-        end
-
-        # Use -1 to skip the download
-        i == -1 ? '' : links[i][1]
+        prompt_links(links)
+        get_link_from_user(links)
       end
+    end
+
+    def get_link_from_user(links)
+      i = $stdin.gets.chomp.to_i
+
+      until i.between?(-1, links.size - 1)
+        puts 'Index out of bounds. Try again [-1 to skip]: '
+        i = $stdin.gets.chomp.to_i
+      end
+
+      i == -1 ? '' : links[i][1]
+    end
+
+    def prompt_links(links)
+      links.each_with_index { |data, i| puts "#{i}\t\t#{data[0]}" }
+
+      puts
+      print 'Select the torrent you want to download [-1 to skip]: '
     end
 
     def check_date(offset)
@@ -142,14 +156,16 @@ module DownloadTV
       # Ignored shows
       s = shows.reject do |i|
         # Remove season+episode
-        @config.content[:ignored].include?(i.split(' ')[0..-2].join(' ').downcase)
+        @config.content[:ignored]
+               .include?(i.split(' ')[0..-2].join(' ').downcase)
       end
 
       s.map { |i| i.gsub(/ \(.+\)|[':]/, '') }
     end
 
     ##
-    # Iteratively applies filters until they've all been applied or applying the next filter would result in no results
+    # Iteratively applies filters until they've all been applied
+    # or applying the next filter would result in no results
     # These filters are defined at @filters
     def filter_shows(links)
       @filters.each do |f| # Apply each filter

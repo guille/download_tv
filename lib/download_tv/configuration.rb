@@ -8,7 +8,7 @@ module DownloadTV
 
     def initialize(content = {}, force_change = false)
       FileUtils.mkdir_p(File.join(ENV['HOME'], '.config', 'download_tv'))
-      @config_path = content[:path] || File.join(ENV['HOME'], '.config', 'download_tv', 'config')
+      @config_path = content[:path] || default_config_path
 
       if File.exist? @config_path
         load_config
@@ -22,25 +22,44 @@ module DownloadTV
     end
 
     def change_configuration
+      prompt_for_myep_user
+      prompt_for_cookie
+      prompt_for_ignored
+      STDOUT.flush
+
+      set_default_values
+      serialize
+    end
+
+    def prompt_for_myep_user
       if @content[:myepisodes_user]
         print "Enter your MyEpisodes username (#{@content[:myepisodes_user]}) : "
       else
         print 'Enter your MyEpisodes username: '
       end
       @content[:myepisodes_user] = STDIN.gets.chomp
+    end
 
+    def prompt_for_cookie
       print 'Save cookie? (y)/n: '
       @content[:cookie] = !(STDIN.gets.chomp.casecmp? 'n')
+    end
 
+    def prompt_for_ignored
       if @content[:ignored]
         puts "Enter a comma-separated list of shows to ignore: (#{@content[:ignored]})"
       else
         puts 'Enter a comma-separated list of shows to ignore: '
       end
 
-      @content[:ignored] = STDIN.gets.chomp.split(',').map(&:strip).map(&:downcase)
-      STDOUT.flush
+      @content[:ignored] = STDIN.gets
+                                .chomp
+                                .split(',')
+                                .map(&:strip)
+                                .map(&:downcase)
+    end
 
+    def set_default_values
       # When modifying existing config, keeps previous values
       # When creating new one, sets defaults
       @content[:auto] ||= true
@@ -48,8 +67,6 @@ module DownloadTV
       @content[:grabber] ||= 'TorrentAPI'
       @content[:date] ||= Date.today - 1
       @content[:version] = DownloadTV::VERSION
-
-      serialize
     end
 
     def serialize
@@ -69,12 +86,19 @@ module DownloadTV
       retry
     end
 
+    def default_config_path
+      File.join(ENV['HOME'], '.config', 'download_tv', 'config')
+    end
+
     ##
     # Returns true if a major or minor update has been detected
     # Returns false if a patch has been detected
     # Returns nil if it's the same version
     def breaking_changes?(version)
-      DownloadTV::VERSION.split('.').zip(version.split('.')).find_index { |x, y| y > x }&.< 2
+      DownloadTV::VERSION.split('.')
+                         .zip(version.split('.'))
+                         .find_index { |x, y| y > x }
+                         &.< 2
     end
 
     def print_config

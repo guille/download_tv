@@ -24,15 +24,18 @@ describe DownloadTV::Downloader do
 
   describe 'the fix_names method' do
     it 'should remove apostrophes, colons and parens' do
-      shows = ['Mr. Foo S01E02', 'Bar (UK) S00E22', "Let's S05E03", 'Baz: The Story S05E22']
-      result = ['Mr. Foo S01E02', 'Bar S00E22', 'Lets S05E03', 'Baz The Story S05E22']
+      shows = ['Mr. Foo S01E02', 'Bar (UK) S00E22', "Let's S05E03",
+               'Baz: The Story S05E22']
+      result = ['Mr. Foo S01E02', 'Bar S00E22', 'Lets S05E03',
+                'Baz The Story S05E22']
 
       dl = DownloadTV::Downloader.new(ignored: [], path: config_path)
       dl.fix_names(shows).must_equal result
     end
 
     it 'should remove ignored shows' do
-      shows = ['Mr. Foo S01E02', 'Bar (UK) S00E22', 'Ignored S20E22', "Let's S05E03"]
+      shows = ['Mr. Foo S01E02', 'Bar (UK) S00E22', 'Ignored S20E22',
+               "Let's S05E03"]
       result = ['Mr. Foo S01E02', 'Bar S00E22', 'Lets S05E03']
 
       dl = DownloadTV::Downloader.new(ignored: ['ignored'], path: config_path)
@@ -82,7 +85,8 @@ describe DownloadTV::Downloader do
 
     it 'removes names without PROPER or REPACK in them' do
       dl = DownloadTV::Downloader.new(path: config_path)
-      links = [['Link 1', ''], ['Link 2 2160p', ''], ['Link 3', ''], ['Link 4 PROPER', ''], ['Link REPACK 5', '']]
+      links = [['Link 1', ''], ['Link 2 2160p', ''], ['Link 3', ''],
+               ['Link 4 PROPER', ''], ['Link REPACK 5', '']]
       res = [['Link 4 PROPER', ''], ['Link REPACK 5', '']]
       dl.filter_shows(links).must_equal res
     end

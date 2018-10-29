@@ -20,8 +20,15 @@ module DownloadTV
       # EZTV shows 50 latest releases if it can't find the torrent
       raise NoTorrentsError if data.size == 50
 
-      names = data.collect { |i| i.attribute('title').text.chomp(' Magnet Link') }
-      links = data.collect { |i| i.attribute('href').text }
+      names = data.collect do |i|
+        i.attribute('title')
+         .text
+         .chomp(' Magnet Link')
+      end
+      links = data.collect do |i|
+        i.attribute('href')
+         .text
+      end
 
       names.zip(links)
     end
