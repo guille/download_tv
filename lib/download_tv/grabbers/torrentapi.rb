@@ -31,12 +31,20 @@ module DownloadTV
     end
 
     ##
+    # Makes a get request tp the given url.
+    # Returns the JSON response parsed into a hash
+    def request_and_parse(url)
+      page = @agent.get(url).content
+      JSON.parse(page)
+    end
+
+    ##
     # Connects to Torrentapi.org and requests a token, returning it
     # Tokens automatically expire every 15 minutes
     def renew_token
-      page = @agent.get('https://torrentapi.org/pubapi_v2.php?get_token=get_token&app_id=DownloadTV').content
-
-      obj = JSON.parse(page)
+      obj = request_and_parse('https://torrentapi.org/pubapi_v2'\
+                              '.php?get_token=get_token&app_id='\
+                              'DownloadTV')
 
       @token = obj['token']
     end
@@ -46,20 +54,17 @@ module DownloadTV
 
       search = format(@url, show, @token)
 
-      page = @agent.get(search).content
-      obj = JSON.parse(page)
+      obj = request_and_parse(search)
 
       if obj['error_code'] == 4 # Token expired
         renew_token
         search = format(@url, show, @token)
-        page = @agent.get(search).content
-        obj = JSON.parse(page)
+        obj = request_and_parse(search)
       end
 
       while obj['error_code'] == 5 # Violate 1req/2s limit
         sleep(@wait)
-        page = @agent.get(search).content
-        obj = JSON.parse(page)
+        obj = request_and_parse(search)
       end
 
       raise NoTorrentsError if obj['error']
