@@ -13,15 +13,7 @@ module DownloadTV
     end
 
     def login
-      if !@user || @user == ''
-        print 'Enter your MyEpisodes username: '
-        @user = STDIN.gets.chomp
-      end
-
-      print 'Enter your MyEpisodes password: '
-      pass = STDIN.noecho(&:gets).chomp
-      puts
-
+      pass = prompt_user_data
       page = @agent.get 'https://www.myepisodes.com/login.php'
 
       login_form = page.forms[1]
@@ -35,6 +27,18 @@ module DownloadTV
       save_cookie if @save_cookie
 
       @agent
+    end
+
+    def prompt_user_data
+      if !@user || @user == ''
+        print 'Enter your MyEpisodes username: '
+        @user = STDIN.gets.chomp
+      end
+
+      print 'Enter your MyEpisodes password: '
+      pass = STDIN.noecho(&:gets).chomp
+      puts
+      pass
     end
 
     def load_cookie
@@ -61,19 +65,27 @@ module DownloadTV
       page = @agent.get 'https://www.myepisodes.com/ajax/service.php?mode=view_privatelist'
       shows = page.parser.css('tr.past')
 
-      s = shows.select do |i|
-        airdate = i.css('td.date')[0].text
-        Date.parse(airdate) >= last
-      end
+      shows = filter_newer_shows(shows, last)
 
-      s.map do |i|
-        name = i.css('td.showname').text
+      build_show_strings(shows)
+    end
+
+    def filter_newer_shows(shows, date)
+      shows.select do |i|
+        airdate = i.css('td.date')[0].text
+        Date.parse(airdate) >= date
+      end
+    end
+
+    def build_show_strings(shows)
+      shows.map do |i|
+        sname = i.css('td.showname').text
         ep = i.css('td.longnumber').text
 
         ep.insert(0, 'S')
         ep.sub!('x', 'E')
 
-        "#{name} #{ep}"
+        "#{sname} #{ep}"
       end
     end
   end
