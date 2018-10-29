@@ -6,9 +6,9 @@ module DownloadTV
       super('https://eztv.ag/search/%s')
     end
 
-    def get_links(s)
+    def get_links(show)
       # Format the url
-      search = format(@url, s)
+      search = format(@url, show)
 
       data = @agent.get(search).search('a.magnet')
 

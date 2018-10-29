@@ -28,6 +28,7 @@ module DownloadTV
         exit 1
       end
       return if @g_instances.first.online?
+
       # We won't be using this grabber
       warn "Problem accessing #{@g_instances.first.class.name}"
       @tries -= 1

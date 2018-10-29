@@ -37,18 +37,18 @@ module DownloadTV
       @token = obj['token']
     end
 
-    def get_links(s)
+    def get_links(show)
       @token ||= renew_token
 
       # Format the url
-      search = format(@url, s, @token)
+      search = format(@url, show, @token)
 
       page = @agent.get(search).content
       obj = JSON.parse(page)
 
       if obj['error_code'] == 4 # Token expired
         renew_token
-        search = format(@url, s, @token)
+        search = format(@url, show, @token)
         page = @agent.get(search).content
         obj = JSON.parse(page)
       end

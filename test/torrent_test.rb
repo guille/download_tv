@@ -25,8 +25,8 @@ describe DownloadTV::Torrent do
   describe 'when giving it a default grabber' do
     it 'has a default order' do
       t = DownloadTV::Torrent.new(nil)
-      expected = grabber_names.map { |i| "DownloadTV::#{i}"}
-      t.g_instances.map { |i| i.class.name}.must_equal expected
+      expected = grabber_names.map { |i| "DownloadTV::#{i}" }
+      t.g_instances.map { |i| i.class.name }.must_equal expected
     end
 
     grabber_names.each do |g|

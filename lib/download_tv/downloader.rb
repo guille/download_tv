@@ -66,6 +66,7 @@ module DownloadTV
           to_download.size.times do
             magnet = queue.pop
             next if magnet == '' # Doesn't download if no torrents are found
+
             download(magnet)
           end
         end
@@ -93,8 +94,8 @@ module DownloadTV
     # When :auto is true it will try to find the best match based on a set of filters
     # When it's false it will prompt the user to select the preferred result
     # Returns either a magnet link or an emptry string
-    def get_link(t, show)
-      links = t.get_links(show)
+    def get_link(torrent, show)
+      links = torrent.get_links(show)
 
       return '' if links.empty?
 

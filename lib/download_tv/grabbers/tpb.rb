@@ -8,9 +8,9 @@ module DownloadTV
       super("#{proxy}/search/%s/0/7/0")
     end
 
-    def get_links(s)
+    def get_links(show)
       # Format the url
-      search = format(@url, s)
+      search = format(@url, show)
 
       data = @agent.get(search).search('#searchResult tr')
       # Skip the header

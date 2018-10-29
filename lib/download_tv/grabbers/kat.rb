@@ -6,7 +6,7 @@ module DownloadTV
       super('https://katcr.co/advanced-usearch/')
     end
 
-    def get_links(s)
+    def get_links(_show)
       tries = 0
       max_tries = 5
 
@@ -27,6 +27,7 @@ module DownloadTV
     rescue Net::HTTP::Persistent::Error => e
       raise unless e.message =~ /too many connection resets/
       raise if tries >= max_tries
+
       tries += 1
       retry
     end

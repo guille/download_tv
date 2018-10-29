@@ -12,18 +12,18 @@ module DownloadTV
 
     def online?
       @agent.read_timeout = 2
-      url = if @url.include? "%s"
-        format(@url, 'test')
-      else
-        @url
-      end
+      url = if @url.include? '%s'
+              format(@url, 'test')
+            else
+              @url
+            end
       @agent.head(url)
       true
     rescue Mechanize::ResponseCodeError, Net::HTTP::Persistent::Error
       false
     end
 
-    def get_links(_s)
+    def get_links(_show)
       raise NotImplementedError
     end
   end
