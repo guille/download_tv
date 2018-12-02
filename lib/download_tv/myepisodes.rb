@@ -56,7 +56,7 @@ module DownloadTV
 
     def logged_in?
       page = @agent.get 'https://www.myepisodes.com/login.php'
-      page.links[1].text == 'Register'
+      page.links[1].text != 'Register'
     end
 
     def save_cookie
