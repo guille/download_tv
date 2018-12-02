@@ -32,8 +32,8 @@ module DownloadTV
       if File.exist? filename
         filename = File.realpath(filename)
         t = Torrent.new(@config.content[:grabber])
-        File.readlines(filename)
-            .each { |show| download(get_link(t, show.chomp)) }
+        to_download = File.readlines(filename, chomp:true)
+        fix_names(to_download).each { |show| download(get_link(t, show)) }
       else
         puts "Error: #{filename} not found"
         exit 1
