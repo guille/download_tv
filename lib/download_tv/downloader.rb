@@ -22,6 +22,7 @@ module DownloadTV
 
     def download_single_show(show)
       t = Torrent.new(@config.content[:grabber])
+      show = fix_names([show]).first
       download(get_link(t, show))
     end
 
