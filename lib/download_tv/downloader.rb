@@ -46,20 +46,29 @@ module DownloadTV
     # It connects to MyEpisodes in order to find which shows
     # to track and which new episodes aired.
     def run(dont_update_last_run, offset = 0)
+      pending = @config.content[:pending]
+      @config.content[:pending].clear
+      pending ||= []
       date = check_date(offset)
+      if pending.empty? and date.nil?
+        puts 'Everything up to date'
+        exit
+      end
+
       to_download = shows_to_download(date)
+      to_download.concat pending
 
       if to_download.empty?
         puts 'Nothing to download'
 
       else
-        t = Torrent.new(@config.content[:grabber])
+        t = Torrent.new()
 
         queue = Queue.new
 
         # Adds a link (or empty string to the queue)
         link_t = Thread.new do
-          to_download.each { |show| queue << get_link(t, show) }
+          to_download.each { |show| queue << get_link(t, show, true) }
         end
 
         # Downloads the links as they are added
@@ -96,6 +105,7 @@ module DownloadTV
       # Log in using cookie by default
       myepisodes.load_cookie
       shows = myepisodes.get_shows(date)
+      shows = reject_ignored(shows)
       fix_names(shows)
     end
 
@@ -105,10 +115,13 @@ module DownloadTV
     # based on a set of filters.
     # When it's false it will prompt the user to select the preferred result
     # Returns either a magnet link or an emptry string
-    def get_link(torrent, show)
+    def get_link(torrent, show, save_pending=false)
       links = torrent.get_links(show)
 
-      return '' if links.empty?
+      if links.empty?
+        @config.content[:pending] << show if save_pending
+        return '' 
+      end
 
       if @config.content[:auto]
         links = filter_shows(links)
@@ -137,13 +150,13 @@ module DownloadTV
       print 'Select the torrent you want to download [-1 to skip]: '
     end
 
+    ##
+    # Returns the date from which to check for shows
+    # Or nil if the date is today
     def check_date(offset)
       last = @config.content[:date]
       if last - offset != Date.today
         last - offset
-      else
-        puts 'Everything up to date'
-        exit
       end
     end
 
@@ -151,16 +164,21 @@ module DownloadTV
     # Given a list of shows and episodes:
     #
     # * Removes ignored shows
-    # * Removes apostrophes, colons and parens
-    def fix_names(shows)
-      # Ignored shows
-      s = shows.reject do |i|
+    def reject_ignored(shows)
+      shows.reject do |i|
         # Remove season+episode
         @config.content[:ignored]
                .include?(i.split(' ')[0..-2].join(' ').downcase)
       end
+      
+    end
 
-      s.map { |i| i.gsub(/ \(.+\)|[':]/, '') }
+    ##
+    # Given a list of shows and episodes:
+    #
+    # * Removes apostrophes, colons and parens
+    def fix_names(shows)
+      shows.map { |i| i.gsub(/ \(.+\)|[':]/, '') }
     end
 
     ##

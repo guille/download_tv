@@ -52,8 +52,6 @@ module DownloadTV
 
       links
     rescue NoTorrentsError
-      puts "No torrents found for #{show} "\
-           "using #{@g_instances.first.class.name}"
 
       # Use next grabber
       if @tries.positive?
@@ -64,7 +62,7 @@ module DownloadTV
       else
         reset_grabbers_order
         reset_tries
-        # Handle show not found here!!
+        puts "No torrents found for #{show}"
         return []
       end
     end

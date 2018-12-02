@@ -66,6 +66,7 @@ module DownloadTV
       @content[:subs] ||= true
       @content[:grabber] ||= 'TorrentAPI'
       @content[:date] ||= Date.today - 1
+      @content[:pending] = []
       @content[:version] = DownloadTV::VERSION
     end
 
@@ -103,6 +104,15 @@ module DownloadTV
 
     def print_config
       @content.each { |k, v| puts "#{k}: #{v}" }
+    end
+
+    def print_attr(arg)
+      puts @content[arg]
+    end
+
+    def clear_pending
+      @content[:pending].clear
+      @content.serialize
     end
   end
 end

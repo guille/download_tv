@@ -106,6 +106,7 @@ describe DownloadTV::Configuration do
       c.content[:ignored].must_equal ['anything']
       c.content[:auto].must_equal true
       c.content[:subs].must_equal true
+      c.content[:pending].must_equal []
       c.content[:grabber].must_equal 'TorrentAPI'
       c.content[:date].must_equal(Date.today - 1)
       c.content[:version].must_equal DownloadTV::VERSION
@@ -151,6 +152,7 @@ describe DownloadTV::Configuration do
       content[:ignored].must_equal ['anything']
       content[:auto].must_equal true
       content[:subs].must_equal true
+      content[:pending].must_equal []
       content[:grabber].must_equal 'TorrentAPI'
       content[:date].must_equal Date.today - 1
       content[:version].must_equal DownloadTV::VERSION

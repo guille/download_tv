@@ -33,21 +33,23 @@ describe DownloadTV::Downloader do
       dl.fix_names(shows).must_equal result
     end
 
+  end
+
+  describe 'the reject_ignored method' do
     it 'should remove ignored shows' do
-      shows = ['Mr. Foo S01E02', 'Bar (UK) S00E22', 'Ignored S20E22',
-               "Let's S05E03"]
-      result = ['Mr. Foo S01E02', 'Bar S00E22', 'Lets S05E03']
+      shows = ['Bar S00E22', 'Ignored S20E22']
+      result = ['Bar S00E22']
 
       dl = DownloadTV::Downloader.new(ignored: ['ignored'], path: config_path)
-      dl.fix_names(shows).must_equal result
+      dl.reject_ignored(shows).must_equal result
     end
+    
   end
 
   describe 'the check_date method' do
     it 'exits the script when up to date' do
       dl = DownloadTV::Downloader.new(date: Date.today, path: config_path)
-      to_run = -> { run_silently { dl.check_date(0) } }
-      to_run.must_raise SystemExit
+      dl.check_date(0).must_be_nil
     end
 
     it 'uses the offset to adjust the date' do
@@ -105,11 +107,15 @@ describe DownloadTV::Downloader do
       show = 'Example Show S01E01'
 
       t.expect(:get_links, [], [show])
-      dl = DownloadTV::Downloader.new(auto: true, path: config_path)
-      dl.get_link(t, show).must_equal ''
+      dl = DownloadTV::Downloader.new(auto: true, path: config_path, pending: ['show 11'])
+      dl.get_link(t, show, true).must_equal ''
+      dl.config.content[:pending].must_equal ['show 11', show]
+
       t.expect(:get_links, [], [show])
-      dl = DownloadTV::Downloader.new(auto: false, path: config_path)
-      dl.get_link(t, show).must_equal ''
+      dl = DownloadTV::Downloader.new(auto: false, path: config_path, pending: [])
+      dl.get_link(t, show, true).must_equal ''
+      dl.config.content[:pending].must_include show
+
       t.verify
     end
 
