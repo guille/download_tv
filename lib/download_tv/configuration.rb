@@ -98,7 +98,7 @@ module DownloadTV
     def breaking_changes?(version)
       DownloadTV::VERSION.split('.')
                          .zip(version.split('.'))
-                         .find_index { |x, y| y > x }
+                         .find_index { |x, y| y < x }
                          &.< 2
     end
 
