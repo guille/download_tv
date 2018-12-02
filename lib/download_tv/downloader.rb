@@ -33,7 +33,7 @@ module DownloadTV
       if File.exist? filename
         filename = File.realpath(filename)
         t = Torrent.new(@config.content[:grabber])
-        to_download = File.readlines(filename, chomp:true)
+        to_download = File.readlines(filename, chomp: true)
         fix_names(to_download).each { |show| download(get_link(t, show)) }
       else
         puts "Error: #{filename} not found"
@@ -51,7 +51,7 @@ module DownloadTV
       @config.content[:pending].clear
       pending ||= []
       date = check_date(offset)
-      if pending.empty? and date.nil?
+      if pending.empty? && date.nil?
         puts 'Everything up to date'
         exit
       end
@@ -63,7 +63,7 @@ module DownloadTV
         puts 'Nothing to download'
 
       else
-        t = Torrent.new()
+        t = Torrent.new 
 
         queue = Queue.new
 
@@ -116,12 +116,12 @@ module DownloadTV
     # based on a set of filters.
     # When it's false it will prompt the user to select the preferred result
     # Returns either a magnet link or an emptry string
-    def get_link(torrent, show, save_pending=false)
+    def get_link(torrent, show, save_pending = false)
       links = torrent.get_links(show)
 
       if links.empty?
         @config.content[:pending] << show if save_pending
-        return '' 
+        return ''
       end
 
       if @config.content[:auto]
@@ -156,9 +156,8 @@ module DownloadTV
     # Or nil if the date is today
     def check_date(offset)
       last = @config.content[:date]
-      if last - offset != Date.today
-        last - offset
-      end
+      last -= offset
+      last if last != Date.today
     end
 
     ##
@@ -171,7 +170,6 @@ module DownloadTV
         @config.content[:ignored]
                .include?(i.split(' ')[0..-2].join(' ').downcase)
       end
-      
     end
 
     ##

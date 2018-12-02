@@ -55,7 +55,7 @@ describe DownloadTV::Configuration do
       create_dummy_config(config_path)
 
       split = DownloadTV::VERSION.split('.')
-      split[0] = (split[0].to_i + 1).to_s
+      split[0] = (split[0].to_i - 1).to_s
       new_version = split.join('.')
       c = DownloadTV::Configuration.new(path: config_path)
       c.breaking_changes?(new_version).must_equal true
@@ -65,7 +65,7 @@ describe DownloadTV::Configuration do
       create_dummy_config(config_path)
 
       split = DownloadTV::VERSION.split('.')
-      split[1] = (split[1].to_i + 1).to_s
+      split[1] = (split[1].to_i - 1).to_s
       new_version = split.join('.')
       c = DownloadTV::Configuration.new(path: config_path)
       c.breaking_changes?(new_version).must_equal true
@@ -75,7 +75,7 @@ describe DownloadTV::Configuration do
       create_dummy_config(config_path)
 
       split = DownloadTV::VERSION.split('.')
-      split[2] = (split[2].to_i + 1).to_s
+      split[2] = (split[2].to_i - 1).to_s
       new_version = split.join('.')
       c = DownloadTV::Configuration.new(path: config_path)
       c.breaking_changes?(new_version).must_equal false

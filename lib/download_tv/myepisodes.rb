@@ -66,6 +66,7 @@ module DownloadTV
 
     def get_shows(last)
       return [] if last.nil?
+
       page = @agent.get 'https://www.myepisodes.com/ajax/service.php?mode=view_privatelist'
       shows = page.parser.css('tr.past')
 

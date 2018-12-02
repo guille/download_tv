@@ -32,7 +32,6 @@ describe DownloadTV::Downloader do
       dl = DownloadTV::Downloader.new(ignored: [], path: config_path)
       dl.fix_names(shows).must_equal result
     end
-
   end
 
   describe 'the reject_ignored method' do
@@ -43,7 +42,6 @@ describe DownloadTV::Downloader do
       dl = DownloadTV::Downloader.new(ignored: ['ignored'], path: config_path)
       dl.reject_ignored(shows).must_equal result
     end
-    
   end
 
   describe 'the check_date method' do

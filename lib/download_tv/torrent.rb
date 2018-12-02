@@ -52,7 +52,6 @@ module DownloadTV
 
       links
     rescue NoTorrentsError
-
       # Use next grabber
       if @tries.positive?
         @tries -= 1
@@ -63,7 +62,7 @@ module DownloadTV
         reset_grabbers_order
         reset_tries
         puts "No torrents found for #{show}"
-        return []
+        []
       end
     end
 
