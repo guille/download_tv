@@ -47,7 +47,7 @@ module DownloadTV
     # It connects to MyEpisodes in order to find which shows
     # to track and which new episodes aired.
     def run(dont_update_last_run, offset = 0)
-      pending = @config.content[:pending]
+      pending = @config.content[:pending].clone
       @config.content[:pending].clear
       pending ||= []
       date = check_date(offset)
