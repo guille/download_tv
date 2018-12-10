@@ -66,7 +66,7 @@ module DownloadTV
       @content[:subs] ||= true
       @content[:grabber] ||= 'TorrentAPI'
       @content[:date] ||= Date.today - 1
-      @content[:pending] = []
+      @content[:pending] ||= []
       @content[:version] = DownloadTV::VERSION
     end
 
