@@ -112,7 +112,7 @@ module DownloadTV
 
     def clear_pending
       @content[:pending].clear
-      @content.serialize
+      serialize
     end
   end
 end
