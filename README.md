@@ -21,6 +21,8 @@ Specific options:
     -o, --offset OFFSET              Move back the last run offset
     -f, --file PATH                  Download shows from a file
     -d, --download SHOW              Downloads given show
+        --season SEASON              Limit the show download to a specific season
+    -t, --tomorrow                   Download shows airing today
     -c, --configure                  Configures defaults
         --show-config                Show current configuration values
         --dry-run                    Don't write to the date file
@@ -30,9 +32,8 @@ Specific options:
         --show-grabbers              List available grabbers
     -p, --pending                    Show list of pending downloads
         --clear-pending              Clear list of pending downloads
-    -v                               Print version
+    -v, --version                    Print version
     -h, --help                       Show this message
-
 ```
 
 ### MyEpisodes integration
@@ -53,6 +54,8 @@ In order to download a single episode, use the -d flag, quoting the string when 
 
 Although it uses some settings and grabbers specific for TV shows, this option can also be used as a quick way to find and download any torrent.
 
+It can be used with the --season flag to try to find and download a whole season of the given show: *tv -d "Breaking Bad" --season 4*. It will start searching from episode 1 and continue until it can't find any torrent for the episode.
+
 ### Multi torrent download
 
 The -f flag can be used to read the list of episodes to download from a file. Each line of the file is interpreted as a episode to download: *tv -f /path/to/listofeps*
@@ -65,7 +68,7 @@ I usually publish a patch update to the gem when I detect one of them isn't work
 
 ### Pending shows
 
-download_tv version 2.5.0 persists the list of shows it can't find on a given execution (when connecting to MyEpisodes, not for single show or file downloads). This list can be viewed by passing the -p flag to the tv binary. The list can be cleared with the --clear-pending option.
+download_tv version 2.5.0 persists the list of shows it can't find on a given execution (when connecting to MyEpisodes, not for single show or file downloads) and it will try to find them again on following executions. This list can be viewed by passing the -p flag to the tv binary. The list can be cleared with the --clear-pending option.
 
 ### License
 

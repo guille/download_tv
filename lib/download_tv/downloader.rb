@@ -23,7 +23,18 @@ module DownloadTV
     def download_single_show(show, season = nil)
       t = Torrent.new(@config.content[:grabber])
       show = fix_names([show]).first
-      download(get_link(t, show))
+      if season
+        season.insert(0, '0') if season.size == 1
+        episode = "#{show} s#{season}e01"
+        loop do
+          link = get_link(t, episode)
+          break if link.empty?
+          download(link)
+          episode = episode.next
+        end
+      else
+        download(get_link(t, show))
+      end
     end
 
     ##

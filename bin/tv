@@ -95,8 +95,12 @@ begin
     dl = DownloadTV::Downloader.new(config)
     dl.run(options[:dry], options[:offset].abs)
   when 'dl'
-    dl = DownloadTV::Downloader.new(config)
-    dl.download_single_show(options[:arg])
+    if options[:arg]
+      dl = DownloadTV::Downloader.new(config)
+      dl.download_single_show(options[:arg], options[:season])
+    else
+      warn 'You must use the season option with the -d option'
+    end
   when 'file'
     dl = DownloadTV::Downloader.new(config)
     dl.download_from_file(options[:arg])
