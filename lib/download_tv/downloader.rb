@@ -20,7 +20,7 @@ module DownloadTV
       Thread.abort_on_exception = true
     end
 
-    def download_single_show(show)
+    def download_single_show(show, season = nil)
       t = Torrent.new(@config.content[:grabber])
       show = fix_names([show]).first
       download(get_link(t, show))
@@ -51,53 +51,75 @@ module DownloadTV
       @config.content[:pending].clear
       pending ||= []
       date = check_date(offset)
-      if pending.empty? && date.nil?
-        puts 'Everything up to date'
-        exit
-      end
 
-      to_download = shows_to_download(date)
-      to_download.concat pending
+      pending.concat shows_to_download(date) if date
 
-      if to_download.empty?
+      if pending.empty?
         puts 'Nothing to download'
-
       else
-        t = Torrent.new 
-
-        queue = Queue.new
-
-        # Adds a link (or empty string to the queue)
-        link_t = Thread.new do
-          to_download.each { |show| queue << get_link(t, show, true) }
-        end
-
-        # Downloads the links as they are added
-        download_t = Thread.new do
-          to_download.size.times do
-            magnet = queue.pop
-            next if magnet == '' # Doesn't download if no torrents are found
-
-            download(magnet)
-          end
-        end
-
-        # Downloading the subtitles
-        # subs_t = @config.content[:subs] and Thread.new do
-        #   to_download.each { |show| @s.get_subs(show) }
-        # end
-
-        link_t.join
-        download_t.join
-        # subs_t.join
-
+        find_and_download(pending)
         puts 'Completed. Exiting...'
       end
 
-      @config.content[:date] = Date.today unless dont_update_last_run
+      @config.content[:date] = [Date.today, @config.content[:date]].max unless dont_update_last_run
       @config.serialize
     rescue InvalidLoginError
       warn 'Wrong username/password combination'
+    end
+
+    ##
+    # Finds download links for all the episodes set to air today.
+    # TODO: Refactor with #run()
+    def run_ahead(dont_update_last_run)
+      pending = @config.content[:pending].clone
+      @config.content[:pending].clear
+      pending ||= []
+
+      # Has the program already been run with --tomorrow
+      if @config.content[:date] < Date.today.next
+        pending.concat today_shows_to_download
+      end
+
+      if pending.empty?
+        puts 'Nothing to download'
+      else
+        find_and_download(pending)
+        puts 'Completed. Exiting...'
+      end
+
+      @config.content[:date] = Date.today.next unless dont_update_last_run
+      @config.serialize
+    rescue InvalidLoginError
+      warn 'Wrong username/password combination'
+    end
+
+    def find_and_download(shows)
+      t = Torrent.new
+      queue = Queue.new
+
+      # Adds a link (or empty string to the queue)
+      link_t = Thread.new do
+        shows.each { |show| queue << get_link(t, show, true) }
+      end
+
+      # Downloads the links as they are added
+      download_t = Thread.new do
+        shows.size.times do
+          magnet = queue.pop
+          next if magnet == '' # Doesn't download if no torrents are found
+
+          download(magnet)
+        end
+      end
+
+      # Downloading the subtitles
+      # subs_t = @config.content[:subs] and Thread.new do
+      #   shows.each { |show| @s.get_subs(show) }
+      # end
+
+      link_t.join
+      download_t.join
+      # subs_t.join
     end
 
     def shows_to_download(date)
@@ -105,7 +127,16 @@ module DownloadTV
                                   @config.content[:cookie])
       # Log in using cookie by default
       myepisodes.load_cookie
-      shows = myepisodes.get_shows(date)
+      shows = myepisodes.get_shows_since(date)
+      shows = reject_ignored(shows)
+      fix_names(shows)
+    end
+
+    def today_shows_to_download
+      myepisodes = MyEpisodes.new(@config.content[:myepisodes_user],
+                                  @config.content[:cookie])
+      myepisodes.load_cookie
+      shows = myepisodes.today_shows
       shows = reject_ignored(shows)
       fix_names(shows)
     end
@@ -152,12 +183,16 @@ module DownloadTV
     end
 
     ##
-    # Returns the date from which to check for shows
-    # Or nil if the date is today
+    # Returns the date from which to check shows
+    # or nil if the program was already ran today
+    # Passing an offset skips this check
     def check_date(offset)
-      last = @config.content[:date]
-      last -= offset
-      last if last != Date.today
+      if offset.zero?
+        last = @config.content[:date]
+        last if last < Date.today
+      else
+        Date.today - offset
+      end
     end
 
     ##

@@ -30,6 +30,15 @@ opt_parser = OptionParser.new do |opts|
     options[:arg] = s
   end
 
+  opts.on('--season SEASON', 'Limit the show download to a specific season') do |s|
+    options[:cmd] = 'dl'
+    options[:season] = s
+  end
+
+  opts.on('-t', '--tomorrow', 'Download shows airing today') do |s|
+    options[:cmd] = 'tomorrow'
+  end
+
   opts.on('-c', '--configure', 'Configures defaults') do
     options[:cmd] = 'config'
   end
@@ -91,6 +100,9 @@ begin
   when 'file'
     dl = DownloadTV::Downloader.new(config)
     dl.download_from_file(options[:arg])
+  when 'tomorrow'
+    dl = DownloadTV::Downloader.new(config)
+    dl.run_ahead(options[:dry])
   when 'config'
     DownloadTV::Configuration.new(config, true)
   when 'showconfig'

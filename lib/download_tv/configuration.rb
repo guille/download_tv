@@ -71,6 +71,7 @@ module DownloadTV
     end
 
     def serialize
+      @content[:pending] = @content[:pending].uniq
       File.write(@config_path, JSON.generate(@content))
     end
 

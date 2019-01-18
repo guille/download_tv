@@ -64,17 +64,20 @@ module DownloadTV
       @agent
     end
 
-    def get_shows(last)
-      return [] if last.nil?
-
+    def get_shows_since(last)
       page = @agent.get 'https://www.myepisodes.com/ajax/service.php?mode=view_privatelist'
       shows = page.parser.css('tr.past')
-
       shows = filter_newer_shows(shows, last)
-
       build_show_strings(shows)
     end
 
+    def today_shows
+      page = @agent.get 'https://www.myepisodes.com/ajax/service.php?mode=view_privatelist'
+      shows = page.parser.css('tr.today')
+      build_show_strings(shows)
+    end
+
+    # Only keep the shows that have aired since the given date
     def filter_newer_shows(shows, date)
       shows.select do |i|
         airdate = i.css('td.date')[0].text
