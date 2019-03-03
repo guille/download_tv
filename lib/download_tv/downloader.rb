@@ -86,7 +86,12 @@ module DownloadTV
       @config.content[:pending].clear
       pending ||= []
 
-      # Has the program already been run with --tomorrow
+      # Make normal run first if necessary
+      if @config.content[:date] < Date.today
+        pending.concat shows_to_download(@config.content[:date])
+      end
+
+      # Only do --tomorrow run if it hasn't happened already
       if @config.content[:date] < Date.today.next
         pending.concat today_shows_to_download
       end

@@ -42,6 +42,8 @@ By default, download_tv connects to your MyEpisodes.com account and fetches the 
 
 The -o flag can be used in order to re-download the episodes from previous days. The --dry-run option is useful to prevent download_tv from updating the date (for example, when running the application shortly after an episode airs).
 
+Starting in version 2.5.4, download_tv includes the --tomorrow flag. By default, an execution of download_tv will download shows airing from the last execution of the program up to a day prior to the current day. Use this flag to include shows airing today in this search. This can be useful depending on your timezone or on the airtime of the shows you follow.
+
 **Note**: Due to API limitations, the gem won't find shows aired more than 14 days prior to the execution of the script.
 
 The options -c and --show-config allow the user to change or view the current configuration values, respectively. These options include your myepisodes username, whether to save cookies or ask for password on each run and the list of ignored shows among other things. The configuration files are (mostly) backwards compatible. The gem will force you to change your configuration after an update if there are breaking changes in it.
