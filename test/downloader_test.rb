@@ -62,37 +62,26 @@ describe DownloadTV::Downloader do
   end
 
   describe 'the filter_shows method' do
-    it 'removes names with 2160p in them' do
-      dl = DownloadTV::Downloader.new(path: config_path)
+    it 'removes names with exclude words in them' do
+      f = {:excludes => ["2160P"], :includes => []}
+      dl = DownloadTV::Downloader.new(path: config_path, filters: f)
       links = [['Link 1', ''], ['Link 2 2160p', ''], ['Link 3', '']]
       res = [['Link 1', ''], ['Link 3', '']]
       dl.filter_shows(links).must_equal res
     end
 
-    it 'removes names with 1080p in them' do
-      dl = DownloadTV::Downloader.new(path: config_path)
-      links = [['Link.1080p', ''], ['Link 2 2160p', ''], ['Link 3', '']]
-      res = [['Link 3', '']]
-      dl.filter_shows(links).must_equal res
-    end
-
-    it 'removes names with 720p in them' do
-      dl = DownloadTV::Downloader.new(path: config_path)
-      links = [['Link 1', ''], ['Link 2 720p', ''], ['Link.720p.rip', '']]
-      res = [['Link 1', '']]
-      dl.filter_shows(links).must_equal res
-    end
-
-    it 'removes names without PROPER or REPACK in them' do
-      dl = DownloadTV::Downloader.new(path: config_path)
+    it 'removes names without include words in them' do
+      f = {:excludes => [], :includes => %w[REPACK]}
+      dl = DownloadTV::Downloader.new(path: config_path, filters: f)
       links = [['Link 1', ''], ['Link 2 2160p', ''], ['Link 3', ''],
-               ['Link 4 PROPER', ''], ['Link REPACK 5', '']]
-      res = [['Link 4 PROPER', ''], ['Link REPACK 5', '']]
+               ['Link REPACK 5', '']]
+      res = [['Link REPACK 5', '']]
       dl.filter_shows(links).must_equal res
     end
 
     it "doesn't apply a filter if it would reject every option" do
-      dl = DownloadTV::Downloader.new(path: config_path)
+      f = {:excludes => %w[2160P 720P], :includes => []}
+      dl = DownloadTV::Downloader.new(path: config_path, filters: f)
       links = [['Link 1 720p', ''], ['Link 2 2160p', ''], ['Link 720p 3', '']]
       res = [['Link 1 720p', ''], ['Link 720p 3', '']]
       dl.filter_shows(links).must_equal res
