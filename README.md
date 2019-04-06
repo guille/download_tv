@@ -48,7 +48,7 @@ Starting in version 2.5.4, download_tv includes the --tomorrow flag. By default,
 
 The options -c and --show-config allow the user to change or view the current configuration values, respectively. These options include your myepisodes username, whether to save cookies or ask for password on each run and the list of ignored shows among other things. The configuration files are (mostly) backwards compatible. The gem will force you to change your configuration after an update if there are breaking changes in it.
 
-The `auto` flag toggles whether all the results for each show are prompted to the user for him to choose or if the application should try to choose the download link automatically (by default, prioritizes PROPER/REPACK releases at 480p).
+The `auto` flag toggles whether all the results for each show are prompted to the user for him to choose or if the application should try to choose the download link automatically (see Section Filters).
 
 ### Single torrent download
 
@@ -71,6 +71,14 @@ I usually publish a patch update to the gem when I detect one of them isn't work
 ### Pending shows
 
 download_tv version 2.5.0 persists the list of shows it can't find on a given execution (when connecting to MyEpisodes, not for single show or file downloads) and it will try to find them again on following executions. This list can be viewed by passing the -p flag to the tv binary. The list can be cleared with the --clear-pending option.
+
+### Filters
+
+download_tv version 2.5.5 adds the possibility of setting include/exclude filters for the automatic download of shows.
+
+Up until that version, the filters by default were excluding 1080p or 720p, as well as including PROPER or REPACK releases when available. From that version onwards, the user can specify in their configuration (`tv -c`) a list of words to include or exclude from their results.
+
+Please keep in mind that this is not a hard filter. The application will apply as many user-defined filters as possible **while still returning at least one result**.
 
 ### License
 

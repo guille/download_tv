@@ -9,14 +9,6 @@ module DownloadTV
     def initialize(config = {})
       @config = Configuration.new(config) # Load configuration
 
-      @filters = [
-        ->(n) { n.include?('2160p') },
-        ->(n) { n.include?('1080p') },
-        ->(n) { n.include?('720p')  },
-        # ->(n) { n.include?('WEB')   },
-        ->(n) { !n.include?('PROPER') && !n.include?('REPACK') }
-      ]
-
       Thread.abort_on_exception = true
     end
 
@@ -232,19 +224,12 @@ module DownloadTV
     end
 
     ##
-    # Iteratively applies filters until they've all been applied
-    # or applying the next filter would result in no results
-    # These filters are defined at @filters
+    # Removes links whose names don't match the user filters
+    # Runs until no filters are left to be applied or applying
+    # a filter would leave no results
     def filter_shows(links)
-      @filters.each do |f| # Apply each filter
-        new_links = links.reject { |name, _link| f.call(name) }
-        # Stop if the filter removes every release
-        break if new_links.empty?
-
-        links = new_links
-      end
-
-      links
+      f = Filterer.new(@config.content[:filters])
+      f.filter(links)
     end
 
     ##

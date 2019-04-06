@@ -25,6 +25,7 @@ module DownloadTV
       prompt_for_myep_user
       prompt_for_cookie
       prompt_for_ignored
+      prompt_for_filters
       STDOUT.flush
 
       set_default_values
@@ -37,7 +38,8 @@ module DownloadTV
       else
         print 'Enter your MyEpisodes username: '
       end
-      @content[:myepisodes_user] = STDIN.gets.chomp
+      input = STDIN.gets.chomp
+      @content[:myepisodes_user] = input if input
     end
 
     def prompt_for_cookie
@@ -59,6 +61,35 @@ module DownloadTV
                                 .map(&:downcase)
     end
 
+    def prompt_for_filters
+      puts "Current filters: (#{@content[:filters]})" if @content[:filters]
+
+      @content[:filters] = {}
+
+      puts 'Enter a comma-separated list of terms to include: '
+
+      @content[:filters][:includes] = STDIN.gets
+                                           .chomp
+                                           .split(',')
+                                           .map(&:strip)
+                                           .map(&:upcase)
+
+      puts 'Enter a comma-separated list of terms to exclude: '
+
+      @content[:filters][:excludes] = STDIN.gets
+                                           .chomp
+                                           .split(',')
+                                           .map(&:strip)
+                                           .map(&:upcase)
+    end
+
+    def default_filters
+      {
+        'includes' => %w[PROPER REPACK],
+        'excludes' => %w[2160P 1080P 720P]
+      }
+    end
+
     def set_default_values
       # When modifying existing config, keeps previous values
       # When creating new one, sets defaults
@@ -66,6 +97,7 @@ module DownloadTV
       @content[:subs] ||= true
       @content[:grabber] ||= 'TorrentAPI'
       @content[:date] ||= Date.today - 1
+      @content[:filters] ||= default_filters
       @content[:pending] ||= []
       @content[:version] = DownloadTV::VERSION
     end
