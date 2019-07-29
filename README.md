@@ -32,6 +32,7 @@ Specific options:
         --show-grabbers              List available grabbers
     -p, --pending                    Show list of pending downloads
         --clear-pending              Clear list of pending downloads
+    -q, --queue                      Add show episode to pending downloads list
     -v, --version                    Print version
     -h, --help                       Show this message
 ```
@@ -71,6 +72,8 @@ I usually publish a patch update to the gem when I detect one of them isn't work
 ### Pending shows
 
 download_tv version 2.5.0 persists the list of shows it can't find on a given execution (when connecting to MyEpisodes, not for single show or file downloads) and it will try to find them again on following executions. This list can be viewed by passing the -p flag to the tv binary. The list can be cleared with the --clear-pending option.
+
+Version 2.6.0 adds functionality to queue an episode by running `tv --queue "show name"`. The --queue parameter cannot be used in conjunction with any other parameters. On the plus side, it doesn't need the show name to be quoted or the spaces escaped.
 
 ### Filters
 

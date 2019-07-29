@@ -76,6 +76,11 @@ opt_parser = OptionParser.new do |opts|
     options[:cmd] = 'clearpending'
   end
 
+  opts.on('-q', '--queue SHOW', 'Add show episode to pending downloads list') do |s|
+    options[:cmd] = 'queue'
+    options[:arg] = s
+  end
+
   opts.on('-v', '--version', 'Print version') do
     puts DownloadTV::VERSION
     exit
@@ -115,6 +120,8 @@ begin
     DownloadTV::Configuration.new(config).print_attr(:pending)
   when 'clearpending'
     DownloadTV::Configuration.new(config).clear_pending
+  when 'queue'
+    DownloadTV::Configuration.new(config).queue_pending(options[:arg])
   end
 rescue Interrupt
   puts 'Interrupt signal detected. Exiting...'

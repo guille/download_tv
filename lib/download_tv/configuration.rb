@@ -147,5 +147,10 @@ module DownloadTV
       @content[:pending].clear
       serialize
     end
+
+    def queue_pending(show)
+      @content[:pending] << show
+      serialize
+    end
   end
 end
