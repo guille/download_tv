@@ -12,20 +12,23 @@ module DownloadTV
       # Format the url
       search = format(@url, show)
 
-      data = @agent.get(search).search('a.magnet')
+      raw_data = @agent.get(search)
+      raw_links = raw_data.search('a.magnet')
+      raw_seeders = raw_data.search('td.forum_thread_post_end').map { |e| e.children[0].text.to_i }
+      raw_links = raw_links.sort_by.with_index {|elem, index| raw_seeders[index]}.reverse
 
-      # Torrent name in data[i].attribute 'title'
+      # Torrent name in raw_links[i].attribute 'title'
       # 'Suits S04E01 HDTV x264-LOL Torrent: Magnet Link'
 
       # EZTV shows 50 latest releases if it can't find the torrent
-      raise NoTorrentsError if data.size == 50
+      raise NoTorrentsError if raw_links.size == 50
 
-      names = data.collect do |i|
+      names = raw_links.collect do |i|
         i.attribute('title')
          .text
          .chomp(' Magnet Link')
       end
-      links = data.collect do |i|
+      links = raw_links.collect do |i|
         i.attribute('href')
          .text
       end
