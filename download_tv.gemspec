@@ -25,6 +25,7 @@ Gem::Specification.new do |s|
   s.add_development_dependency 'bundler', '~> 2.0'
   s.add_development_dependency 'minitest', '~> 5.0'
   s.add_development_dependency 'rake', '~> 10.0'
+  s.add_development_dependency 'pry', '~> 0.13'
 
   s.add_dependency('json')
   s.add_dependency('mechanize')

@@ -92,7 +92,13 @@ opt_parser = OptionParser.new do |opts|
   end
 end
 
-opt_parser.parse!(ARGV)
+begin
+  opt_parser.parse!(ARGV)
+rescue OptionParser::InvalidOption => e
+  warn e.message
+  puts opt_parser.help
+  exit 1
+end
 
 begin
   case options[:cmd]
