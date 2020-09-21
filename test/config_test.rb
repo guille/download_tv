@@ -18,28 +18,28 @@ describe DownloadTV::Configuration do
       create_dummy_config(config_path)
 
       c = DownloadTV::Configuration.new(path: config_path)
-      c.content.must_equal(path: config_path, version: DownloadTV::VERSION)
+      _(c.content).must_equal(path: config_path, version: DownloadTV::VERSION)
     end
 
     it 'will load the existing configuration (existing)' do
       create_dummy_config(config_path, auto: false, myepisodes_user: 'dummy')
 
       c = DownloadTV::Configuration.new(path: config_path)
-      c.content.must_equal(path: config_path, auto: false, myepisodes_user: 'dummy', version: DownloadTV::VERSION)
+      _(c.content).must_equal(path: config_path, auto: false, myepisodes_user: 'dummy', version: DownloadTV::VERSION)
     end
 
     it 'will get overwritten by the parameters given' do
       create_dummy_config(config_path, myepisodes_user: 'dummy')
 
       c = DownloadTV::Configuration.new(path: config_path, myepisodes_user: 'fake')
-      c.content.must_equal(path: config_path, myepisodes_user: 'fake', version: DownloadTV::VERSION)
+      _(c.content).must_equal(path: config_path, myepisodes_user: 'fake', version: DownloadTV::VERSION)
     end
 
     it 'will downcase ignored shows' do
       create_dummy_config(config_path, ignored: %w[duMMy String])
 
       c = DownloadTV::Configuration.new(path: config_path)
-      c.content[:ignored].must_equal %w[dummy string]
+      _(c.content[:ignored]).must_equal %w[dummy string]
     end
   end
 
@@ -58,7 +58,7 @@ describe DownloadTV::Configuration do
       split[0] = (split[0].to_i - 1).to_s
       new_version = split.join('.')
       c = DownloadTV::Configuration.new(path: config_path)
-      c.breaking_changes?(new_version).must_equal true
+      _(c.breaking_changes?(new_version)).must_equal true
     end
 
     it "returns true when there's been a minor update" do
@@ -68,7 +68,7 @@ describe DownloadTV::Configuration do
       split[1] = (split[1].to_i - 1).to_s
       new_version = split.join('.')
       c = DownloadTV::Configuration.new(path: config_path)
-      c.breaking_changes?(new_version).must_equal true
+      _(c.breaking_changes?(new_version)).must_equal true
     end
 
     it "returns false when it's a small patch" do
@@ -78,7 +78,7 @@ describe DownloadTV::Configuration do
       split[2] = (split[2].to_i - 1).to_s
       new_version = split.join('.')
       c = DownloadTV::Configuration.new(path: config_path)
-      c.breaking_changes?(new_version).must_equal false
+      _(c.breaking_changes?(new_version)).must_equal false
     end
   end
 
@@ -90,7 +90,7 @@ describe DownloadTV::Configuration do
         end
       end
 
-      File.exist?(config_path).must_equal true
+      _(File.exist?(config_path)).must_equal true
     end
 
     it 'will have the right values' do
@@ -101,15 +101,15 @@ describe DownloadTV::Configuration do
         end
       end
 
-      c.content[:myepisodes_user].must_equal 'anything'
-      c.content[:cookie].must_equal true
-      c.content[:ignored].must_equal ['anything']
-      c.content[:auto].must_equal true
-      c.content[:subs].must_equal true
-      c.content[:pending].must_equal []
-      c.content[:grabber].must_equal 'TorrentAPI'
-      c.content[:date].must_equal(Date.today - 1)
-      c.content[:version].must_equal DownloadTV::VERSION
+      _(c.content[:myepisodes_user]).must_equal 'anything'
+      _(c.content[:cookie]).must_equal true
+      _(c.content[:ignored]).must_equal ['anything']
+      _(c.content[:auto]).must_equal true
+      _(c.content[:subs]).must_equal true
+      _(c.content[:pending]).must_equal []
+      _(c.content[:grabber]).must_equal 'TorrentAPI'
+      _(c.content[:date]).must_equal(Date.today - 1)
+      _(c.content[:version]).must_equal DownloadTV::VERSION
     end
 
     it 'will set the cookie value to false when explicitly told so' do
@@ -120,7 +120,7 @@ describe DownloadTV::Configuration do
         end
       end
 
-      c.content[:cookie].must_equal false
+      _(c.content[:cookie]).must_equal false
     end
 
     it 'will separate the ignored values by commas' do
@@ -130,7 +130,7 @@ describe DownloadTV::Configuration do
           c = DownloadTV::Configuration.new(path: config_path)
         end
       end
-      c.content[:ignored].must_equal ['ignored1', 'itsgone', 'ignored 2']
+      _(c.content[:ignored]).must_equal ['ignored1', 'itsgone', 'ignored 2']
     end
   end
 
@@ -147,22 +147,22 @@ describe DownloadTV::Configuration do
       content = JSON.parse(source, symbolize_names: true)
       content[:date] = Date.parse(content[:date])
 
-      content[:cookie].must_equal true
-      content[:myepisodes_user].must_equal 'anything'
-      content[:ignored].must_equal ['anything']
-      content[:auto].must_equal true
-      content[:subs].must_equal true
-      content[:pending].must_equal []
-      content[:grabber].must_equal 'TorrentAPI'
-      content[:date].must_equal Date.today - 1
-      content[:version].must_equal DownloadTV::VERSION
+      _(content[:cookie]).must_equal true
+      _(content[:myepisodes_user]).must_equal 'anything'
+      _(content[:ignored]).must_equal ['anything']
+      _(content[:auto]).must_equal true
+      _(content[:subs]).must_equal true
+      _(content[:pending]).must_equal []
+      _(content[:grabber]).must_equal 'TorrentAPI'
+      _(content[:date]).must_equal Date.today - 1
+      _(content[:version]).must_equal DownloadTV::VERSION
     end
   end
 
   describe 'the constructor' do
     it 'will trigger a configuration change when asked to' do
       create_dummy_config(config_path, auto: false)
-      File.exist?(config_path).must_equal true
+      _(File.exist?(config_path)).must_equal true
       c = nil
 
       run_silently do
@@ -171,7 +171,7 @@ describe DownloadTV::Configuration do
         end
       end
 
-      c.content[:auto].must_equal false
+      _(c.content[:auto]).must_equal false
     end
   end
 end

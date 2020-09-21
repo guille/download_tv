@@ -24,4 +24,4 @@ module DownloadTV
   class NoSubtitlesError < StandardError; end
 end
 
-Dir[File.join(__dir__, 'download_tv', 'grabbers', '*.rb')].each { |file| require file }
+Dir[File.join(__dir__, 'download_tv', 'grabbers', '*.rb')].sort.each { |file| require file }

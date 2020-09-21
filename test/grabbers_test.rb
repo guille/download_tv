@@ -11,30 +11,30 @@ describe DownloadTV::LinkGrabber do
       next unless grabber.online?
 
       it 'will have a url attribute on creation' do
-        grabber.url.wont_be_nil
+        _(grabber.url).wont_be_nil
       end
 
       it "will raise NoTorrentsError when torrent can't be found" do
         notfound = -> { grabber.get_links('Totally Fake Show askjdgsaudas') }
-        notfound.must_raise DownloadTV::NoTorrentsError
+        _(notfound).must_raise DownloadTV::NoTorrentsError
       end
 
       it 'will return an array with names and links of results when a torrent can be found' do
-        result = grabber.get_links('Game Of Thrones S04E01')
-        result.must_be_instance_of Array
-        result.wont_be :empty?
+        result = grabber.get_links('The Boys S01E01')
+        _(result).must_be_instance_of Array
+        _(result).wont_be :empty?
         result.each do |r|
-          r.size.must_equal 2
-          r[0].must_be_instance_of String
-          r[0].upcase.must_include 'THRONES'
-          r[1].must_be_instance_of String
-          r[1].must_include 'magnet:'
+          _(r.size).must_equal 2
+          _(r[0]).must_be_instance_of String
+          _(r[0].upcase).must_include 'BOYS'
+          _(r[1]).must_be_instance_of String
+          _(r[1]).must_include 'magnet:'
         end
       end
     end
   end
 
   it "raises an error if the instance doesn't implement get_links" do
-    -> { DownloadTV::LinkGrabber.new('').get_links('test') }.must_raise NotImplementedError
+    _(-> { DownloadTV::LinkGrabber.new('').get_links('test') }).must_raise NotImplementedError
   end
 end

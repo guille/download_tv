@@ -21,6 +21,7 @@ module DownloadTV
         loop do
           link = get_link(t, episode)
           break if link.empty?
+
           download(link)
           episode = episode.next
         end

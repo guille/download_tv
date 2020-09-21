@@ -8,7 +8,7 @@ module DownloadTV
 
     def grabbers
       # %w[TorrentAPI ThePirateBay Eztv KAT]
-      %w[TorrentAPI ThePirateBay Eztv]
+      %w[TorrentAPI Eztv]
     end
 
     def initialize(default_grabber = nil)

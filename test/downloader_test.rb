@@ -17,8 +17,8 @@ describe DownloadTV::Downloader do
   describe 'when creating the object' do
     it 'can receive an optional configuration hash' do
       dl = DownloadTV::Downloader.new(auto: true, grabber: 'KAT', path: config_path)
-      dl.config.content[:auto].must_equal true
-      dl.config.content[:grabber].must_equal 'KAT'
+      _(dl.config.content[:auto]).must_equal true
+      _(dl.config.content[:grabber]).must_equal 'KAT'
     end
   end
 
@@ -30,7 +30,7 @@ describe DownloadTV::Downloader do
                 'Baz The Story S05E22']
 
       dl = DownloadTV::Downloader.new(ignored: [], path: config_path)
-      dl.fix_names(shows).must_equal result
+      _(dl.fix_names(shows)).must_equal result
     end
   end
 
@@ -40,14 +40,14 @@ describe DownloadTV::Downloader do
       result = ['Bar S00E22']
 
       dl = DownloadTV::Downloader.new(ignored: ['ignored'], path: config_path)
-      dl.reject_ignored(shows).must_equal result
+      _(dl.reject_ignored(shows)).must_equal result
     end
   end
 
   describe 'the check_date method' do
     it 'exits the script when up to date' do
       dl = DownloadTV::Downloader.new(date: Date.today, path: config_path)
-      dl.check_date(0).must_be_nil
+      _(dl.check_date(0)).must_be_nil
     end
 
     it 'uses the offset to adjust the date' do
@@ -56,8 +56,8 @@ describe DownloadTV::Downloader do
 
       date = dl.check_date(1)
 
-      date.must_equal(Date.today - 1)
-      dl.config.content[:date].must_equal Date.today
+      _(date).must_equal(Date.today - 1)
+      _(dl.config.content[:date]).must_equal Date.today
     end
   end
 
@@ -67,7 +67,7 @@ describe DownloadTV::Downloader do
       dl = DownloadTV::Downloader.new(path: config_path, filters: f)
       links = [['Link 1', ''], ['Link 2 2160p', ''], ['Link 3', '']]
       res = [['Link 1', ''], ['Link 3', '']]
-      dl.filter_shows(links).must_equal res
+      _(dl.filter_shows(links)).must_equal res
     end
 
     it 'removes names without include words in them' do
@@ -76,7 +76,7 @@ describe DownloadTV::Downloader do
       links = [['Link 1', ''], ['Link 2 2160p', ''], ['Link 3', ''],
                ['Link REPACK 5', '']]
       res = [['Link REPACK 5', '']]
-      dl.filter_shows(links).must_equal res
+      _(dl.filter_shows(links)).must_equal res
     end
 
     it "doesn't apply a filter if it would reject every option" do
@@ -84,7 +84,7 @@ describe DownloadTV::Downloader do
       dl = DownloadTV::Downloader.new(path: config_path, filters: f)
       links = [['Link 1 720p', ''], ['Link 2 2160p', ''], ['Link 720p 3', '']]
       res = [['Link 1 720p', ''], ['Link 720p 3', '']]
-      dl.filter_shows(links).must_equal res
+      _(dl.filter_shows(links)).must_equal res
     end
   end
 
@@ -95,13 +95,13 @@ describe DownloadTV::Downloader do
 
       t.expect(:get_links, [], [show])
       dl = DownloadTV::Downloader.new(auto: true, path: config_path, pending: ['show 11'])
-      dl.get_link(t, show, true).must_equal ''
-      dl.config.content[:pending].must_equal ['show 11', show]
+      _(dl.get_link(t, show, true)).must_equal ''
+      _(dl.config.content[:pending]).must_equal ['show 11', show]
 
       t.expect(:get_links, [], [show])
       dl = DownloadTV::Downloader.new(auto: false, path: config_path, pending: [])
-      dl.get_link(t, show, true).must_equal ''
-      dl.config.content[:pending].must_include show
+      _(dl.get_link(t, show, true)).must_equal ''
+      _(dl.config.content[:pending]).must_include show
 
       t.verify
     end
@@ -112,7 +112,7 @@ describe DownloadTV::Downloader do
 
       t.expect(:get_links, [['Name 1', 'Link 1'], ['Name 2', 'Link 2']], [show])
       dl = DownloadTV::Downloader.new(auto: true, path: config_path)
-      dl.get_link(t, show).must_equal 'Link 1'
+      _(dl.get_link(t, show)).must_equal 'Link 1'
       t.verify
     end
   end
@@ -123,7 +123,7 @@ describe DownloadTV::Downloader do
       RbConfig::CONFIG['host_os'] = 'linux-gnu'
 
       dl = DownloadTV::Downloader.new(path: config_path)
-      dl.detect_os.must_equal 'xdg-open'
+      _(dl.detect_os).must_equal 'xdg-open'
 
       RbConfig::CONFIG['host_os'] = prev
     end
@@ -133,7 +133,7 @@ describe DownloadTV::Downloader do
       RbConfig::CONFIG['host_os'] = 'darwin15.6.0'
 
       dl = DownloadTV::Downloader.new(path: config_path)
-      dl.detect_os.must_equal 'open'
+      _(dl.detect_os).must_equal 'open'
 
       RbConfig::CONFIG['host_os'] = prev
     end
@@ -144,8 +144,8 @@ describe DownloadTV::Downloader do
 
       dl = DownloadTV::Downloader.new(path: config_path)
 
-      to_run = -> { run_silently { dl.detect_os.must_equal 'xdg-open' } }
-      to_run.must_raise SystemExit
+      to_run = -> { run_silently { _(dl.detect_os).must_equal 'xdg-open' } }
+      _(to_run).must_raise SystemExit
 
       RbConfig::CONFIG['host_os'] = prev
     end
