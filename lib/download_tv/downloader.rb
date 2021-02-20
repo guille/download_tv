@@ -50,7 +50,10 @@ module DownloadTV
     # the last run of the program
     # It connects to MyEpisodes in order to find which shows
     # to track and which new episodes aired.
-    def run(dont_update_last_run, offset = 0)
+    # The param +dont_update_last_run+ prevents changing the configuration's date value
+    # The param +offset+ can be used to move the date back that many days in the check
+    # The param +include_tomorrow+ will add the current day to the list of dates to search
+    def run(dont_update_last_run, offset = 0, include_tomorrow = false)
       pending = @config.content[:pending].clone
       @config.content[:pending].clear
       pending ||= []
