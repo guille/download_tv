@@ -61,7 +61,7 @@ module DownloadTV
       if pending.empty?
         puts 'Nothing to download'
       else
-        find_and_download(pending)
+        find_and_download(pending.uniq)
         puts 'Completed. Exiting...'
       end
 
@@ -92,7 +92,7 @@ module DownloadTV
       if pending.empty?
         puts 'Nothing to download'
       else
-        find_and_download(pending)
+        find_and_download(pending.uniq)
         puts 'Completed. Exiting...'
       end
 
