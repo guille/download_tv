@@ -1,6 +1,6 @@
 # download_tv
 
-[![Build Status](https://travis-ci.org/guille/download_tv.svg?branch=master)](https://travis-ci.org/guille/download_tv)
+![Build Status](https://github.com/guille/download_tv/actions/workflows/ruby.yml/badge.svg)
 [![Gem Version](https://badge.fury.io/rb/download_tv.svg)](https://badge.fury.io/rb/download_tv)
 [![Code Climate](https://codeclimate.com/github/guille/download_tv.svg)](https://codeclimate.com/github/guille/download_tv)
 

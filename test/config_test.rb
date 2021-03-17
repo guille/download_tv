@@ -48,7 +48,7 @@ describe DownloadTV::Configuration do
       create_dummy_config(config_path)
 
       c = DownloadTV::Configuration.new(path: config_path)
-      c.breaking_changes?(DownloadTV::VERSION).must_be_nil
+      _(c.breaking_changes?(DownloadTV::VERSION)).must_be_nil
     end
 
     it "returns true when there's been a major update" do
