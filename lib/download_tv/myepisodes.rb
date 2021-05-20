@@ -32,11 +32,11 @@ module DownloadTV
     def prompt_user_data
       if !@user || @user == ''
         print 'Enter your MyEpisodes username: '
-        @user = STDIN.gets.chomp
+        @user = $stdin.gets.chomp
       end
 
       print 'Enter your MyEpisodes password: '
-      pass = STDIN.noecho(&:gets).chomp
+      pass = $stdin.noecho(&:gets).chomp
       puts
       pass
     end

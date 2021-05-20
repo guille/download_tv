@@ -26,7 +26,7 @@ module DownloadTV
       prompt_for_cookie
       prompt_for_ignored
       prompt_for_filters
-      STDOUT.flush
+      $stdout.flush
 
       set_default_values
       serialize
@@ -38,13 +38,13 @@ module DownloadTV
       else
         print 'Enter your MyEpisodes username: '
       end
-      input = STDIN.gets.chomp
+      input = $stdin.gets.chomp
       @content[:myepisodes_user] = input if input
     end
 
     def prompt_for_cookie
       print 'Save cookie? (y)/n: '
-      @content[:cookie] = !(STDIN.gets.chomp.casecmp? 'n')
+      @content[:cookie] = !($stdin.gets.chomp.casecmp? 'n')
     end
 
     def prompt_for_ignored
@@ -54,11 +54,11 @@ module DownloadTV
         puts 'Enter a comma-separated list of shows to ignore: '
       end
 
-      @content[:ignored] = STDIN.gets
-                                .chomp
-                                .split(',')
-                                .map(&:strip)
-                                .map(&:downcase)
+      @content[:ignored] = $stdin.gets
+                                 .chomp
+                                 .split(',')
+                                 .map(&:strip)
+                                 .map(&:downcase)
     end
 
     def prompt_for_filters
@@ -68,19 +68,19 @@ module DownloadTV
 
       puts 'Enter a comma-separated list of terms to include: '
 
-      @content[:filters][:includes] = STDIN.gets
-                                           .chomp
-                                           .split(',')
-                                           .map(&:strip)
-                                           .map(&:upcase)
+      @content[:filters][:includes] = $stdin.gets
+                                            .chomp
+                                            .split(',')
+                                            .map(&:strip)
+                                            .map(&:upcase)
 
       puts 'Enter a comma-separated list of terms to exclude: '
 
-      @content[:filters][:excludes] = STDIN.gets
-                                           .chomp
-                                           .split(',')
-                                           .map(&:strip)
-                                           .map(&:upcase)
+      @content[:filters][:excludes] = $stdin.gets
+                                            .chomp
+                                            .split(',')
+                                            .map(&:strip)
+                                            .map(&:upcase)
     end
 
     def default_filters
