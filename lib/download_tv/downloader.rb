@@ -12,19 +12,26 @@ module DownloadTV
       Thread.abort_on_exception = true
     end
 
+    ##
+    # Tries to download episodes in order for a given season,
+    # until it can't find any
+    def download_entire_season(show, season)
+      season.insert(0, '0') if season.size == 1
+      episode = "#{show} s#{season}e01"
+      loop do
+        link = get_link(t, episode)
+        break if link.empty?
+
+        download(link)
+        episode = episode.next
+      end
+    end
+
     def download_single_show(show, season = nil)
       t = Torrent.new(@config.content[:grabber])
       show = fix_names([show]).first
       if season
-        season.insert(0, '0') if season.size == 1
-        episode = "#{show} s#{season}e01"
-        loop do
-          link = get_link(t, episode)
-          break if link.empty?
-
-          download(link)
-          episode = episode.next
-        end
+        download_entire_season(show, season)
       else
         download(get_link(t, show))
       end
@@ -46,6 +53,14 @@ module DownloadTV
     end
 
     ##
+    # Returns the date from which to check shows
+    def date_to_check_from(offset)
+      return @config.content[:date] if offset.zero?
+
+      Date.today - offset
+    end
+
+    ##
     # Finds download links for all new episodes aired since
     # the last run of the program
     # It connects to MyEpisodes in order to find which shows
@@ -53,13 +68,14 @@ module DownloadTV
     # The param +dont_update_last_run+ prevents changing the configuration's date value
     # The param +offset+ can be used to move the date back that many days in the check
     # The param +include_tomorrow+ will add the current day to the list of dates to search
-    def run(dont_update_last_run, offset = 0, include_tomorrow = false)
+    def run(dont_update_last_run, offset = 0, include_tomorrow: false)
       pending = @config.content[:pending].clone
       @config.content[:pending].clear
       pending ||= []
-      date = check_date(offset)
+      date = date_to_check_from(offset)
 
-      pending.concat shows_to_download(date) if date
+      pending.concat shows_to_download(date) if date < Date.today
+      pending.concat today_shows_to_download if include_tomorrow && date < Date.today.next
 
       if pending.empty?
         puts 'Nothing to download'
@@ -68,38 +84,13 @@ module DownloadTV
         puts 'Completed. Exiting...'
       end
 
-      @config.content[:date] = [Date.today, @config.content[:date]].max unless dont_update_last_run
-      @config.serialize
-    rescue InvalidLoginError
-      warn 'Wrong username/password combination'
-    end
-
-    ##
-    # Finds download links for all the episodes set to air today.
-    # TODO: Refactor with #run()
-    def run_ahead(dont_update_last_run)
-      pending = @config.content[:pending].clone
-      @config.content[:pending].clear
-      pending ||= []
-
-      # Make normal run first if necessary
-      if @config.content[:date] < Date.today
-        pending.concat shows_to_download(@config.content[:date])
+      unless dont_update_last_run
+        @config.content[:date] = if include_tomorrow
+                                   Date.today.next
+                                 else
+                                   [Date.today, @config.content[:date]].max
+                                 end
       end
-
-      # Only do --tomorrow run if it hasn't happened already
-      if @config.content[:date] < Date.today.next
-        pending.concat today_shows_to_download
-      end
-
-      if pending.empty?
-        puts 'Nothing to download'
-      else
-        find_and_download(pending.uniq)
-        puts 'Completed. Exiting...'
-      end
-
-      @config.content[:date] = Date.today.next unless dont_update_last_run
       @config.serialize
     rescue InvalidLoginError
       warn 'Wrong username/password combination'
@@ -111,7 +102,7 @@ module DownloadTV
 
       # Adds a link (or empty string to the queue)
       link_t = Thread.new do
-        shows.each { |show| queue << get_link(t, show, true) }
+        shows.each { |show| queue << get_link(t, show, save_pending: true) }
       end
 
       # Downloads the links as they are added
@@ -124,20 +115,13 @@ module DownloadTV
         end
       end
 
-      # Downloading the subtitles
-      # subs_t = @config.content[:subs] and Thread.new do
-      #   shows.each { |show| @s.get_subs(show) }
-      # end
-
       link_t.join
       download_t.join
-      # subs_t.join
     end
 
     def shows_to_download(date)
       myepisodes = MyEpisodes.new(@config.content[:myepisodes_user],
                                   @config.content[:cookie])
-      # Log in using cookie by default
       myepisodes.load_cookie
       shows = myepisodes.get_shows_since(date)
       shows = reject_ignored(shows)
@@ -159,7 +143,7 @@ module DownloadTV
     # based on a set of filters.
     # When it's false it will prompt the user to select the preferred result
     # Returns either a magnet link or an emptry string
-    def get_link(torrent, show, save_pending = false)
+    def get_link(torrent, show, save_pending: false)
       links = torrent.get_links(show)
 
       if links.empty?
@@ -195,19 +179,6 @@ module DownloadTV
     end
 
     ##
-    # Returns the date from which to check shows
-    # or nil if the program was already ran today
-    # Passing an offset skips this check
-    def check_date(offset)
-      if offset.zero?
-        last = @config.content[:date]
-        last if last < Date.today
-      else
-        Date.today - offset
-      end
-    end
-
-    ##
     # Given a list of shows and episodes:
     #
     # * Removes ignored shows
@@ -238,7 +209,6 @@ module DownloadTV
 
     ##
     # Spawns a silent process to download a given magnet link
-    # Uses xdg-open (not portable)
     def download(link)
       @cmd ||= detect_os
 

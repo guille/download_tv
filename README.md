@@ -21,18 +21,17 @@ Specific options:
     -o, --offset OFFSET              Move back the last run offset
     -f, --file PATH                  Download shows from a file
     -d, --download SHOW              Downloads given show
-        --season SEASON              Limit the show download to a specific season
+    -s, --season SEASON              Limit the show download to a specific season
     -t, --tomorrow                   Download shows airing today
     -c, --configure                  Configures defaults
         --show-config                Show current configuration values
         --dry-run                    Don't write to the date file
     -a, --[no-]auto                  Automatically find links
-    -s, --[no-]subtitles             Download subtitles
     -g, --grabber GRABBER            Use given grabber as first option
         --show-grabbers              List available grabbers
     -p, --pending                    Show list of pending downloads
         --clear-pending              Clear list of pending downloads
-    -q, --queue                      Add show episode to pending downloads list
+    -q, --queue SHOW                 Add show episode to pending downloads list
     -v, --version                    Print version
     -h, --help                       Show this message
 ```
