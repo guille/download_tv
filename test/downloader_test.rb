@@ -44,17 +44,17 @@ describe DownloadTV::Downloader do
     end
   end
 
-  describe 'the check_date method' do
-    it 'exits the script when up to date' do
+  describe 'the date_to_check_from method' do
+    it 'returns the config date when offset is not given' do
       dl = DownloadTV::Downloader.new(date: Date.today, path: config_path)
-      _(dl.check_date(0)).must_be_nil
+      _(dl.date_to_check_from(0)).must_equal Date.today
     end
 
     it 'uses the offset to adjust the date' do
       # Would exit with offset 0
       dl = DownloadTV::Downloader.new(date: Date.today, path: config_path)
 
-      date = dl.check_date(1)
+      date = dl.date_to_check_from(1)
 
       _(date).must_equal(Date.today - 1)
       _(dl.config.content[:date]).must_equal Date.today
@@ -95,12 +95,12 @@ describe DownloadTV::Downloader do
 
       t.expect(:get_links, [], [show])
       dl = DownloadTV::Downloader.new(auto: true, path: config_path, pending: ['show 11'])
-      _(dl.get_link(t, show, true)).must_equal ''
+      _(dl.get_link(t, show, save_pending: true)).must_equal ''
       _(dl.config.content[:pending]).must_equal ['show 11', show]
 
       t.expect(:get_links, [], [show])
       dl = DownloadTV::Downloader.new(auto: false, path: config_path, pending: [])
-      _(dl.get_link(t, show, true)).must_equal ''
+      _(dl.get_link(t, show, save_pending: true)).must_equal ''
       _(dl.config.content[:pending]).must_include show
 
       t.verify
