@@ -16,6 +16,7 @@ module DownloadTV
     # Tries to download episodes in order for a given season,
     # until it can't find any
     def download_entire_season(show, season)
+      t = Torrent.new(@config.content[:grabber])
       season.insert(0, '0') if season.size == 1
       episode = "#{show} s#{season}e01"
       loop do
