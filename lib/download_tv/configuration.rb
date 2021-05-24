@@ -94,7 +94,6 @@ module DownloadTV
       # When modifying existing config, keeps previous values
       # When creating new one, sets defaults
       @content[:auto] ||= true
-      @content[:subs] ||= true
       @content[:grabber] ||= 'TorrentAPI'
       @content[:date] ||= Date.today - 1
       @content[:filters] ||= default_filters
