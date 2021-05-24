@@ -1,10 +1,10 @@
 # download_tv
 
-![Build Status](https://github.com/guille/download_tv/actions/workflows/ruby.yml/badge.svg)
+[![Ruby](https://github.com/guille/download_tv/actions/workflows/ruby.yml/badge.svg?branch=master)](https://github.com/guille/download_tv/actions/workflows/ruby.yml)
 [![Gem Version](https://badge.fury.io/rb/download_tv.svg)](https://badge.fury.io/rb/download_tv)
 [![Code Climate](https://codeclimate.com/github/guille/download_tv.svg)](https://codeclimate.com/github/guille/download_tv)
 
-download_tv is a tool that allows the user to find magnet links for TV show episodes. It accepts shows as arguments, from a file or it can integrate with your MyEpisodes account.
+**download_tv** is a tool that allows the user to find magnet links for TV show episodes. It accepts shows as arguments, from a file or it can integrate with your MyEpisodes account.
 
 ### Installation
 
@@ -38,49 +38,53 @@ Specific options:
 
 ### MyEpisodes integration
 
-By default, download_tv connects to your MyEpisodes.com account and fetches the list of episodes that have aired since the program was run for the last time. It then tries to find magnet links to download each of these shows, using the link grabbers available. You can see the grabbers with the --show-grabbers option. These magnet links will be executed with whatever program you have configured to handle the magnet:// files.
+By default, **download_tv** connects to your [MyEpisodes.com](https://www.myepisodes.com/) account and fetches the list of episodes that have aired since the program was run for the last time. It then tries to find magnet links to download each of these shows, using the link grabbers available. You can see the grabbers with the `--show-grabbers` option. These magnet links will be executed with whatever program you have configured to handle magnet:// files.
 
-The -o flag can be used in order to re-download the episodes from previous days. The --dry-run option is useful to prevent download_tv from updating the date (for example, when running the application shortly after an episode airs).
+The `-o` flag can be used in order to re-download the episodes from previous days. The `--dry-run` option is useful to prevent **download_tv** from updating the date (for example, when running the application shortly after an episode airs).
 
-Starting in version 2.5.4, download_tv includes the --tomorrow flag. By default, an execution of download_tv will download shows airing from the last execution of the program up to a day prior to the current day. Use this flag to include shows airing today in this search. This can be useful depending on your timezone or on the airtime of the shows you follow.
+The application also includes the `-t/--tomorrow` flag. By default, an execution of **download_tv** will download shows airing from the last execution of the program up to a day prior to the current day. This flag can be used to include in the search the episodes airing in the same day. This can be useful depending on your timezone or on the airtime of the shows you follow.
 
 **Note**: Due to API limitations, the gem won't find shows aired more than 14 days prior to the execution of the script.
 
-The options -c and --show-config allow the user to change or view the current configuration values, respectively. These options include your myepisodes username, whether to save cookies or ask for password on each run and the list of ignored shows among other things. The configuration files are (mostly) backwards compatible. The gem will force you to change your configuration after an update if there are breaking changes in it.
+The options `-c` and `--show-config` allow the user to change or view the current configuration values, respectively. These options include your MyEpisodes username, whether to save cookies or ask for password on each run and the list of ignored shows among other things. The gem (mostly) follows semver to track configuration file changes. It will automatically trigger a configuration update when it detects an older non-compatible version.
 
-The `auto` flag toggles whether all the results for each show are prompted to the user for him to choose or if the application should try to choose the download link automatically (see Section Filters).
+The `--auto` flag toggles whether all the results for each show are prompted to the user for him to choose or if the application should try to choose the download link automatically (see Section Filters). By default, all grabbers try to sort by number of seeders.
 
 ### Single torrent download
 
-In order to download a single episode, use the -d flag, quoting the string when it contains spaces: *tv -d "Breaking Bad S04E01"*
+In order to download a single episode, use the `-d` flag, quoting the string when it contains spaces:
+
+```
+tv -d "Breaking Bad S04E01"
+```
 
 Although it uses some settings and grabbers specific for TV shows, this option can also be used as a quick way to find and download any torrent.
 
-It can be used with the --season flag to try to find and download a whole season of the given show: *tv -d "Breaking Bad" --season 4*. It will start searching from episode 1 and continue until it can't find any torrent for the episode.
+It can be optionally used in conjunction with the `--season` flag to try to find and download a whole season of the given show: `tv -d "Breaking Bad" --season 4`. It will start searching from episode 1 and continue upwards until it can't find any torrent for an episode.
 
 ### Multi torrent download
 
-The -f flag can be used to read the list of episodes to download from a file. Each line of the file is interpreted as a episode to download: *tv -f /path/to/listofeps*
+The `-f` flag can be used to read the list of episodes to download from a file. Each line of the file is interpreted as a episode to download.
 
 ### Available link grabbers
 
-With -g and --show-grabbers, the user can see what grabbers are available and choose one of these as their preferred option. By default, the application searches for torrents in TorrentAPI, ThePirateBay, EZTV and KAT, in that order, skipping to the next when one of them is down/doesn't have a torrent for said episode.
+With `-g` and `--show-grabbers`, the user can see what grabbers are available and choose one of these as their preferred option. By default, the application searches for torrents using TorrentAPI. When a grabber doesn't have a torrent for said episode, is offline, or causes any error to appear, it skips to the next grabber until exhausting the list.
 
 I usually publish a patch update to the gem when I detect one of them isn't working, disabling it or fixing it altogether. If a specific grabber is giving you problems, check whether you're running the latest version of the gem before opening an issue here.
 
 ### Pending shows
 
-download_tv version 2.5.0 persists the list of shows it can't find on a given execution (when connecting to MyEpisodes, not for single show or file downloads) and it will try to find them again on following executions. This list can be viewed by passing the -p flag to the tv binary. The list can be cleared with the --clear-pending option.
+**download_tv** persists the list of shows it can't find on a given execution (when connecting to MyEpisodes, not for single show or file downloads) and it will try to find them again on following executions. This list can be viewed by passing the -p flag to the tv binary. The list can be cleared with the --clear-pending option.
 
-Version 2.6.0 adds functionality to queue an episode by running `tv --queue "show name"`. The --queue parameter cannot be used in conjunction with any other parameters. On the plus side, it doesn't need the show name to be quoted or the spaces escaped.
+It also has the functionality to queue an episode by running `tv --queue "show name"`. The --queue parameter cannot be used in conjunction with any other parameters.
 
 ### Filters
 
-download_tv version 2.5.5 adds the possibility of setting include/exclude filters for the automatic download of shows.
+**download_tv** allows setting include/exclude filters for the automatic download of shows.
 
-Up until that version, the filters by default were excluding 1080p or 720p, as well as including PROPER or REPACK releases when available. From that version onwards, the user can specify in their configuration (`tv -c`) a list of words to include or exclude from their results.
+Upon installation, the default filters exclude 2060p, 1080p or 720p, and include PROPER or REPACK releases when available. The user can specify in their configuration (`tv -c`) a list of words to include or exclude from their results that will override these defaults.
 
-Please keep in mind that this is not a hard filter. The application will apply as many user-defined filters as possible **while still returning at least one result**.
+Keep in mind that this is not a hard filter. The application will sequentially apply as many user-defined filters as possible **while still returning at least one result**.
 
 ### License
 
