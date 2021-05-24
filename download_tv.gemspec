@@ -27,6 +27,7 @@ Gem::Specification.new do |s|
   s.add_development_dependency "rake", ">= 12.3.3"
   s.add_development_dependency 'pry', '~> 0.13'
   s.add_development_dependency 'byebug', '~> 11.1'
+  s.add_development_dependency 'codecov', '~> 0.5.2'
 
   s.add_dependency('json')
   s.add_dependency('mechanize')
