@@ -2,4 +2,3 @@
 /pkg/
 .rubocop.yml
 .byebug_history
-coverage/
