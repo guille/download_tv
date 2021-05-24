@@ -89,18 +89,18 @@ describe DownloadTV::Downloader do
   end
 
   describe 'the get_link method' do
-    it "returns an empty string when it can't find links" do
+    it "returns nil when it can't find links" do
       t = Minitest::Mock.new
       show = 'Example Show S01E01'
 
       t.expect(:get_links, [], [show])
       dl = DownloadTV::Downloader.new(auto: true, path: config_path, pending: ['show 11'])
-      _(dl.get_link(t, show, save_pending: true)).must_equal ''
+      _(dl.get_link(t, show, save_pending: true)).must_be_nil
       _(dl.config.content[:pending]).must_equal ['show 11', show]
 
       t.expect(:get_links, [], [show])
       dl = DownloadTV::Downloader.new(auto: false, path: config_path, pending: [])
-      _(dl.get_link(t, show, save_pending: true)).must_equal ''
+      _(dl.get_link(t, show, save_pending: true)).must_be_nil
       _(dl.config.content[:pending]).must_include show
 
       t.verify

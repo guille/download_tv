@@ -6,15 +6,14 @@ module DownloadTV
   class Configuration
     attr_reader :content, :config_path
 
-    def initialize(content = {}, force_change = false)
-      FileUtils.mkdir_p(File.join(ENV['HOME'], '.config', 'download_tv'))
+    def initialize(content = {})
       @config_path = content[:path] || default_config_path
+      FileUtils.mkdir_p(File.expand_path('..', @config_path))
 
       if File.exist? @config_path
         load_config
         @content.merge!(content) unless content.empty?
         @content[:ignored]&.map!(&:downcase)
-        change_configuration if force_change
       else
         @content = content
         change_configuration
@@ -33,11 +32,8 @@ module DownloadTV
     end
 
     def prompt_for_myep_user
-      if @content[:myepisodes_user]
-        print "Enter your MyEpisodes username (#{@content[:myepisodes_user]}) : "
-      else
-        print 'Enter your MyEpisodes username: '
-      end
+      existing = "(#{@content[:myepisodes_user]}) " if @content[:myepisodes_user]
+      print "Enter your MyEpisodes username #{existing}: "
       input = $stdin.gets.chomp
       @content[:myepisodes_user] = input if input
     end
@@ -48,39 +44,27 @@ module DownloadTV
     end
 
     def prompt_for_ignored
-      if @content[:ignored]
-        puts "Enter a comma-separated list of shows to ignore: (#{@content[:ignored]})"
-      else
-        puts 'Enter a comma-separated list of shows to ignore: '
-      end
+      existing = "(#{@content[:ignored]})" if @content[:ignored]
+      puts "Enter a comma-separated list of shows to ignore: #{existing}"
 
-      @content[:ignored] = $stdin.gets
-                                 .chomp
-                                 .split(',')
-                                 .map(&:strip)
-                                 .map(&:downcase)
+      @content[:ignored] = read_and_split_list :downcase
     end
 
     def prompt_for_filters
       puts "Current filters: (#{@content[:filters]})" if @content[:filters]
-
       @content[:filters] = {}
 
       puts 'Enter a comma-separated list of terms to include: '
-
-      @content[:filters][:includes] = $stdin.gets
-                                            .chomp
-                                            .split(',')
-                                            .map(&:strip)
-                                            .map(&:upcase)
+      @content[:filters][:includes] = read_and_split_list :upcase
 
       puts 'Enter a comma-separated list of terms to exclude: '
+      @content[:filters][:excludes] = read_and_split_list :upcase
+    end
 
-      @content[:filters][:excludes] = $stdin.gets
-                                            .chomp
-                                            .split(',')
-                                            .map(&:strip)
-                                            .map(&:upcase)
+    def read_and_split_list(case_method)
+      $stdin.gets.chomp.split(',')
+            .map(&:strip)
+            .map(&case_method)
     end
 
     def default_filters
@@ -90,9 +74,10 @@ module DownloadTV
       }
     end
 
+    ##
+    # Update the +content+ attribute with the defaults, if needed.
+    # Maintains the previous values, in case it's an update from an existing file.
     def set_default_values
-      # When modifying existing config, keeps previous values
-      # When creating new one, sets defaults
       @content[:auto] ||= true
       @content[:grabber] ||= 'TorrentAPI'
       @content[:date] ||= Date.today - 1
@@ -116,7 +101,6 @@ module DownloadTV
     rescue JSON::ParserError
       @content = {}
       change_configuration
-      retry
     end
 
     def default_config_path
@@ -124,9 +108,7 @@ module DownloadTV
     end
 
     ##
-    # Returns true if a major or minor update has been detected
-    # Returns false if a patch has been detected
-    # Returns nil if it's the same version
+    # Returns true if a major or minor update has been detected, something falsy otherwise
     def breaking_changes?(version)
       DownloadTV::VERSION.split('.')
                          .zip(version.split('.'))

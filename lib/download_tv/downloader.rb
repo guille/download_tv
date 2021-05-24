@@ -97,24 +97,30 @@ module DownloadTV
       warn 'Wrong username/password combination'
     end
 
+    def find_links(torrent, shows, queue)
+      Thread.new do
+        shows.each { |show| queue << get_link(torrent, show, save_pending: true) }
+        queue.close
+      end
+    end
+
+    def download_from_queue(queue)
+      Thread.new do
+        until queue.closed?
+          magnet = queue.pop
+          download(magnet) if magnet # Doesn't download if no torrents are found
+        end
+      end
+    end
+
     def find_and_download(shows)
       t = Torrent.new
       queue = Queue.new
 
-      # Adds a link (or empty string to the queue)
-      link_t = Thread.new do
-        shows.each { |show| queue << get_link(t, show, save_pending: true) }
-      end
+      link_t = find_links(t, shows, queue)
 
       # Downloads the links as they are added
-      download_t = Thread.new do
-        shows.size.times do
-          magnet = queue.pop
-          next if magnet == '' # Doesn't download if no torrents are found
-
-          download(magnet)
-        end
-      end
+      download_t = download_from_queue(queue)
 
       link_t.join
       download_t.join
@@ -143,18 +149,17 @@ module DownloadTV
     # When :auto is true it will try to find the best match
     # based on a set of filters.
     # When it's false it will prompt the user to select the preferred result
-    # Returns either a magnet link or an emptry string
+    # Returns either a magnet link or nil
     def get_link(torrent, show, save_pending: false)
       links = torrent.get_links(show)
 
       if links.empty?
         @config.content[:pending] << show if save_pending
-        return ''
+        return
       end
 
       if @config.content[:auto]
-        links = filter_shows(links)
-        links.first[1]
+        filter_shows(links).first[1]
       else
         prompt_links(links)
         get_link_from_user(links)
@@ -169,7 +174,7 @@ module DownloadTV
         i = $stdin.gets.chomp.to_i
       end
 
-      i == -1 ? '' : links[i][1]
+      i == -1 ? nil : links[i][1]
     end
 
     def prompt_links(links)
@@ -204,8 +209,8 @@ module DownloadTV
     # Runs until no filters are left to be applied or applying
     # a filter would leave no results
     def filter_shows(links)
-      f = Filterer.new(@config.content[:filters])
-      f.filter(links)
+      @filterer ||= Filterer.new(@config.content[:filters])
+      @filterer.filter(links)
     end
 
     ##
@@ -225,7 +230,7 @@ module DownloadTV
       when /darwin/
         'open'
       else
-        warn "You're using an unsupported platform."
+        warn "You're using an unsupported platform (#{RbConfig::CONFIG['host_os']})."
         exit 1
       end
     end

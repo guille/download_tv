@@ -20,7 +20,7 @@ describe DownloadTV::LinkGrabber do
       end
 
       it 'will return an array with names and links of results when a torrent can be found' do
-        result = grabber.get_links('The Boys S01E01')
+        result = grabber.get_links('The Boys S02E01')
         _(result).must_be_instance_of Array
         _(result).wont_be :empty?
         result.each do |r|

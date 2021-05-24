@@ -8,12 +8,13 @@ module DownloadTV
 
     def initialize(url)
       @url = url
-      @agent = Mechanize.new
-      @agent.user_agent = DownloadTV::USER_AGENT
+      @agent = Mechanize.new do |a|
+        a.user_agent = DownloadTV::USER_AGENT
+        a.read_timeout = 2
+      end
     end
 
     def online?
-      @agent.read_timeout = 2
       url = if @url.include? '%s'
               format(@url, 'test')
             else

@@ -115,7 +115,7 @@ begin
     dl = DownloadTV::Downloader.new(config)
     dl.run(options[:dry], options[:offset].abs, include_tomorrow: true)
   when 'config'
-    DownloadTV::Configuration.new(config, true)
+    DownloadTV::Configuration.new(config).change_configuration
   when 'showconfig'
     DownloadTV::Configuration.new(config).print_config
   when 'showpending'

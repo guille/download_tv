@@ -39,31 +39,23 @@ module DownloadTV
     end
 
     def change_grabbers
-      # Rotates the instantiated grabbers
+      @tries -= 1
       @g_instances.rotate!
       check_grabber_online
     end
 
     def get_links(show)
-      links = @g_instances.first.get_links(show)
-
-      reset_grabbers_order
-      reset_tries
-
-      links
+      @g_instances.first.get_links(show)
     rescue NoTorrentsError
-      # Use next grabber
       if @tries.positive?
-        @tries -= 1
         change_grabbers
         retry
-
-      else
-        reset_grabbers_order
-        reset_tries
-        puts "No torrents found for #{show}"
-        []
       end
+      # We're out of grabbers to try
+      puts "No torrents found for #{show}"
+      []
+    ensure
+      reset_grabbers_order
     end
 
     def reset_tries
@@ -72,6 +64,7 @@ module DownloadTV
 
     def reset_grabbers_order
       @g_instances.rotate!(@tries + 1)
+      reset_tries
     end
   end
 end

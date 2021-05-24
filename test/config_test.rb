@@ -105,7 +105,6 @@ describe DownloadTV::Configuration do
       _(c.content[:cookie]).must_equal true
       _(c.content[:ignored]).must_equal ['anything']
       _(c.content[:auto]).must_equal true
-      _(c.content[:subs]).must_equal true
       _(c.content[:pending]).must_equal []
       _(c.content[:grabber]).must_equal 'TorrentAPI'
       _(c.content[:date]).must_equal(Date.today - 1)
@@ -151,7 +150,6 @@ describe DownloadTV::Configuration do
       _(content[:myepisodes_user]).must_equal 'anything'
       _(content[:ignored]).must_equal ['anything']
       _(content[:auto]).must_equal true
-      _(content[:subs]).must_equal true
       _(content[:pending]).must_equal []
       _(content[:grabber]).must_equal 'TorrentAPI'
       _(content[:date]).must_equal Date.today - 1

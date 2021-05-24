@@ -5,30 +5,29 @@ module DownloadTV
   # TorrentAPI.org grabber
   # Interfaces with http://torrentapi.org/apidocs_v2.txt
   class TorrentAPI < LinkGrabber
-    attr_accessor :token
-    attr_reader :wait
+    TOKEN_EXPIRED_ERROR = 4
+    TOO_MANY_REQUESTS_ERROR = 5 # 1req/2s
 
     def initialize
       super('https://torrentapi.org/pubapi_v2.php?'\
             'mode=search&search_string=%s&token=%s&'\
             'app_id=DownloadTV&sort=seeders')
-      @wait = 0.1
+      @wait = 0.5
+      @token = nil
     end
 
     ##
     # Specific implementation for TorrentAPI (requires token)
     def online?
-      @agent.read_timeout = 2
       renew_token
       true
     rescue Mechanize::ResponseCodeError => e
       if e.response_code == '429'
         sleep(@wait)
         retry
-      else
-        false
       end
-    rescue Net::HTTP::Persistent::Error => e
+      false
+    rescue Net::HTTP::Persistent::Error
       false
     end
 
@@ -52,19 +51,19 @@ module DownloadTV
     end
 
     def get_links(show)
-      @token ||= renew_token
+      renew_token if @token.nil?
 
       search = format(@url, show, @token)
 
       obj = request_and_parse(search)
 
-      if obj['error_code'] == 4 # Token expired
+      if obj['error_code'] == TOKEN_EXPIRED_ERROR
         renew_token
         search = format(@url, show, @token)
         obj = request_and_parse(search)
       end
 
-      while obj['error_code'] == 5 # Violate 1req/2s limit
+      while obj['error_code'] == TOO_MANY_REQUESTS_ERROR
         sleep(@wait)
         obj = request_and_parse(search)
       end
@@ -79,9 +78,6 @@ module DownloadTV
       if e.response_code == '429'
         sleep(@wait)
         retry
-      else
-        warn 'An unexpected error has occurred. Try updating the gem.'
-        exit 1
       end
     end
   end
