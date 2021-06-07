@@ -1,5 +1,10 @@
 # download_tv CHANGELOG
 
+## 2.6.4 (2021-06-07)
+
+* Grabbers
+	* Torrentz: added Torrentz2 grabber.
+
 ## 2.6.3 (2021-05-24)
 
 * Fixes
