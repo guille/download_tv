@@ -10,7 +10,7 @@ module DownloadTV
       @url = url
       @agent = Mechanize.new do |a|
         a.user_agent = DownloadTV::USER_AGENT
-        a.read_timeout = 2
+        a.read_timeout = 10
       end
     end
 

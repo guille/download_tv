@@ -1,5 +1,10 @@
 # download_tv CHANGELOG
 
+## 2.6.5 (2021-06-10)
+
+* Fixes
+	* Bump HTTP read timeout to avoid errors on new grabber.
+
 ## 2.6.4 (2021-06-07)
 
 * Grabbers
