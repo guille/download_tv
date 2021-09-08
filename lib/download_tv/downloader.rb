@@ -66,10 +66,10 @@ module DownloadTV
     # the last run of the program
     # It connects to MyEpisodes in order to find which shows
     # to track and which new episodes aired.
-    # The param +dont_update_last_run+ prevents changing the configuration's date value
+    # The param +dry_run+ prevents changing the persisted configuration
     # The param +offset+ can be used to move the date back that many days in the check
     # The param +include_tomorrow+ will add the current day to the list of dates to search
-    def run(dont_update_last_run, offset = 0, include_tomorrow: false)
+    def run(dry_run = false, offset = 0, include_tomorrow: false)
       pending = @config.content[:pending].clone
       @config.content[:pending].clear
       pending ||= []
@@ -85,14 +85,14 @@ module DownloadTV
         puts 'Completed. Exiting...'
       end
 
-      unless dont_update_last_run
+      unless dry_run
         @config.content[:date] = if include_tomorrow
                                    Date.today.next
                                  else
                                    [Date.today, @config.content[:date]].max
                                  end
+        @config.serialize
       end
-      @config.serialize
     rescue InvalidLoginError
       warn 'Wrong username/password combination'
     end

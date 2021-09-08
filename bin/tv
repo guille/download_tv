@@ -47,7 +47,7 @@ opt_parser = OptionParser.new do |opts|
     options[:cmd] = 'showconfig'
   end
 
-  opts.on('--dry-run', "Don't write to the date file") do |n|
+  opts.on('--dry-run', "Don't update the persisted configuration") do |n|
     options[:dry] = n
   end
 

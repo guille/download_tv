@@ -1,5 +1,10 @@
 # download_tv CHANGELOG
 
+## Unreleased (????-??-??)
+
+* Improvements
+	* The `--dry-run` option now prevents from persisting any configuration, including pending shows, not just the last execution date.
+
 ## 2.6.5 (2021-06-10)
 
 * Fixes
