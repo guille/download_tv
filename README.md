@@ -6,11 +6,11 @@
 
 **download_tv** is a tool that allows the user to find magnet links for TV show episodes. It accepts shows as arguments, from a file or it can integrate with your MyEpisodes account.
 
-### Installation
+## Installation
 
 `gem install download_tv`
 
-### Usage
+## Usage
 
 Once installed, you can launch the binary *tv*
 
@@ -86,6 +86,10 @@ Upon installation, the default filters exclude 2060p, 1080p or 720p, and include
 
 Keep in mind that this is not a hard filter. The application will sequentially apply as many user-defined filters as possible **while still returning at least one result**.
 
-### License
+## Shell completion
+
+The provided binary will print completion files to STDOUT by passing the options `--*-completion-bash` and `--*-completion-zsh` (you might have to escape the asterisk). Use your shell's manual to find out how to load these files to get completions.
+
+## License
 
 This project is released under the terms of the MIT license. See [LICENSE.md](https://github.com/guille/download_tv/blob/master/LICENSE.md) file for details.
