@@ -12,7 +12,7 @@
 
 ## Usage
 
-Once installed, you can launch the binary *tv*
+Once installed, you can launch the binary `tv`
 
 ```
 Usage: tv [options]
