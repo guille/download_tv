@@ -75,8 +75,7 @@ module DownloadTV
       pending ||= []
       date = date_to_check_from(offset)
 
-      pending.concat shows_to_download(date) if date < Date.today
-      pending.concat today_shows_to_download if include_tomorrow && date < Date.today.next
+      pending.concat shows_to_download(date, include_tomorrow) if date < (include_tomorrow ? Date.today.next : Date.today)
 
       if pending.empty?
         puts 'Nothing to download'
@@ -126,20 +125,11 @@ module DownloadTV
       download_t.join
     end
 
-    def shows_to_download(date)
+    def shows_to_download(date, include_tomorrow)
       myepisodes = MyEpisodes.new(@config.content[:myepisodes_user],
                                   @config.content[:cookie])
       myepisodes.load_cookie
-      shows = myepisodes.get_shows_since(date)
-      shows = reject_ignored(shows)
-      fix_names(shows)
-    end
-
-    def today_shows_to_download
-      myepisodes = MyEpisodes.new(@config.content[:myepisodes_user],
-                                  @config.content[:cookie])
-      myepisodes.load_cookie
-      shows = myepisodes.today_shows
+      shows = myepisodes.get_shows_since(date, include_tomorrow: include_tomorrow)
       shows = reject_ignored(shows)
       fix_names(shows)
     end

@@ -64,16 +64,11 @@ module DownloadTV
       @agent
     end
 
-    def get_shows_since(last)
+    def get_shows_since(last, include_tomorrow: false)
       page = @agent.get 'https://www.myepisodes.com/ajax/service.php?mode=view_privatelist'
       shows = page.parser.css('tr.past')
       shows = filter_newer_shows(shows, last)
-      build_show_strings(shows)
-    end
-
-    def today_shows
-      page = @agent.get 'https://www.myepisodes.com/ajax/service.php?mode=view_privatelist'
-      shows = page.parser.css('tr.today')
+      shows.concat(page.parser.css('tr.today')) if include_tomorrow
       build_show_strings(shows)
     end
 
@@ -81,7 +76,8 @@ module DownloadTV
     def filter_newer_shows(shows, date)
       shows.select do |i|
         airdate = i.css('td.date')[0].text
-        Date.parse(airdate) >= date
+        viewed_checkbox = i.css('td.status input').last
+        Date.parse(airdate) >= date && viewed_checkbox&.attribute('checked').nil?
       end
     end
 
