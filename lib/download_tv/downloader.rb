@@ -128,7 +128,6 @@ module DownloadTV
     def shows_to_download(date, include_tomorrow)
       myepisodes = MyEpisodes.new(@config[:myepisodes_user],
                                   @config[:cookie])
-      myepisodes.load_cookie
       shows = myepisodes.get_shows_since(date, include_tomorrow: include_tomorrow)
       shows = reject_ignored(shows)
       fix_names(shows)
