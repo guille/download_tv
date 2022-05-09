@@ -4,7 +4,7 @@ describe DownloadTV::Configuration do
   let(:raw_config) { double('raw_config') }
   let(:parsed_config) { { version: DownloadTV::VERSION, pending: [] } }
   let(:opts) { {} }
-  let(:subject) { described_class.new(opts) }
+  subject { described_class.new(opts) }
 
   before :each do
     allow(File).to receive(:exist?).and_return true
