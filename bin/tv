@@ -117,9 +117,9 @@ begin
   when 'config'
     DownloadTV::Configuration.new(config).change_configuration
   when 'showconfig'
-    DownloadTV::Configuration.new(config).print_config
+    puts DownloadTV::Configuration.new(config)
   when 'showpending'
-    DownloadTV::Configuration.new(config).print_attr(:pending)
+    puts DownloadTV::Configuration.new(config)[:pending]
   when 'clearpending'
     DownloadTV::Configuration.new(config).clear_pending
   when 'queue'

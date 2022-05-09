@@ -17,8 +17,8 @@ describe DownloadTV::Downloader do
   describe 'when creating the object' do
     it 'can receive an optional configuration hash' do
       dl = DownloadTV::Downloader.new(auto: true, grabber: 'KAT', path: config_path)
-      _(dl.config.content[:auto]).must_equal true
-      _(dl.config.content[:grabber]).must_equal 'KAT'
+      _(dl.config[:auto]).must_equal true
+      _(dl.config[:grabber]).must_equal 'KAT'
     end
   end
 
@@ -57,7 +57,7 @@ describe DownloadTV::Downloader do
       date = dl.date_to_check_from(1)
 
       _(date).must_equal(Date.today - 1)
-      _(dl.config.content[:date]).must_equal Date.today
+      _(dl.config[:date]).must_equal Date.today
     end
   end
 
@@ -96,12 +96,12 @@ describe DownloadTV::Downloader do
       t.expect(:get_links, [], [show])
       dl = DownloadTV::Downloader.new(auto: true, path: config_path, pending: ['show 11'])
       _(dl.get_link(t, show, save_pending: true)).must_be_nil
-      _(dl.config.content[:pending]).must_equal ['show 11', show]
+      _(dl.config[:pending]).must_equal ['show 11', show]
 
       t.expect(:get_links, [], [show])
       dl = DownloadTV::Downloader.new(auto: false, path: config_path, pending: [])
       _(dl.get_link(t, show, save_pending: true)).must_be_nil
-      _(dl.config.content[:pending]).must_include show
+      _(dl.config[:pending]).must_include show
 
       t.verify
     end

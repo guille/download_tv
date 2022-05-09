@@ -16,7 +16,7 @@ module DownloadTV
     # Tries to download episodes in order for a given season,
     # until it can't find any
     def download_entire_season(show, season)
-      t = Torrent.new(@config.content[:grabber])
+      t = Torrent.new(@config[:grabber])
       season.insert(0, '0') if season.size == 1
       episode = "#{show} s#{season}e01"
       loop do
@@ -29,7 +29,7 @@ module DownloadTV
     end
 
     def download_single_show(show, season = nil)
-      t = Torrent.new(@config.content[:grabber])
+      t = Torrent.new(@config[:grabber])
       show = fix_names([show]).first
       if season
         download_entire_season(show, season)
@@ -44,7 +44,7 @@ module DownloadTV
     def download_from_file(filename)
       if File.exist? filename
         filename = File.realpath(filename)
-        t = Torrent.new(@config.content[:grabber])
+        t = Torrent.new(@config[:grabber])
         to_download = File.readlines(filename, chomp: true)
         fix_names(to_download).each { |show| download(get_link(t, show)) }
       else
@@ -56,7 +56,7 @@ module DownloadTV
     ##
     # Returns the date from which to check shows
     def date_to_check_from(offset)
-      return @config.content[:date] if offset.zero?
+      return @config[:date] if offset.zero?
 
       Date.today - offset
     end
@@ -70,8 +70,8 @@ module DownloadTV
     # The param +offset+ can be used to move the date back that many days in the check
     # The param +include_tomorrow+ will add the current day to the list of dates to search
     def run(dry_run = false, offset = 0, include_tomorrow: false)
-      pending = @config.content[:pending].clone
-      @config.content[:pending].clear
+      pending = @config[:pending].clone
+      @config[:pending].clear
       pending ||= []
       date = date_to_check_from(offset)
 
@@ -85,10 +85,10 @@ module DownloadTV
       end
 
       unless dry_run
-        @config.content[:date] = if include_tomorrow
+        @config[:date] = if include_tomorrow
                                    Date.today.next
                                  else
-                                   [Date.today, @config.content[:date]].max
+                                   [Date.today, @config[:date]].max
                                  end
         @config.serialize
       end
@@ -126,8 +126,8 @@ module DownloadTV
     end
 
     def shows_to_download(date, include_tomorrow)
-      myepisodes = MyEpisodes.new(@config.content[:myepisodes_user],
-                                  @config.content[:cookie])
+      myepisodes = MyEpisodes.new(@config[:myepisodes_user],
+                                  @config[:cookie])
       myepisodes.load_cookie
       shows = myepisodes.get_shows_since(date, include_tomorrow: include_tomorrow)
       shows = reject_ignored(shows)
@@ -144,11 +144,11 @@ module DownloadTV
       links = torrent.get_links(show)
 
       if links.empty?
-        @config.content[:pending] << show if save_pending
+        @config[:pending] << show if save_pending
         return
       end
 
-      if @config.content[:auto]
+      if @config[:auto]
         filter_shows(links).first[1]
       else
         prompt_links(links)
@@ -181,7 +181,7 @@ module DownloadTV
     def reject_ignored(shows)
       shows.reject do |i|
         # Remove season+episode
-        @config.content[:ignored]
+        @config[:ignored]
                .include?(i.split(' ')[0..-2].join(' ').downcase)
       end
     end
@@ -199,7 +199,7 @@ module DownloadTV
     # Runs until no filters are left to be applied or applying
     # a filter would leave no results
     def filter_shows(links)
-      @filterer ||= Filterer.new(@config.content[:filters])
+      @filterer ||= Filterer.new(@config[:filters])
       @filterer.filter(links)
     end
 
