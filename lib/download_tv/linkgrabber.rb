@@ -22,7 +22,7 @@ module DownloadTV
             end
       @agent.head(url)
       true
-    rescue Mechanize::ResponseCodeError, Net::HTTP::Persistent::Error, Errno::ECONNRESET
+    rescue Mechanize::ResponseCodeError, Net::HTTP::Persistent::Error, Errno::ECONNRESET, Net::ReadTimeout
       false
     end
 
