@@ -8,7 +8,10 @@ module DownloadTV
 
     def initialize(url)
       @url = url
-      @agent = Mechanize.new do |a|
+    end
+
+    def agent
+      @agent ||= Mechanize.new do |a|
         a.user_agent = DownloadTV::USER_AGENT
         a.read_timeout = 10
       end
@@ -20,7 +23,7 @@ module DownloadTV
             else
               @url
             end
-      @agent.head(url)
+      agent.head(url)
       true
     rescue Mechanize::ResponseCodeError, Net::HTTP::Persistent::Error, Errno::ECONNRESET, Net::ReadTimeout, OpenSSL::SSL::SSLError
       false

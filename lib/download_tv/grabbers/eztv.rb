@@ -9,7 +9,7 @@ module DownloadTV
     end
 
     def get_links(show)
-      raw_data = @agent.get(format(@url, show))
+      raw_data = agent.get(format(@url, show))
       raw_seeders = raw_data.search('td.forum_thread_post_end').map { |e| e.children[0].text.to_i }
       raw_links = raw_data.search('a.magnet').sort_by.with_index { |_, index| raw_seeders[index] }.reverse
 

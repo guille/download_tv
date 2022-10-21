@@ -9,7 +9,7 @@ module DownloadTV
     end
 
     def get_links(show)
-      raw_data = @agent.get(format(@url, show))
+      raw_data = agent.get(format(@url, show))
       results = raw_data.search('dl')
 
       raise NoTorrentsError if results.empty?
