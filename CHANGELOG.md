@@ -1,5 +1,13 @@
 # download_tv CHANGELOG
 
+## Next (???)
+
+* Fixes
+	* Better detection for offline grabbers without crashing the app
+
+* Grabbers
+	* Torrentz: Fix parser
+
 ## 2.6.6 (2022-01-21)
 
 * Improvements
