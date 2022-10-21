@@ -35,7 +35,7 @@ module DownloadTV
     # Makes a get request tp the given url.
     # Returns the JSON response parsed into a hash
     def request_and_parse(url)
-      page = @agent.get(url).content
+      page = agent.get(url).content
       JSON.parse(page)
     end
 

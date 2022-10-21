@@ -14,7 +14,7 @@ module DownloadTV
       search = format(@url, show)
 
       # Skip the header
-      data = @agent.get(search).search('#searchResult tr').drop 1
+      data = agent.get(search).search('#searchResult tr').drop 1
 
       raise NoTorrentsError if data.empty?
 
