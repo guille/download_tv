@@ -8,6 +8,13 @@ module DownloadTV
       def grabbers
         %w[TorrentAPI Torrentz Eztv]
       end
+
+      def healthcheck
+        grabbers.each do |g|
+          grabber = (DownloadTV.const_get g).new
+          puts "#{g}: #{grabber.online? ? 'online' : 'offline'}"
+        end
+      end
     end
 
     def initialize(default_grabber = nil)

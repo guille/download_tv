@@ -29,6 +29,7 @@ Specific options:
     -a, --[no-]auto                  Automatically find links
     -g, --grabber GRABBER            Use given grabber as first option
         --show-grabbers              List available grabbers
+        --healthcheck                Check status of all the grabbers
     -p, --pending                    Show list of pending downloads
         --clear-pending              Clear list of pending downloads
     -q, --queue SHOW                 Add show episode to pending downloads list

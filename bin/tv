@@ -64,6 +64,11 @@ opt_parser = OptionParser.new do |opts|
     exit
   end
 
+  opts.on('--healthcheck', 'Check status of all the grabbers') do
+    DownloadTV::Torrent.healthcheck
+    exit
+  end
+
   opts.on('-p', '--pending', 'Show list of pending downloads') do
     options[:cmd] = 'showpending'
   end

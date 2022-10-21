@@ -2,6 +2,9 @@
 
 ## Next (???)
 
+* Features
+	* Add `--healthcheck` to check the status of all the grabbers (online/offline).
+
 * Fixes
 	* Better detection for offline grabbers without crashing the app
 
