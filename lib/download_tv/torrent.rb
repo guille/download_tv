@@ -4,43 +4,19 @@ module DownloadTV
   ##
   # Class in charge of managing the link grabbers
   class Torrent
-    attr_reader :g_instances, :tries
-
-    def grabbers
-      %w[TorrentAPI Torrentz Eztv]
+    class << self
+      def grabbers
+        %w[TorrentAPI Torrentz Eztv]
+      end
     end
 
     def initialize(default_grabber = nil)
-      g_names = grabbers
-
-      # Silently ignores bad names
-      found_default = g_names.find_index(default_grabber)
-      g_names.rotate! found_default if found_default
-
-      @g_instances = g_names.map { |g| (DownloadTV.const_get g).new }
+      @g_instances = self.class.grabbers\
+        .rotate(self.class.grabbers.find_index(default_grabber) || 0)
+        .map { |g| (DownloadTV.const_get g).new }
       reset_tries
 
-      check_grabber_online
-    end
-
-    def check_grabber_online
-      if @g_instances.empty?
-        warn 'There are no available grabbers.'
-        exit 1
-      end
-      return if @g_instances.first.online?
-
-      # We won't be using this grabber
-      warn "Problem accessing #{@g_instances.first.class.name}"
-      @tries -= 1
-      @g_instances.shift # Removes first element
-      check_grabber_online
-    end
-
-    def change_grabbers
-      @tries -= 1
-      @g_instances.rotate!
-      check_grabber_online
+      remove_grabber_if_offline
     end
 
     def get_links(show)
@@ -55,6 +31,32 @@ module DownloadTV
       []
     ensure
       reset_grabbers_order
+    end
+
+    private
+
+    ##
+    # This method removes the grabber from the instances list if it is not online
+    # It will repeat until it finds an online grabber, or  exit the application
+    # if there are none
+    def remove_grabber_if_offline
+      if @g_instances.empty?
+        warn 'There are no available grabbers.'
+        exit 1
+      end
+      return if @g_instances.first.online?
+
+      # We won't be using this grabber
+      warn "Problem accessing #{@g_instances.first.class.name}"
+      @tries -= 1
+      @g_instances.shift # Removes first element
+      remove_grabber_if_offline
+    end
+
+    def change_grabbers
+      @tries -= 1
+      @g_instances.rotate!
+      remove_grabber_if_offline
     end
 
     def reset_tries

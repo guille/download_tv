@@ -60,7 +60,7 @@ opt_parser = OptionParser.new do |opts|
   end
 
   opts.on('--show-grabbers', 'List available grabbers') do
-    puts DownloadTV::Torrent.new.grabbers
+    puts DownloadTV::Torrent.grabbers
     exit
   end
 
