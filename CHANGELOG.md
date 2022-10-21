@@ -1,6 +1,6 @@
 # download_tv CHANGELOG
 
-## Next (???)
+## 2.6.7 (2022-10-22)
 
 * Features
 	* Add `--healthcheck` to check the status of all the grabbers (online/offline).
