@@ -1,5 +1,11 @@
 # download_tv CHANGELOG
 
+## 2.6.8 (2022-12-02)
+
+* Improvements
+	* Improvements on the TorrentAPI grabber.
+	* Better detection of grabbers being offline.
+
 ## 2.6.7 (2022-10-22)
 
 * Features
