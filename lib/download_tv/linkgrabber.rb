@@ -25,7 +25,7 @@ module DownloadTV
             end
       agent.head(url)
       true
-    rescue Mechanize::ResponseCodeError, Net::HTTP::Persistent::Error, Errno::ECONNRESET, Net::ReadTimeout, OpenSSL::SSL::SSLError
+    rescue StandardError
       false
     end
 
