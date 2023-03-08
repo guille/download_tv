@@ -63,7 +63,7 @@ module DownloadTV
         obj = request_and_parse(search)
       end
 
-      while obj['error_code'] == TOO_MANY_REQUESTS_ERROR || obj.has_key?('rate_limit')
+      until obj['error_code'] != TOO_MANY_REQUESTS_ERROR && (obj['rate_limit'].nil? || obj['rate_limit'] == false)
         sleep(@wait)
         obj = request_and_parse(search)
       end

@@ -1,5 +1,10 @@
 # download_tv CHANGELOG
 
+## 2.6.9 (2023-03-08)
+
+* Fixes
+	* Bug fixes on the TorrentAPI grabber.
+
 ## 2.6.8 (2022-12-02)
 
 * Improvements
