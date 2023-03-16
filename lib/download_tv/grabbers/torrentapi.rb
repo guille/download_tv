@@ -12,8 +12,9 @@ module DownloadTV
       super('https://torrentapi.org/pubapi_v2.php?'\
             'mode=search&search_string=%s&token=%s&'\
             'app_id=DownloadTV&sort=seeders')
-      @wait = 0.5
+      @wait = 1.5
       @token = nil
+      @retries_left = 5
     end
 
     ##
@@ -75,10 +76,12 @@ module DownloadTV
 
       names.zip(links)
     rescue Mechanize::ResponseCodeError => e
-      if e.response_code == '429'
+      if (e.response_code == '429' || e.response_code == '520') && @retries_left > 0
         sleep(@wait)
+        @retries_left -= 1
         retry
       end
+      raise NoTorrentsError
     end
   end
 end
