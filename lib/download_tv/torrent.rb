@@ -6,7 +6,7 @@ module DownloadTV
   class Torrent
     class << self
       def grabbers
-        %w[TorrentAPI Torrentz Eztv]
+        %w[Torrentz Eztv]
       end
 
       def healthcheck
