@@ -1,5 +1,10 @@
 # download_tv CHANGELOG
 
+## 2.7.0 (2023-05-31)
+
+* Grabbers
+	* TorrentAPI: Removed (RARBG)
+
 ## 2.6.10 (2023-03-16)
 
 * Fixes
