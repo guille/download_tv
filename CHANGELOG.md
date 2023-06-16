@@ -1,5 +1,10 @@
 # download_tv CHANGELOG
 
+## 2.8.0 (2023-06-16)
+
+* Grabbers
+	* TorrentGalaxy: added TorrentGalaxy grabber.
+
 ## 2.7.0 (2023-05-31)
 
 * Grabbers
