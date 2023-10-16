@@ -13,8 +13,7 @@ module DownloadTV
       raw_seeders = raw_data.search('td.forum_thread_post_end').map { |e| e.children[0].text.to_i }
       raw_links = raw_data.search('a.magnet').sort_by.with_index { |_, index| raw_seeders[index] }.reverse
 
-      # EZTV shows 50 latest releases if it can't find the torrent
-      raise NoTorrentsError if raw_links.size == 50
+      raise NoTorrentsError if raw_links.size == 0
 
       raw_links.collect do |i|
         [i.attribute('title').text.chomp(' Magnet Link'),
