@@ -1,5 +1,10 @@
 # download_tv CHANGELOG
 
+## 2.8.1 (2023-10-16)
+
+* Grabbers
+	* Eztv: fix torrent not found detection.
+
 ## 2.8.0 (2023-06-16)
 
 * Grabbers
