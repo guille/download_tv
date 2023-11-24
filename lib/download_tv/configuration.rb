@@ -150,7 +150,7 @@ module DownloadTV
     def default_filters
       {
         'includes' => %w[PROPER REPACK],
-        'excludes' => %w[2160P 1080P 720P]
+        'excludes' => []
       }
     end
 

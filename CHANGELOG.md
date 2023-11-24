@@ -1,5 +1,10 @@
 # download_tv CHANGELOG
 
+## Next (unreleased)
+
+* Improvements
+	* Remove high quality options from default `exclude` filters
+
 ## 2.8.1 (2023-10-16)
 
 * Grabbers
