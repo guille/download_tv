@@ -8,7 +8,6 @@ Gem::Specification.new do |s|
   s.name          = 'download_tv'
   s.version       = DownloadTV::VERSION
   s.authors       = ['guille']
-  s.email         = ['guillerg96@gmail.com']
 
   s.summary       = 'DownloadTV is a tool that allows the user to find magnet links for tv show episodes. It accepts shows as arguments, from a file or it can integrate with your MyEpisodes account.'
   s.homepage      = 'https://github.com/guille/download_tv'

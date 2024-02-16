@@ -2,6 +2,8 @@
 
 ## Next (unreleased)
 
+## 2.8.2 (2024-02-16)
+
 * Improvements
 	* Remove high quality options from default `exclude` filters
 
