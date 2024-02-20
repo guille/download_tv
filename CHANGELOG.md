@@ -2,6 +2,13 @@
 
 ## Next (unreleased)
 
+## 2.8.3 (2024-02-20)
+
+* Grabbers
+	* TorrentGalaxy: disable grabber.
+	* Torrentz: made the new default.
+	* ThePirateBay: re-enable grabber with new proxy URL.
+
 ## 2.8.2 (2024-02-16)
 
 * Improvements
