@@ -4,7 +4,7 @@ module DownloadTV
   ##
   # ThePirateBay grabber
   class ThePirateBay < LinkGrabber
-    def initialize(tpb_proxy = 'https://pirateproxy.sh/')
+    def initialize(tpb_proxy = 'https://tpb30.ukpass.co/')
       proxy = tpb_proxy.gsub(%r{/+$}, '')
 
       super("#{proxy}/search/%s/0/7/0")
