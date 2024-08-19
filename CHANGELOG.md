@@ -2,6 +2,9 @@
 
 ## Next (unreleased)
 
+* Grabbers
+	* ThePirateBay: fix with upstream. Use tpb api.
+
 ## 2.8.3 (2024-02-20)
 
 * Grabbers
