@@ -180,8 +180,9 @@ module DownloadTV
     def reject_ignored(shows)
       shows.reject do |i|
         # Remove season+episode
-        @config[:ignored]
-               .include?(i.split(' ')[0..-2].join(' ').downcase)
+        @config[:ignored].include?(
+          i.split(' ')[0..-2].join(' ').downcase
+        )
       end
     end
 
