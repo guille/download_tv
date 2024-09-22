@@ -2,6 +2,11 @@
 
 ## Next (unreleased)
 
+## 2.9.0 (2024-09-22)
+
+* Improvements
+	* Add -e option to edit configuration manually.
+
 ## 2.8.5 (2024-09-22)
 
 * Grabbers

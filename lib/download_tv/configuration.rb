@@ -44,6 +44,10 @@ module DownloadTV
       serialize
     end
 
+    def config_path
+      (content[:path] || default_config_path)
+    end
+
     private
 
     def content
@@ -125,10 +129,6 @@ module DownloadTV
 
       puts 'Enter a comma-separated list of terms to exclude: '
       self[:filters][:excludes] = read_and_split_list :upcase
-    end
-
-    def config_path
-      (content[:path] || default_config_path)
     end
 
     def default_config_path

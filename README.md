@@ -33,6 +33,7 @@ Specific options:
     -p, --pending                    Show list of pending downloads
         --clear-pending              Clear list of pending downloads
     -q, --queue SHOW                 Add show episode to pending downloads list
+    -e, --edit                       Open configuration with $EDITOR
     -v, --version                    Print version
     -h, --help                       Show this message
 ```

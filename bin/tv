@@ -82,6 +82,12 @@ opt_parser = OptionParser.new do |opts|
     options[:arg] = s
   end
 
+  opts.on('-e', '--edit', 'Open configuration with $EDITOR') do
+    path = DownloadTV::Configuration.new.config_path
+    Process.detach(Process.spawn("$EDITOR #{path}"))
+    exit
+  end
+
   opts.on('-v', '--version', 'Print version') do
     puts DownloadTV::VERSION
     exit
