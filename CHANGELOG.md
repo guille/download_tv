@@ -2,6 +2,12 @@
 
 ## Next (unreleased)
 
+## 2.8.5 (2024-09-22)
+
+* Grabbers
+	* ThePirateBay: fix with upstream again...
+	* ThePirateBayAPI: added (disabled) in case they expose it again.
+
 ## 2.8.4 (2024-08-19)
 
 * Grabbers
