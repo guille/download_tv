@@ -2,6 +2,11 @@
 
 ## Next (unreleased)
 
+## 2.9.1 (2024-09-24)
+
+* Grabbers
+	* Eztv: update hostname and fix hidden links
+
 ## 2.9.0 (2024-09-22)
 
 * Improvements
