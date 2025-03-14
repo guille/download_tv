@@ -22,10 +22,10 @@ Gem::Specification.new do |s|
   s.executables = ['tv']
 
   s.add_development_dependency 'bundler', '~> 2.0'
-  s.add_development_dependency 'minitest', '~> 5.0'
-  s.add_development_dependency "rake", ">= 12.3.3"
-  s.add_development_dependency 'pry', '~> 0.13'
   s.add_development_dependency 'byebug', '~> 11.1'
+  s.add_development_dependency 'minitest', '~> 5.0'
+  s.add_development_dependency 'pry', '~> 0.13'
+  s.add_development_dependency 'rake', '>= 12.3.3'
 
   s.add_dependency('json')
   s.add_dependency('mechanize')

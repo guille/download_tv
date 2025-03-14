@@ -2,6 +2,12 @@
 
 ## Next (unreleased)
 
+## 2.9.2 (2025-03-14)
+
+* Grabbers
+	* ThePirateBay: update URL
+	* Torrentz: remove grabber
+
 ## 2.9.1 (2024-09-24)
 
 * Grabbers
