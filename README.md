@@ -70,7 +70,7 @@ The `-f` flag can be used to read the list of episodes to download from a file. 
 
 ### Available link grabbers
 
-With `-g` and `--show-grabbers`, the user can see what grabbers are available and choose one of these as their preferred option. By default, the application searches for torrents using Torrentz. When a grabber doesn't have a torrent for said episode, is offline, or causes any error to appear, it skips to the next grabber until exhausting the list.
+With `-g` and `--show-grabbers`, the user can see what grabbers are available and choose one of these as their preferred option. By default, the application searches for torrents using ThePirateBay. When a grabber doesn't have a torrent for said episode, is offline, or causes any error to appear, it skips to the next grabber until exhausting the list.
 
 I usually publish a patch update to the gem when I detect one of them isn't working, disabling it or fixing it altogether. If a specific grabber is giving you problems, check whether you're running the latest version of the gem before opening an issue here.
 

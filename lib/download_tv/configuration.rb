@@ -140,7 +140,7 @@ module DownloadTV
     # Maintains the previous values, in case it's an update from an existing file.
     def set_default_values
       self[:auto] ||= true
-      self[:grabber] ||= 'Torrentz'
+      self[:grabber] ||= 'ThePirateBay'
       self[:date] ||= Date.today - 1
       self[:filters] ||= default_filters
       self[:pending] ||= []
