@@ -21,8 +21,8 @@ module DownloadTV
       # Second cell of each row contains links and name
       results = data.map { |d| d.search('td')[1] }
 
-      names = results.collect { |i| i.search('.detName').text.strip }
-      links = results.collect { |i| i.search('a')[1].attribute('href').text }
+      names = results.compact.collect { |i| i.search('.detName').text.strip }
+      links = results.compact.collect { |i| i.search('a')[1].attribute('href').text }
 
       names.zip(links)
     end

@@ -2,6 +2,11 @@
 
 ## Next (unreleased)
 
+## 2.9.3 (2025-04-20)
+
+* Grabbers
+	* ThePirateBay: fix error
+
 ## 2.9.2 (2025-03-14)
 
 * Grabbers
