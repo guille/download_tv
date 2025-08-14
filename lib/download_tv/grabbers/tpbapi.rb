@@ -16,7 +16,7 @@ module DownloadTV
     ]
 
     def initialize
-      super("https://tpb36.ukpass.co/apibay/q.php?q=%s&cat=")
+      super("https://apibay.org/q.php?q=%s&cat=")
     end
 
     def get_links(show)

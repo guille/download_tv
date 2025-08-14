@@ -2,6 +2,12 @@
 
 ## Next (unreleased)
 
+## 2.9.4 (2025-08-14)
+
+* Grabbers
+	* ThePirateBay: disabled (previous proxy was getting shady)
+	* ThePirateBayAPI: re-added and enabled
+
 ## 2.9.3 (2025-04-20)
 
 * Grabbers
