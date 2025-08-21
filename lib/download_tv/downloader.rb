@@ -75,7 +75,10 @@ module DownloadTV
       pending ||= []
       date = date_to_check_from(offset)
 
-      pending.concat shows_to_download(date, include_tomorrow) if date < (include_tomorrow ? Date.today.next : Date.today)
+      if date < (include_tomorrow ? Date.today.next : Date.today)
+        pending.concat shows_to_download(date,
+                                         include_tomorrow)
+      end
 
       if pending.empty?
         puts 'Nothing to download'
@@ -86,10 +89,10 @@ module DownloadTV
 
       unless dry_run
         @config[:date] = if include_tomorrow
-                                   Date.today.next
-                                 else
-                                   [Date.today, @config[:date]].max
-                                 end
+                           Date.today.next
+                         else
+                           [Date.today, @config[:date]].max
+                         end
         @config.serialize
       end
     rescue InvalidLoginError
