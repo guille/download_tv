@@ -13,10 +13,10 @@ module DownloadTV
       udp://opentracker.i2p.rocks:6969/announce
       udp://open.stealth.si:80/announce
       udp://tracker.0x.tf:6969/announce
-    ]
+    ].freeze
 
     def initialize
-      super("https://apibay.org/q.php?q=%s&cat=")
+      super('https://apibay.org/q.php?q=%s&cat=')
     end
 
     def get_links(show)
@@ -39,7 +39,7 @@ module DownloadTV
     end
 
     def trackers_params
-      trackers_params ||= "&tr=#{TRACKERS.map { |tracker| CGI.escape(tracker) }.join('&tr=')}"
+      @trackers_params ||= "&tr=#{TRACKERS.map { |tracker| CGI.escape(tracker) }.join('&tr=')}"
     end
   end
 end

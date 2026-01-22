@@ -62,10 +62,8 @@ module DownloadTV
     end
 
     ##
-    # Finds download links for all new episodes aired since
-    # the last run of the program
-    # It connects to MyEpisodes in order to find which shows
-    # to track and which new episodes aired.
+    # Finds download links for all new episodes aired since the last run of the program
+    # It connects to MyEpisodes in order to find which shows to track and which new episodes aired.
     # The param +dry_run+ prevents changing the persisted configuration
     # The param +offset+ can be used to move the date back that many days in the check
     # The param +include_tomorrow+ will add the current day to the list of dates to search
@@ -170,7 +168,7 @@ module DownloadTV
     end
 
     def prompt_links(links)
-      links.each_with_index { |data, i| puts "#{i}\t\t#{data[0]}" }
+      links.each_with_index { |data, i| puts " #{i}\t\t#{data[0]}" }
 
       puts
       print 'Select the torrent you want to download [-1 to skip]: '
