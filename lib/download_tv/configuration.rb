@@ -45,7 +45,7 @@ module DownloadTV
     end
 
     def config_path
-      (content[:path] || default_config_path)
+      content[:path] || default_config_path
     end
 
     private
