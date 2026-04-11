@@ -1,3 +1,4 @@
 /pkg/
 .byebug_history
 *.sublime-*
+coverage/
