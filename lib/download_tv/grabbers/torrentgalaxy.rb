@@ -12,7 +12,7 @@ module DownloadTV
       raw_data = agent.get(format(@url, show))
       rows = raw_data.search('div.tgxtablerow')
 
-      raise NoTorrentsError if rows.size.zero?
+      raise NoTorrentsError if rows.empty?
 
       rows.map do |row|
         [row.children[4].text.strip,

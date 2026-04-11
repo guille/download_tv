@@ -1,4 +1,4 @@
-#!/usr/bin/env ruby
+#!/usr/bin/env -S ruby
 # frozen_string_literal: true
 
 require 'optparse'
@@ -35,7 +35,7 @@ opt_parser = OptionParser.new do |opts|
     options[:season] = s
   end
 
-  opts.on('-t', '--tomorrow', 'Download shows airing today') do |s|
+  opts.on('-t', '--tomorrow', 'Download shows airing today') do |_|
     options[:cmd] = 'tomorrow'
   end
 
@@ -111,7 +111,7 @@ begin
   case options[:cmd]
   when 'run'
     dl = DownloadTV::Downloader.new(config)
-    dl.run(options[:dry], options[:offset].abs)
+    dl.run(options[:offset].abs, dry_run: options[:dry])
   when 'dl'
     if options[:arg]
       dl = DownloadTV::Downloader.new(config)
@@ -124,7 +124,7 @@ begin
     dl.download_from_file(options[:arg])
   when 'tomorrow'
     dl = DownloadTV::Downloader.new(config)
-    dl.run(options[:dry], options[:offset].abs, include_tomorrow: true)
+    dl.run(options[:offset].abs, dry_run: options[:dry], include_tomorrow: true)
   when 'config'
     DownloadTV::Configuration.new(config).change_configuration
   when 'showconfig'

@@ -19,8 +19,6 @@ module DownloadTV
   USER_AGENT = "DownloadTV #{DownloadTV::VERSION}"
 
   class NoTorrentsError < StandardError; end
-
-  class NoSubtitlesError < StandardError; end
 end
 
 Dir[File.join(__dir__, 'download_tv', 'grabbers', '*.rb')].sort.each { |file| require file }

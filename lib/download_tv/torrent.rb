@@ -18,9 +18,9 @@ module DownloadTV
     end
 
     def initialize(default_grabber = nil)
-      @g_instances = self.class.grabbers\
-        .rotate(self.class.grabbers.find_index(default_grabber) || 0)
-        .map { |g| (DownloadTV.const_get g).new }
+      @g_instances = self.class.grabbers
+                         .rotate(self.class.grabbers.find_index(default_grabber) || 0)
+                         .map { |g| (DownloadTV.const_get g).new }
       reset_tries
 
       remove_grabber_if_offline

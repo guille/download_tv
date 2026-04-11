@@ -107,8 +107,8 @@ describe DownloadTV::Configuration do
 
   describe '#to_s' do
     it 'will form a string with each (key, value) pair in a new line' do
-      expected = "version: #{DownloadTV::VERSION}\n"\
-        "pending: []\n"
+      expected = "version: #{DownloadTV::VERSION}\n" \
+                 "pending: []\n"
       expect(subject.to_s).to eq expected
     end
   end

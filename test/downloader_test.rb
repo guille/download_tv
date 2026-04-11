@@ -11,7 +11,7 @@ describe DownloadTV::Downloader do
   end
 
   after do
-    File.delete(config_path) if File.exist?(config_path)
+    FileUtils.rm_f(config_path)
   end
 
   describe 'when creating the object' do
@@ -63,7 +63,7 @@ describe DownloadTV::Downloader do
 
   describe 'the filter_shows method' do
     it 'removes names with exclude words in them' do
-      f = {:excludes => ["2160P"], :includes => []}
+      f = { excludes: ['2160P'], includes: [] }
       dl = DownloadTV::Downloader.new(path: config_path, filters: f)
       links = [['Link 1', ''], ['Link 2 2160p', ''], ['Link 3', '']]
       res = [['Link 1', ''], ['Link 3', '']]
@@ -71,7 +71,7 @@ describe DownloadTV::Downloader do
     end
 
     it 'removes names without include words in them' do
-      f = {:excludes => [], :includes => %w[REPACK]}
+      f = { excludes: [], includes: %w[REPACK] }
       dl = DownloadTV::Downloader.new(path: config_path, filters: f)
       links = [['Link 1', ''], ['Link 2 2160p', ''], ['Link 3', ''],
                ['Link REPACK 5', '']]
@@ -80,7 +80,7 @@ describe DownloadTV::Downloader do
     end
 
     it "doesn't apply a filter if it would reject every option" do
-      f = {:excludes => %w[2160P 720P], :includes => []}
+      f = { excludes: %w[2160P 720P], includes: [] }
       dl = DownloadTV::Downloader.new(path: config_path, filters: f)
       links = [['Link 1 720p', ''], ['Link 2 2160p', ''], ['Link 720p 3', '']]
       res = [['Link 1 720p', ''], ['Link 720p 3', '']]

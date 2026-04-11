@@ -33,7 +33,7 @@ describe DownloadTV::Filterer do
       end
 
       describe 'when there is only one entry not matching (multiple filter)' do
-        let(:excludes) { ['2', '0'] }
+        let(:excludes) { %w[2 0] }
         it 'will return it' do
           filtered = subject.filter(test_data)
           expect(filtered.size).to eq 1
@@ -67,7 +67,7 @@ describe DownloadTV::Filterer do
       end
 
       describe 'when all entries match (more filters)' do
-        let(:excludes) { ['TEST', 'EXCLUDE'] }
+        let(:excludes) { %w[TEST EXCLUDE] }
         it 'will only apply filters until there would be no values left' do
           filtered = subject.filter(test_data)
           expect(filtered.size).to eq 1

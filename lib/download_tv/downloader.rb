@@ -64,10 +64,10 @@ module DownloadTV
     ##
     # Finds download links for all new episodes aired since the last run of the program
     # It connects to MyEpisodes in order to find which shows to track and which new episodes aired.
-    # The param +dry_run+ prevents changing the persisted configuration
     # The param +offset+ can be used to move the date back that many days in the check
+    # The param +dry_run+ prevents changing the persisted configuration
     # The param +include_tomorrow+ will add the current day to the list of dates to search
-    def run(dry_run = false, offset = 0, include_tomorrow: false)
+    def run(offset = 0, dry_run: false, include_tomorrow: false)
       pending = @config[:pending].clone
       @config[:pending].clear
       pending ||= []
@@ -182,7 +182,7 @@ module DownloadTV
       shows.reject do |i|
         # Remove season+episode
         @config[:ignored].include?(
-          i.split(' ')[0..-2].join(' ').downcase
+          i.split[0..-2].join(' ').downcase
         )
       end
     end

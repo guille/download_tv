@@ -7,7 +7,8 @@ module DownloadTV
     def initialize(user, save_cookie)
       @user = user
       @save_cookie = save_cookie
-      @cookie_path = File.join(ENV['HOME'], '.config', 'download_tv', 'cookie')
+      # TODO: Respect XDG_CONFIG_HOME
+      @cookie_path = File.join(Dir.home, '.config', 'download_tv', 'cookie')
       agent.user_agent = DownloadTV::USER_AGENT
       login
     end
@@ -49,7 +50,7 @@ module DownloadTV
     ##
     # If there is a cookie file, tries to log in using it
     # returns the result of the operation (true/false)
-    def load_cookie
+    def load_cookie # rubocop:disable Naming/PredicateMethod
       if File.exist? @cookie_path
         agent.cookie_jar.load @cookie_path
         return true if logged_in?
