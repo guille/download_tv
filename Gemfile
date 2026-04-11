@@ -9,5 +9,5 @@ gem 'rake'
 gem 'debug'
 gem 'minitest' # TODO: Remove when it's all on rspec
 gem 'rspec'
-gem 'rubocop'
-gem 'rubocop-rspec'
+gem 'rubocop', require: false
+gem 'rubocop-rspec', require: false

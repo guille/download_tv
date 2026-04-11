@@ -1,8 +1,7 @@
 # download_tv
 
-[![Ruby](https://github.com/guille/download_tv/actions/workflows/ruby.yml/badge.svg?branch=master)](https://github.com/guille/download_tv/actions/workflows/ruby.yml)
+[![Specs](https://github.com/guille/download_tv/actions/workflows/ruby.yml/badge.svg?branch=master)](https://github.com/guille/download_tv/actions/workflows/ruby.yml)
 [![Gem Version](https://badge.fury.io/rb/download_tv.svg)](https://badge.fury.io/rb/download_tv)
-[![Code Climate](https://codeclimate.com/github/guille/download_tv.svg)](https://codeclimate.com/github/guille/download_tv)
 
 **download_tv** is a tool that allows the user to find magnet links for TV show episodes. It accepts shows as arguments, from a file or it can integrate with your MyEpisodes account.
 
