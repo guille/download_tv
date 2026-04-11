@@ -132,8 +132,8 @@ module DownloadTV
     end
 
     def default_config_path
-      # TODO: Respect XDG_CONFIG_HOME
-      File.join(Dir.home, '.config', 'download_tv', 'config')
+      base = ENV.fetch('XDG_CONFIG_HOME') { File.join(Dir.home, '.config') }
+      File.join(base, 'download_tv', 'config')
     end
 
     ##

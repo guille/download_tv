@@ -2,6 +2,9 @@
 
 ## Next (unreleased)
 
+* Improvements
+	* Now respects `XDG_CONFIG_HOME` when set (falls back to `~/.config/download_tv`)
+
 ## 2.9.4 (2025-08-14)
 
 * Grabbers

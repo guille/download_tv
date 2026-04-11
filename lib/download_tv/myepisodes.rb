@@ -7,8 +7,8 @@ module DownloadTV
     def initialize(user, save_cookie)
       @user = user
       @save_cookie = save_cookie
-      # TODO: Respect XDG_CONFIG_HOME
-      @cookie_path = File.join(Dir.home, '.config', 'download_tv', 'cookie')
+      base = ENV.fetch('XDG_CONFIG_HOME') { File.join(Dir.home, '.config') }
+      @cookie_path = File.join(base, 'download_tv', 'cookie')
       agent.user_agent = DownloadTV::USER_AGENT
       login
     end
