@@ -4,12 +4,12 @@ describe DownloadTV::Torrent do
   let(:default_grabber) { nil }
   # let(:third_grabber) { double('eztv') }
   let(:second_grabber) { double('eztv') }
-  let(:first_grabber) { double('tpb') }
+  let(:first_grabber) { double('tpbapi') }
   let(:test_show) { double('test_show') }
   subject { described_class.new(default_grabber) }
 
   before :each do
-    allow(DownloadTV::ThePirateBay).to receive(:new).and_return first_grabber
+    allow(DownloadTV::ThePirateBayAPI).to receive(:new).and_return first_grabber
     allow(DownloadTV::Eztv).to receive(:new).and_return second_grabber
     # allow(DownloadTV::TorrentGalaxy).to receive(:new).and_return third_grabber
 
@@ -21,7 +21,7 @@ describe DownloadTV::Torrent do
   describe 'Torrent.grabbers' do
     it 'returns the list of grabbers' do
       # This order is assumed in the other specs, so explicitly checking it here
-      expect(described_class.grabbers).to eq %w[ThePirateBay Eztv]
+      expect(described_class.grabbers).to eq %w[ThePirateBayAPI Eztv]
     end
   end
 
