@@ -1,14 +1,15 @@
 # frozen_string_literal: true
 
 describe DownloadTV::Torrent do
+  subject { described_class.new(default_grabber) }
+
   let(:default_grabber) { nil }
   # let(:third_grabber) { double('eztv') }
   let(:second_grabber) { double('eztv') }
   let(:first_grabber) { double('tpbapi') }
   let(:test_show) { double('test_show') }
-  subject { described_class.new(default_grabber) }
 
-  before :each do
+  before do
     allow(DownloadTV::ThePirateBayAPI).to receive(:new).and_return first_grabber
     allow(DownloadTV::Eztv).to receive(:new).and_return second_grabber
     # allow(DownloadTV::TorrentGalaxy).to receive(:new).and_return third_grabber
@@ -26,7 +27,7 @@ describe DownloadTV::Torrent do
   end
 
   describe '#get_links' do
-    it 'will use the first grabber and return its #get_link result' do
+    it 'uses the first grabber and return its #get_link result' do
       result = double('result')
       expect(first_grabber).to receive(:get_links).with(test_show).and_return(result)
 
@@ -38,7 +39,7 @@ describe DownloadTV::Torrent do
         allow(first_grabber).to receive(:online?).and_return(false)
       end
 
-      it 'will use the second grabber' do
+      it 'uses the second grabber' do
         expect(first_grabber).not_to receive(:get_links)
         expect(second_grabber).to receive(:get_links).with(test_show)
         # expect(third_grabber).not_to receive(:get_links)
@@ -55,7 +56,7 @@ describe DownloadTV::Torrent do
         # allow(third_grabber).to receive(:online?).and_return(false)
       end
 
-      it 'will exit' do
+      it 'exits' do
         expect(first_grabber).not_to receive(:get_links)
         expect(second_grabber).not_to receive(:get_links)
         # expect(third_grabber).not_to receive(:get_links)
@@ -69,7 +70,7 @@ describe DownloadTV::Torrent do
         allow(first_grabber).to receive(:get_links).with(test_show).and_raise(DownloadTV::NoTorrentsError)
       end
 
-      it 'will keep trying until one does' do
+      it 'keeps trying until one does' do
         expect(first_grabber).to receive(:get_links).ordered
         expect(second_grabber).to receive(:get_links).ordered
 
@@ -84,7 +85,7 @@ describe DownloadTV::Torrent do
         # allow(third_grabber).to receive(:get_links).with(test_show).and_raise(DownloadTV::NoTorrentsError)
       end
 
-      it 'will return an empty array' do
+      it 'returns an empty array' do
         expect(first_grabber).to receive(:get_links).ordered
         expect(second_grabber).to receive(:get_links).ordered
         # expect(third_grabber).to receive(:get_links).ordered
@@ -96,7 +97,7 @@ describe DownloadTV::Torrent do
     context 'when the default grabber is set' do
       let(:default_grabber) { 'Eztv' }
 
-      it 'will use that grabber preferently' do
+      it 'uses that grabber preferently' do
         test_show = double('test_show')
         expect(first_grabber).not_to receive(:get_links)
         expect(second_grabber).to receive(:get_links)
@@ -109,14 +110,14 @@ describe DownloadTV::Torrent do
     context 'when a grabber fails on a run and it is called twice' do
       before do
         count = 0
-        allow(first_grabber).to receive(:get_links).exactly(2).times.with(test_show) do
+        allow(first_grabber).to receive(:get_links).twice.with(test_show) do
           count += 1
           raise DownloadTV::NoTorrentsError if count == 1
         end
       end
 
       it 'the second run will use the original order' do
-        expect(first_grabber).to receive(:get_links).exactly(2).times
+        expect(first_grabber).to receive(:get_links).twice
         expect(second_grabber).to receive(:get_links).exactly(1).time
         # expect(third_grabber).not_to receive(:get_links)
 

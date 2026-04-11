@@ -1,11 +1,11 @@
 # frozen_string_literal: true
 
 describe DownloadTV::Filterer do
+  subject { described_class.new(filters_config) }
+
   let(:excludes) { [] }
   let(:includes) { [] }
   let(:filters_config) { { excludes: excludes, includes: includes } }
-
-  subject { described_class.new(filters_config) }
 
   describe '#filter' do
     let(:test_data) do
@@ -17,7 +17,7 @@ describe DownloadTV::Filterer do
     end
 
     context 'when there are no filters' do
-      it 'will return the given list' do
+      it 'returns the given list' do
         expect(subject.filter(test_data)).to eq test_data
       end
     end
@@ -25,7 +25,8 @@ describe DownloadTV::Filterer do
     context 'when there are exclude filters' do
       describe 'when there is only one entry not matching (one filter)' do
         let(:excludes) { ['TEST'] }
-        it 'will return it' do
+
+        it 'returns it' do
           filtered = subject.filter(test_data)
           expect(filtered.size).to eq 1
           expect(filtered.first).to eq 'Exclude'
@@ -34,7 +35,8 @@ describe DownloadTV::Filterer do
 
       describe 'when there is only one entry not matching (multiple filter)' do
         let(:excludes) { %w[2 0] }
-        it 'will return it' do
+
+        it 'returns it' do
           filtered = subject.filter(test_data)
           expect(filtered.size).to eq 1
           expect(filtered.first).to eq 'Exclude'
@@ -43,7 +45,8 @@ describe DownloadTV::Filterer do
 
       describe 'when only one filter matches' do
         let(:excludes) { ['0'] }
-        it 'will not return that element' do
+
+        it 'does not return that element' do
           filtered = subject.filter(test_data)
           expect(filtered.size).to eq 2
           expect(filtered.include?('Test 10')).to be false
@@ -52,7 +55,8 @@ describe DownloadTV::Filterer do
 
       describe 'when no entries match' do
         let(:excludes) { ['zzzz'] }
-        it 'will return the original' do
+
+        it 'returns the original' do
           filtered = subject.filter(test_data)
           expect(filtered).to eq test_data
         end
@@ -60,7 +64,8 @@ describe DownloadTV::Filterer do
 
       describe 'when all entries match (one filter)' do
         let(:excludes) { ['E'] }
-        it 'will return the original' do
+
+        it 'returns the original' do
           filtered = subject.filter(test_data)
           expect(filtered).to eq test_data
         end
@@ -68,7 +73,8 @@ describe DownloadTV::Filterer do
 
       describe 'when all entries match (more filters)' do
         let(:excludes) { %w[TEST EXCLUDE] }
-        it 'will only apply filters until there would be no values left' do
+
+        it 'onlies apply filters until there would be no values left' do
           filtered = subject.filter(test_data)
           expect(filtered.size).to eq 1
           expect(filtered.first).to eq 'Exclude'
@@ -78,7 +84,8 @@ describe DownloadTV::Filterer do
 
     context 'when there are include filters' do
       let(:includes) { ['TEST'] }
-      it 'will filter out entries not matching' do
+
+      it 'filters out entries not matching' do
         filtered = subject.filter(test_data)
         expect(filtered.size).to eq 2
         expect(filtered.include?('Exclude')).to be false
@@ -89,7 +96,7 @@ describe DownloadTV::Filterer do
       let(:excludes) { ['EXCLUDE'] }
       let(:includes) { ['EXCLUDE'] }
 
-      it 'will apply "includes" filters first' do
+      it 'applies "includes" filters first' do
         filtered = subject.filter(test_data)
         expect(filtered.size).to eq 1
         expect(filtered.first).to eq 'Exclude'
@@ -98,7 +105,8 @@ describe DownloadTV::Filterer do
       describe 'if the filters are not capitalised' do
         let(:excludes) { ['exclude'] }
         let(:includes) { ['test'] }
-        it 'will not apply the filter successfully' do
+
+        it 'does not apply the filter successfully' do
           expect(subject.filter(test_data)).to eq test_data
         end
       end
