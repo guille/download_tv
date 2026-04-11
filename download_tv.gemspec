@@ -14,7 +14,7 @@ Gem::Specification.new do |s|
   s.homepage      = 'https://github.com/guille/download_tv'
 
   s.files         = `git ls-files -z`.split("\x0").reject do |f|
-    f.match(%r{^(test)/})
+    f.match(%r{^(spec)/})
   end
 
   s.require_paths = ['lib']

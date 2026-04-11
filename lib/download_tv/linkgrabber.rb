@@ -10,13 +10,6 @@ module DownloadTV
       @url = url
     end
 
-    def agent
-      @agent ||= Mechanize.new do |a|
-        a.user_agent = DownloadTV::USER_AGENT
-        a.read_timeout = 10
-      end
-    end
-
     def online?
       url = if @url.include? '%s'
               format(@url, 'test')
@@ -31,6 +24,15 @@ module DownloadTV
 
     def get_links(_show)
       raise NotImplementedError
+    end
+
+    private
+
+    def agent
+      @agent ||= Mechanize.new do |a|
+        a.user_agent = DownloadTV::USER_AGENT
+        a.read_timeout = 10
+      end
     end
   end
 end

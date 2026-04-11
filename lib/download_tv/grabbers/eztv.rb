@@ -2,7 +2,7 @@
 
 module DownloadTV
   ##
-  # EZTV.ag grabber
+  # EZTV grabber
   class Eztv < LinkGrabber
     def initialize
       super('https://eztvx.to/search/%s')

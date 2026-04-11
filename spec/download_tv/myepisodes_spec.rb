@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe DownloadTV::MyEpisodes do
+describe DownloadTV::MyEpisodes do # rubocop:disable RSpec/SpecFilePathFormat
   subject { described_class.new('user', true) }
 
   let(:save_cookie) { true }
