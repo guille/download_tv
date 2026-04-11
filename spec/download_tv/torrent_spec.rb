@@ -5,9 +5,9 @@ describe DownloadTV::Torrent do
 
   let(:default_grabber) { nil }
   # let(:third_grabber) { double('eztv') }
-  let(:second_grabber) { double('eztv') }
-  let(:first_grabber) { double('tpbapi') }
-  let(:test_show) { double('test_show') }
+  let(:second_grabber) { instance_double(DownloadTV::Eztv) }
+  let(:first_grabber) { instance_double(DownloadTV::ThePirateBayAPI) }
+  let(:test_show) { 'test_show' }
 
   before do
     allow(DownloadTV::ThePirateBayAPI).to receive(:new).and_return first_grabber
@@ -28,10 +28,10 @@ describe DownloadTV::Torrent do
 
   describe '#get_links' do
     it 'uses the first grabber and return its #get_link result' do
-      result = double('result')
+      result = []
       expect(first_grabber).to receive(:get_links).with(test_show).and_return(result)
 
-      subject.get_links(test_show)
+      expect(subject.get_links(test_show)).to eq(result)
     end
 
     context 'when the first grabber is offline' do
@@ -98,7 +98,7 @@ describe DownloadTV::Torrent do
       let(:default_grabber) { 'Eztv' }
 
       it 'uses that grabber preferently' do
-        test_show = double('test_show')
+        test_show = 'test_show'
         expect(first_grabber).not_to receive(:get_links)
         expect(second_grabber).to receive(:get_links)
         # expect(third_grabber).to receive(:get_links).with(test_show)
