@@ -17,6 +17,9 @@ describe DownloadTV::Torrent do
     allow(first_grabber).to receive(:online?).and_return(true)
     allow(second_grabber).to receive(:online?).and_return(true)
     # allow(third_grabber).to receive(:online?).and_return(true)
+
+    allow_any_instance_of(described_class).to receive(:warn)
+    allow_any_instance_of(described_class).to receive(:puts)
   end
 
   describe 'Torrent.grabbers' do

@@ -9,6 +9,7 @@ describe DownloadTV::Downloader do
     allow(File).to receive_messages(exist?: true, read: '{}')
     allow(JSON).to receive(:parse).and_return({ version: DownloadTV::VERSION, pending: [] })
     allow(FileUtils).to receive(:rm_f)
+    allow_any_instance_of(described_class).to receive(:warn)
   end
 
   describe 'when creating the object' do

@@ -63,6 +63,8 @@ describe DownloadTV::Configuration do
       allow(File).to receive(:exist?).and_return false
       allow(FileUtils).to receive(:mkdir_p)
       allow_any_instance_of(described_class).to receive(:serialize)
+      allow_any_instance_of(described_class).to receive(:print)
+      allow_any_instance_of(described_class).to receive(:puts)
       allow($stdin).to receive(:gets).and_return(myepisodes_user, cookies, ignored, '', '')
     end
 
@@ -148,6 +150,7 @@ describe DownloadTV::Configuration do
       allow(File).to receive(:exist?).and_return true
       allow(File).to receive(:read).and_return raw_config
       allow(JSON).to receive(:parse).and_return parsed_config
+      allow_any_instance_of(described_class).to receive(:warn)
     end
 
     describe 'when the config does not have a version' do
