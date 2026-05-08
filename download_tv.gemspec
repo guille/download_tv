@@ -21,8 +21,8 @@ Gem::Specification.new do |s|
 
   s.executables = ['tv']
 
-  s.add_dependency('json')
-  s.add_dependency('mechanize')
+  s.add_dependency 'json'
+  s.add_dependency 'mechanize'
 
   s.license = 'MIT'
   s.metadata['rubygems_mfa_required'] = 'true'

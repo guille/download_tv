@@ -1,0 +1,14 @@
+[tools]
+ruby = "latest"
+
+[deps]
+bundler = { auto = true }
+
+[tasks.test]
+run = "bundle exec rspec"
+
+[tasks.check]
+run = "bundle exec rubocop"
+
+[tasks.release]
+run = "rake release"
