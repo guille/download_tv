@@ -6,7 +6,7 @@ module DownloadTV
   class Torrent
     class << self
       def grabbers
-        %w[ThePirateBayAPI Eztv]
+        %w[ThePirateBayAPI]
       end
 
       def healthcheck
@@ -27,7 +27,7 @@ module DownloadTV
     end
 
     def get_links(show)
-      @g_instances.first.get_links(show)
+      @g_instances.first.get_links(CGI.escape(show))
     rescue NoTorrentsError
       if @tries.positive?
         change_grabbers

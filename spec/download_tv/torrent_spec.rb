@@ -25,7 +25,7 @@ describe DownloadTV::Torrent do
   describe 'Torrent.grabbers' do
     it 'returns the list of grabbers' do
       # This order is assumed in the other specs, so explicitly checking it here
-      expect(described_class.grabbers).to eq %w[ThePirateBayAPI Eztv]
+      expect(described_class.grabbers).to eq %w[ThePirateBayAPI]
     end
   end
 

@@ -2,6 +2,15 @@
 
 ## Next (unreleased)
 
+
+## 2.9.5 (2026-05-31)
+
+* Fixes
+	* Escape show names to avoid issues with some special characters
+
+* Grabbers
+	* Eztv: disabled (Cloudflare challenge)
+
 * Improvements
 	* Now respects `XDG_CONFIG_HOME` when set (falls back to `~/.config/download_tv`)
 

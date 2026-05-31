@@ -6,6 +6,7 @@ require 'mechanize'
 require 'date'
 require 'io/console'
 require 'fileutils'
+require 'cgi/escape'
 
 require 'download_tv/version'
 require 'download_tv/configuration'
