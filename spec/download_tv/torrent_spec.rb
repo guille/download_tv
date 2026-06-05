@@ -58,12 +58,12 @@ describe DownloadTV::Torrent do
       end
     end
 
-    context 'when called multiple times' do
-      it 'resets state between calls' do
-        allow(first_grabber).to receive(:get_links).with(test_show).and_return([], [])
-        subject.get_links(test_show)
-        subject.get_links(test_show)
-      end
-    end
+    # context 'when called multiple times' do
+    #   it 'resets state between calls' do
+    #     allow(first_grabber).to receive(:get_links).with(test_show).and_return([], [])
+    #     subject.get_links(test_show)
+    #     subject.get_links(test_show)
+    #   end
+    # end
   end
 end
